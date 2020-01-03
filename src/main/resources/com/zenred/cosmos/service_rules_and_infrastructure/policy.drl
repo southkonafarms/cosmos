@@ -1,0 +1,448 @@
+package com.zenred.cosmos.service_rules_and_infrastructure;
+
+import com.zenred.cosmos.domain.Atmosphere;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsHydrogen;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsHelium;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsOxygen;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsOzone;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsNitrogen;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsMethane;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsAcetylene;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsAmmonia;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsCarbon;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsCarbonDioxide;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsCarbonMonoxide;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsChlorine;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsCynoCetylene;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsDiCetylene;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsEthane;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsHydrochloricAcid;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsHydrogenCyanide;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsHydrogenSulfide;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsMethCetylene;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsNitrogenDioxide;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsOzone;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsPotassium;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsSilicon;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsSodium;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsSulfur;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsSulfuricAcid;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsWater;
+
+
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInGasGiantRange;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInMiniGasGiantRange;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInSuperEarthRange;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInEarthLikeRange;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInHotEarthLikeRange;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInGoldilocksRange;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInGoldilocksWithOzoneRange;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInHotGasGiantRange;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInHotEarthLikeRangeWithWater;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInHotEarthLikeRangeWithNitrogenDioxide;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInHotEarthLikeRangeWithCarbonMonoxide;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInMiniGasGiantAcetylene;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInMiniGasGiantChlorine
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInMiniGasGiantHydrochloricAcid;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInMiniGasGiantHydrogenCyanide;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInMiniGasGiantHydrogenSulfide;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInMiniGasGiantCynoCetylene;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInMiniGasGiantDiCetylene;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInMiniGasGiantEthane;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInMiniGasGiantMethCetylene;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInUltraHotRockRangeWithCarbon;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInUltraHotRockRangeWithPotassium;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInUltraHotRockRangeWithSodium;
+import com.zenred.cosmos.service_rules_and_infrastructure.atmosphere_postprocess.IsInUltraHotRockRangeWithSulfur;
+
+import com.zenred.cosmos.domain.Planetoid;
+
+dialect  "mvel"
+
+// chemicals and compounds
+
+rule IsHydrogen when
+    atmosphere : Atmosphere( chem_name == 'Hydrogen' )
+then
+    insertLogical( new IsHydrogen( atmosphere ) );
+    System.out.println("in IsHydrogen"+atmosphere);
+end
+
+rule IsHelium when
+    atmosphere : Atmosphere( chem_name == 'Helium' )
+then
+    insertLogical( new IsHelium( atmosphere ) );
+    System.out.println("in IsHelium"+atmosphere);
+end
+
+rule IsNitrogen when
+    atmosphere : Atmosphere( chem_name == 'Nitrogen' )
+then
+    insertLogical( new IsNitrogen( atmosphere ) );
+    System.out.println("in IsNitrogen"+atmosphere);
+end
+
+rule IsOxygen when
+    atmosphere : Atmosphere( chem_name == 'Oxygen' )
+then
+    insertLogical( new IsOxygen( atmosphere ) );
+    System.out.println("in IsOxygen"+atmosphere);
+end
+
+rule IsOzone when
+    atmosphere : Atmosphere( chem_name == 'Ozone' )
+then
+    insertLogical( new IsOzone( atmosphere ) );
+    System.out.println("in IsOzone"+atmosphere);
+end
+
+rule IsMethane when
+    atmosphere : Atmosphere( chem_name == 'Methane' )
+then
+    insertLogical( new IsMethane( atmosphere ) );
+    System.out.println("in IsMethane"+atmosphere);
+end
+
+rule IsAmmonia when
+    atmosphere : Atmosphere( chem_name == 'Ammonia' )
+then
+    insertLogical( new IsAmmonia( atmosphere ) );
+    System.out.println("in IsAmmonia"+atmosphere);
+end
+
+rule IsCarbon when
+    atmosphere : Atmosphere( chem_name == 'Carbon' )
+then
+    insertLogical( new IsCarbon( atmosphere ) );
+    System.out.println("in IsCarbon"+atmosphere);
+end
+
+rule IsCarbonDioxide when
+    atmosphere : Atmosphere( chem_name == 'CarbonDioxide' )
+then
+    insertLogical( new IsCarbonDioxide( atmosphere ) );
+    System.out.println("in IsCarbonDioxide"+atmosphere);
+end
+
+rule IsCarbonMonoxide when
+    atmosphere : Atmosphere( chem_name == 'CarbonMonoxide' )
+then
+    insertLogical( new IsCarbonMonoxide( atmosphere ) );
+    System.out.println("in IsCarbonMonoxide"+atmosphere);
+end
+
+rule IsChlorine when
+    atmosphere : Atmosphere( chem_name == 'Chlorine' )
+then
+    insertLogical( new IsChlorine( atmosphere ) );
+    System.out.println("in IsChlorine"+atmosphere);
+end
+
+rule IsCynoCetylene when
+    atmosphere : Atmosphere( chem_name == 'Cynocetylene' )
+then
+    insertLogical( new IsCynoCetylene( atmosphere ) );
+    System.out.println("in IsCynoCetylene"+atmosphere);
+end
+
+rule IsHydrochloricAcid when
+    atmosphere : Atmosphere( chem_name == 'HydrochloricAcid' )
+then
+    insertLogical( new IsHydrochloricAcid( atmosphere ) );
+    System.out.println("in IsHydrochloricAcid"+atmosphere);
+end
+
+rule IsHydrogenCyanide when
+    atmosphere : Atmosphere( chem_name == 'HydrogenCyanide' )
+then
+    insertLogical( new IsHydrogenCyanide( atmosphere ) );
+    System.out.println("in IsHydrogenCyanide"+atmosphere);
+end
+
+rule IsHydrogenSulfide when
+    atmosphere : Atmosphere( chem_name == 'HydrogenSulfide' )
+then
+    insertLogical( new IsHydrogenSulfide( atmosphere ) );
+    System.out.println("in IsHydrogenSulfide"+atmosphere);
+end
+
+rule IsMethCetylene when
+    atmosphere : Atmosphere( chem_name == 'Methlacetylene' )
+then
+    insertLogical( new IsMethCetylene( atmosphere ) );
+    System.out.println("in IsMethCetylene"+atmosphere);
+end
+
+rule IsNitrogenDioxide when
+    atmosphere : Atmosphere( chem_name == 'NitrogenDioxide' )
+then
+    insertLogical( new IsNitrogenDioxide( atmosphere ) );
+    System.out.println("in IsNitrogenDioxide"+atmosphere);
+end
+
+rule IsPotassium when
+    atmosphere : Atmosphere( chem_name == 'Potassium' )
+then
+    insertLogical( new IsPotassium( atmosphere ) );
+    System.out.println("in IsPotassium"+atmosphere);
+end
+
+rule IsSiicon when
+    atmosphere : Atmosphere( chem_name == 'Silicon' )
+then
+    insertLogical( new IsSilicon( atmosphere ) );
+    System.out.println("in IsSilicon"+atmosphere);
+end
+
+rule IsSodium when
+    atmosphere : Atmosphere( chem_name == 'Sodium' )
+then
+    insertLogical( new IsSodium( atmosphere ) );
+    System.out.println("in IsSodium"+atmosphere);
+end
+
+rule IsSulfur when
+    atmosphere : Atmosphere( chem_name == 'Sulfur' )
+then
+    insertLogical( new IsSulfur( atmosphere ) );
+    System.out.println("in IsSulfur"+atmosphere);
+end
+
+rule IsSulfuricAcid when
+    atmosphere : Atmosphere( chem_name == 'SulfuricAcid' )
+then
+    insertLogical( new IsSulfuricAcid( atmosphere ) );
+    System.out.println("in IsSulfuricAcid"+atmosphere);
+end
+
+rule IsWater when
+    atmosphere : Atmosphere( chem_name == 'Water' )
+then
+    insertLogical( new IsWater( atmosphere ) );
+    System.out.println("in IsWater"+atmosphere);
+end
+
+// planet scenarios
+
+rule IsInGasGiantRange when
+	radiusRangeConst : RadiusRangeConst()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID)
+then
+	insertLogical(new IsInGasGiantRange(planetoid));
+end
+
+rule IsInMiniGasGiantRange when
+	radiusRangeConst : RadiusRangeConst()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID && radius < radiusRangeConst.GAS_GIANT_PLANETOID)
+then
+	insertLogical(new IsInMiniGasGiantRange(planetoid));
+end
+
+rule IsInMiniGasGiantRangeWithHydorchloricAcidChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID && radius < radiusRangeConst.GAS_GIANT_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.LOWERHOTGASGIANT, 
+		chances.fetchChance() < chances.CHANCE_HYDROCHLORIC_ACID)
+then
+	insertLogical(new IsInMiniGasGiantHydrochloricAcid(planetoid));
+end
+
+rule IsInMiniGasGiantRangeWithChlorineChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID && radius < radiusRangeConst.GAS_GIANT_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.LOWERHOTGASGIANT, 
+		chances.fetchChance() < chances.CHANCE_CHLORINE)
+then
+	insertLogical(new IsInMiniGasGiantChlorine(planetoid));
+end
+
+rule IsInMiniGasGiantRangeWithEthaneChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID && radius < radiusRangeConst.GAS_GIANT_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.LOWERHOTGASGIANT, 
+		chances.fetchChance() < chances.CHANCE_ETHANE)
+then
+	insertLogical(new IsInMiniGasGiantEthane(planetoid));
+end
+
+rule IsInMiniGasGiantRangeWithAcetyleneChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID && radius < radiusRangeConst.GAS_GIANT_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.LOWERHOTGASGIANT, 
+		chances.fetchChance() < chances.CHANCE_ACETYLENE)
+then
+	insertLogical(new IsInMiniGasGiantAcetylene(planetoid));
+end
+
+rule IsInMiniGasGiantRangeWithHydrogenCyanideChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID && radius < radiusRangeConst.GAS_GIANT_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.LOWERHOTGASGIANT, 
+		chances.fetchChance() < chances.CHANCE_HYDROGEN_CYANIDE)
+then
+	insertLogical(new IsInMiniGasGiantHydrogenCyanide(planetoid));
+end
+
+rule IsInMiniGasGiantRangeWithHydrogenSulfideChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID && radius < radiusRangeConst.GAS_GIANT_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.LOWERHOTGASGIANT, 
+		chances.fetchChance() < chances.CHANCE_HYDROGENSULFIDE)
+then
+	insertLogical(new IsInMiniGasGiantHydrogenSulfide(planetoid));
+end
+
+rule IsInMiniGasGiantRangeWithCynoCetyleneChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID && radius < radiusRangeConst.GAS_GIANT_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.LOWERHOTGASGIANT, 
+		chances.fetchChance() < chances.CHANCE_CYANOCETYLENE)
+then
+	insertLogical(new IsInMiniGasGiantCynoCetylene(planetoid));
+end
+
+
+rule IsInMiniGasGiantRangeWithDiCetyleneChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID && radius < radiusRangeConst.GAS_GIANT_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.LOWERHOTGASGIANT, 
+		chances.fetchChance() < chances.CHANCE_DICETYLENE)
+then
+	insertLogical(new IsInMiniGasGiantDiCetylene(planetoid));
+end
+
+
+
+rule IsInSuperEarthRange when
+	radiusRangeConst : RadiusRangeConst()
+	planetoid : Planetoid(radius >= radiusRangeConst.SUPER_EARTH_PLANETOID && radius < radiusRangeConst.MINI_GAS_GIANT_PLANETOID)
+then
+	insertLogical(new IsInSuperEarthRange(planetoid));
+end
+
+rule IsInEarthLikeRange when
+	radiusRangeConst : RadiusRangeConst()
+	planetoid : Planetoid(radius >= radiusRangeConst.EARTH_PLANETOID && radius < radiusRangeConst.SUPER_EARTH_PLANETOID)
+then
+	insertLogical(new IsInEarthLikeRange(planetoid));
+end
+
+rule IsInGoldilocksRange when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	planetoid : Planetoid(radius >= radiusRangeConst.EARTH_PLANETOID && radius < radiusRangeConst.SUPER_EARTH_PLANETOID,
+		temperature > temperatureRangeConst.LOWERGOLDILOCKS && temperature <= temperatureRangeConst.UPPERGOLDILOCKS)
+then
+	insertLogical(new IsInGoldilocksRange(planetoid));
+end
+
+rule IsInGoldilocksRangewithOzoneChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.EARTH_PLANETOID && radius < radiusRangeConst.SUPER_EARTH_PLANETOID,
+		temperature > temperatureRangeConst.LOWERGOLDILOCKS && temperature <= temperatureRangeConst.UPPERGOLDILOCKS,
+		chances.fetchChance() < chances.CHANCE_OZONE)
+then
+	insertLogical(new IsInGoldilocksWithOzoneRange(planetoid));
+end
+
+rule IsInHotEarthLikeRange when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	planetoid : Planetoid(radius >= radiusRangeConst.EARTH_PLANETOID && radius < radiusRangeConst.SUPER_EARTH_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.UPPERHOTEARTH)
+then
+	insertLogical(new IsInHotEarthLikeRange(planetoid));
+end
+
+rule IsInHotEarthLikeRangeWithWaterChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.EARTH_PLANETOID && radius < radiusRangeConst.SUPER_EARTH_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.UPPERHOTEARTH, 
+		chances.fetchChance() < chances.CHANCE_HOT_WATER)
+then
+	insertLogical(new IsInHotEarthLikeRangeWithWater(planetoid));
+end
+
+rule IsInHotEarthLikeRangeWithNitrogenOxideChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.EARTH_PLANETOID && radius < radiusRangeConst.SUPER_EARTH_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTEARTH && temperature <= temperatureRangeConst.UPPERHOTEARTH, 
+		chances.fetchChance() < chances.CHANCE_NITROGEN_DIOXIDE)
+then
+	insertLogical(new IsInHotEarthLikeRangeWithNitrogenDioxide(planetoid));
+end
+
+rule IsInUltraHotRockRangewithCarbonChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.EARTH_PLANETOID && radius < radiusRangeConst.SUPER_EARTH_PLANETOID,
+		temperature > temperatureRangeConst.UPPERHOTEARTH && temperature <= temperatureRangeConst.ULTRAHOTROCK, 
+		chances.fetchChance() < chances.CHANCE_CARBON)
+then
+	insertLogical(new IsInUltraHotRockRangeWithCarbon(planetoid));
+end
+
+rule IsInUltraHotRockRangewithPotassiumChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.EARTH_PLANETOID && radius < radiusRangeConst.SUPER_EARTH_PLANETOID,
+		temperature > temperatureRangeConst.UPPERHOTEARTH && temperature <= temperatureRangeConst.ULTRAHOTROCK, 
+		chances.fetchChance() < chances.CHANCE_POTASSIUM)
+then
+	insertLogical(new IsInUltraHotRockRangeWithPotassium(planetoid));
+end
+
+rule IsInUltraHotRockRangewithSodiumChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.EARTH_PLANETOID && radius < radiusRangeConst.SUPER_EARTH_PLANETOID,
+		temperature > temperatureRangeConst.UPPERHOTEARTH && temperature <= temperatureRangeConst.ULTRAHOTROCK, 
+		chances.fetchChance() < chances.CHANCE_SODIUM)
+then
+	insertLogical(new IsInUltraHotRockRangeWithSodium(planetoid));
+end
+
+rule IsInUltraHotRockRangewithSulfurChances when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	chances : Chances()
+	planetoid : Planetoid(radius >= radiusRangeConst.EARTH_PLANETOID && radius < radiusRangeConst.SUPER_EARTH_PLANETOID,
+		temperature > temperatureRangeConst.UPPERHOTEARTH && temperature <= temperatureRangeConst.ULTRAHOTROCK, 
+		chances.fetchChance() < chances.CHANCE_SULFUR)
+then
+	insertLogical(new IsInUltraHotRockRangeWithSulfur(planetoid));
+end
+
+rule IsAHotGasGiant when
+	radiusRangeConst : RadiusRangeConst()
+	temperatureRangeConst : TemperatureRangeConst()
+	planetoid : Planetoid(radius >= radiusRangeConst.MINI_GAS_GIANT_PLANETOID,
+		temperature > temperatureRangeConst.LOWERHOTGASGIANT && temperature <= temperatureRangeConst.UPPERHOTGASGIANT)
+then
+	insertLogical(new IsInHotGasGiantRange(planetoid));
+end

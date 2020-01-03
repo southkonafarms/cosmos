@@ -1,0 +1,61 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+         http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+         http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+         http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           "
+	default-dependency-check="none">
+
+
+	<bean id="login" class="com.zenred.johntredden.controller.Login"/>
+	<bean id="firstAccess" class="com.zenred.johntredden.controller.FirstAccess"/>
+	<bean id="answerQuestion1" class="com.zenred.johntredden.controller.AnswerQuestion1"/>
+	<bean id="createLogin" class="com.zenred.johntredden.controller.CreateLogin"/>
+	<bean id="starSystems" class="com.zenred.cosmos.controller.StarSystems"/>
+	<bean id="visitStarSystem" class="com.zenred.cosmos.controller.VisitStarSystem"/>
+	<bean id="starCluster" class="com.zenred.cosmos.controller.StarCluster"/>
+	<bean id="starAndPlanets" class="com.zenred.cosmos.controller.StarAndPlanets"/>
+	<bean id="planetAndMoons" class="com.zenred.cosmos.controller.PlanetAndMoons"/>
+	<bean id="systemReportChoice" class="com.zenred.cosmos.controller.SystemReportChoice"/>
+	<bean id="systemReportResults" class="com.zenred.cosmos.controller.SystemReportResults"/>
+	<bean id="listAllPlanetoidRenamingCandidates"  class="com.zenred.cosmos.controller.ListAllPlanetoidRenamingCandidates"/>
+	<bean id="listAllStarRenamingCandidates"  class="com.zenred.cosmos.controller.ListAllStarRenamingCandidates"/>
+	<bean id="listAllClusterRenamingCandidates"  class="com.zenred.cosmos.controller.ListAllClusterRenamingCandidates"/>
+	<bean id="renameEntity" class="com.zenred.cosmos.controller.RenameEntity"/>
+	<bean id="listRenamedEntities" class="com.zenred.cosmos.controller.ListRenamedEntities"/>
+	<bean id="visitSingleStarSystem" class="com.zenred.cosmos.controller.VisitSingleStarSystem"/>
+	<bean id="isEntityRenamed" class="com.zenred.cosmos.controller.IsEntityRenamed"/>
+
+	<bean id="urlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/login.html">login</prop>
+				<prop key="/firstAccess.html">firstAccess</prop>
+				<prop key="/answerQuestion1.html">answerQuestion1</prop>
+				<prop key="/createLogin.html">createLogin</prop>
+				<prop key="/starSystems.html">starSystems</prop>
+				<prop key="/visitStarSystem.html">visitStarSystem</prop>
+				<prop key="/starCluster.html">starCluster</prop>
+				<prop key="/starAndPlanets.html">starAndPlanets</prop>
+				<prop key="/planetAndMoons.html">planetAndMoons</prop>
+				<prop key="/systemReportChoice.html">systemReportChoice</prop>
+				<prop key="/systemReportResults.html">systemReportResults</prop>
+				<prop key="/listPlanetoidRenameCandidates.html">listAllPlanetoidRenamingCandidates</prop>
+				<prop key="/listStarRenameCandidates.html">listAllStarRenamingCandidates</prop>
+				<prop key="/listClusterRenameCandidates.html">listAllClusterRenamingCandidates</prop>
+				<prop key="/renameEntity.html">renameEntity</prop>
+				<prop key="/listRenamedEntities.html">listRenamedEntities</prop>
+				<prop key="/visitSingleStarSystem.html">visitSingleStarSystem</prop>
+				<prop key="/isEntityRenamed.html">isEntityRenamed</prop>
+			</props>
+		</property>
+	</bean>
+</beans>
+
