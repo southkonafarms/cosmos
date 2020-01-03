@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>Testing Prototype</title>
+</head>
+<body>
+	<canvas id="planars">
+	Your browser does not support the HTML5 canvas tag.
+	Please upgrade to a version with full support for HTML5.
+	
+	</canvas>
+
+<script type="text/javascript">
+var scaleViz = (function(){
+	
+	const xBoxLarger = 10;
+	const yBox = 50;
+	const spacing = 5;
+	const yHeight = 20;
+	const scaleDigits = 30;
+	
+	
+	const bigger = "Increase Scale  ";
+	const smaller = "Decrease Scale  ";
+	const value = "Current Scale:";
+	
+	const step = 0.1;
+	
+	var scale = 1.0;
+	var biggerWidth;
+	var smallerWidth;
+	var valueWidth;
+	
+	var xBoxSmaller;
+	var xBoxCurrent;
+	
+	var scale=1.0;
+	
+	return{
+		drawControls: function(context){
+			context.font="16px Verdana";
+			biggerWidth = Math.floor(context.measureText(bigger).width);
+			smallerWidth = Math.floor(context.measureText(smaller).width);
+			valueWidth = Math.floor(context.measureText(value).width);
+			
+			xBoxSmaller = xBoxLarger+biggerWidth+spacing;
+			xBoxCurrent = xBoxLarger+biggerWidth+spacing+smallerWidth+spacing;
+			context.beginPath();
+		    context.rect(xBoxLarger, yBox, biggerWidth, yHeight);
+		    context.fillStyle = 'lightgreen';
+		    context.fill();
+		    context.lineWidth = 2;
+		    context.strokeStyle = 'black';
+		    context.strokeText(bigger, xBoxLarger, yBox+yHeight-3);
+		    context.stroke();
+		    context.closePath();
+		    
+			context.beginPath();
+		    context.rect(xBoxSmaller, yBox, smallerWidth, yHeight);
+		    context.fillStyle = 'red';
+		    context.fill();
+		    context.lineWidth = 2;
+		    context.strokeStyle = 'black';
+		    context.strokeText(smaller, xBoxSmaller, yBox+yHeight-3);
+		    context.stroke();
+		    context.closePath();
+		    
+		    context.beginPath();
+		    context.rect(xBoxCurrent, yBox, valueWidth+scaleDigits, yHeight);
+		    context.fillStyle = 'yellow';
+		    context.fill();
+		    context.lineWidth = 2;
+		    context.strokeStyle = 'black';
+		    context.strokeText(value+scale, xBoxCurrent, yBox+yHeight-3);
+		    context.stroke();
+		    context.closePath();
+		}
+	}
+	
+})();
+var closure = (function () {
+	var i_xdim;
+	var i_ydim;
+	
+	baseFunction = function(context){
+		var message;
+		this.message = "baseFunction";
+		console.log(this.message);
+		context.fillText(this.message, i_xdim+5, i_ydim+5);
+	}
+	
+	baseFunction.prototype.childFunctionOne = function(context){
+		console.log("childFunctionOne");
+		context.fillText("childFunctionOne", i_xdim+20, i_ydim+20);		}
+	baseFunction.prototype.childFunctionTwo = function(context){
+		console.log("childFunctionTwo");
+		context.fillText("childFunctionTwo", i_xdim+35, i_ydim+35);	
+		context.fillText(this.message, i_xdim+45, i_ydim+45);	
+		this.message = "Took Over!";
+		context.fillText(this.message, i_xdim+60, i_ydim+60);	
+
+	}
+	baseFunction.prototype.getMessage = function(){
+		return this.message;
+	}
+	
+	return{
+		setXandYDim: function(xdim, ydim){
+			i_xdim = xdim;
+			i_ydim = ydim;
+		},
+		action: function(context){
+			var baseF = new baseFunction(context);
+			baseF.childFunctionOne(context);
+			baseF.childFunctionTwo(context);
+			console.log("Message:"+baseF.getMessage());
+			context.fillText("Message:"+baseF.getMessage(), 300, 100);
+		},
+		action2: function(context){
+			var baseF = new baseFunction(context);
+			baseF.childFunctionOne(context);
+		}
+	}
+	
+})();
+
+var planarcanvas = document.getElementById("planars");
+var planarcanvasContext = planarcanvas.getContext("2d");
+planarcanvasContext.canvas.width = window.innerWidth;
+planarcanvasContext.canvas.height = window.innerHeight;
+closure.setXandYDim(planarcanvasContext.canvas.width/2, planarcanvasContext.canvas.height/2);
+closure.action(planarcanvasContext);
+closure.setXandYDim(100, 100);
+closure.action2(planarcanvasContext);
+scaleViz.drawControls(planarcanvasContext);
+</script>
+</body>
+</html>
