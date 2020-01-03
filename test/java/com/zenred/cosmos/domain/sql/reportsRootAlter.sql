@@ -1,1 +1,0 @@
-ALTER TABLE Configuration ADD `reportRoot` char(255) DEFAULT '';
