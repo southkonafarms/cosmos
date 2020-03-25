@@ -681,13 +681,17 @@ public class GenCSV {
 		String upperU = currentUs.get(0).toString();
 		Integer currentSizeU = currentUs.size() - 1;
 		String lowerU = currentUs.get(currentSizeU).toString();
-		String upperV = currentVs.get(0).toString();
-		String lowerV = currentVs.get(currentVs.size() - 1).toString();
-		logger.info("SIZES:"
-				+ (currentUs.size() - 1 + "::" + (currentVs.size() - 1)));
-		logger.info("LISTS:" + currentUs + "::" + currentVs);
-		sectors.add(upperU + ":" + upperV + ":" + lowerU + ":" + lowerV);
+		if (!currentVs.isEmpty()) {
 
+			String upperV = currentVs.get(0).toString();
+			String lowerV = currentVs.get(currentVs.size() - 1).toString();
+			logger.info("SIZES:" + (currentUs.size() - 1 + "::" + (currentVs.size() - 1)));
+			logger.info("LISTS:" + currentUs + "::" + currentVs);
+			sectors.add(upperU + ":" + upperV + ":" + lowerU + ":" + lowerV);
+		}
+		else{
+			logger.warn("Current VS is empty!");
+		}
 
 		return sectors;
 	}
