@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.Controller;
 import com.zenred.cosmos.controller.json.BasicMessageView;
 import com.zenred.cosmos.service_rules_and_infrastructure.GenSystem;
 import com.zenred.cosmos.vizualization.BasicMessageResponse;
+import com.zenred.cosmos.domain.System;
 
 public class UserDesignatedSystem implements Controller {
 	
@@ -34,7 +35,13 @@ public class UserDesignatedSystem implements Controller {
 			modelAndView.addObject(BasicMessageView.JSON_ROOT, basicMessageResponse);
 		}
 		else {
-			
+			System system = GenSystem.genSystemFromOrigin(uDimension, vDimension);
+			GenSystem.candidate(system);
+			BasicMessageResponse basicMessageResponse = new BasicMessageResponse();
+			String message = system.getUcoordinate().toString() + ':' + system.getVcoordinate().toString();
+			basicMessageResponse.setTheMessage(message); 
+			modelAndView = new ModelAndView(new BasicMessageView());
+			modelAndView.addObject(BasicMessageView.JSON_ROOT, basicMessageResponse);
 		}
 		return modelAndView;
 	}

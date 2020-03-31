@@ -58,5 +58,15 @@ public class GenSystem {
 	public static Boolean doesSystemExist(System system){
 		return systemDao.doesSystemExist(system.getUcoordinate(), system.getVcoordinate());
 	}
+	
+	/**
+	 * 
+	 * @param ucoordinate, vcoordinate
+	 * @return does it exist or not
+	 */
+	public static Boolean doesSystemExist(Double ucoordinate, Double vcoordinate){
+		return systemDao.doesSystemExist(ucoordinate, vcoordinate);
+	}
+
 
 }
