@@ -3,20 +3,20 @@ package com.zenred.cosmos.domain;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.apache.log4j.Logger;
 
 import com.zenred.johntredden.domain.AbstractJDBCDao;
 import com.zenred.util.GenRandomRolls;
 
 public class SystemDao extends AbstractJDBCDao {
+	
+	private static Logger logger = Logger.getLogger(SystemDao.class);
 	
 	public static String SYSTEM = "System";
 	public static String SYSTEM_ID = "SystemId";
@@ -251,6 +251,7 @@ public class SystemDao extends AbstractJDBCDao {
 		if(0 == count ){
 			answer = false;
 		}
+		logger.info("answer: " + answer + " ucoordinate:" + ucoordinate + " vcoordinate:" + vcoordinate);
 		return answer;
 	}
 	

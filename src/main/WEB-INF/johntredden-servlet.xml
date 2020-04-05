@@ -55,7 +55,7 @@
 				<prop key="/listRenamedEntities.html">listRenamedEntities</prop>
 				<prop key="/visitSingleStarSystem.html">visitSingleStarSystem</prop>
 				<prop key="/isEntityRenamed.html">isEntityRenamed</prop>
-				<prop key="/userDesignatedSystem.html"></prop>
+				<prop key="/userDesignatedSystem.html">userDesignatedSystem</prop>
 			</props>
 		</property>
 	</bean>

@@ -27,6 +27,7 @@ public class UserDesignatedSystem implements Controller {
 		Double uDimension = new Double(s_UDimension);
 		Double vDimension = new Double(s_VDimension);
 		Boolean answer = GenSystem.doesSystemExist(uDimension, vDimension);
+		logger.info("answer for " + uDimension + ':' + vDimension + " answer:" + answer);
 		ModelAndView modelAndView = null;
 		if(answer){
 			BasicMessageResponse basicMessageResponse = new BasicMessageResponse();
