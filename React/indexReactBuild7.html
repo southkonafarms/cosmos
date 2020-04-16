@@ -3,13 +3,43 @@
 <html>
 <head>
 <title>React WTF</title>
-<script src="../js/react.development.js" crossorigin></script>
-<script src="../js/react-dom.development.js" crossorigin></script>
+<script src="../js/react.development.js"></script>
+<script src="../js/react-dom.development.js"></script>
 </head>
 <body>
 	<div id="root"></div>
+	
+	<script type="text/javascript">
+	//for debugging
+	function print_recursive(printthis) {
+	    var output = '';
+
+	    if(Array.isArray(printthis) || typeof(printthis) == 'object') {
+	        for(var i in printthis) {
+	        	console.log("??:"+printthis[i]+"::"+i);
+	            output += i + ' : ' + print_recursive(printthis[i]) + '\n';
+	        }
+	    }else {
+	        output += printthis;
+	    }
+	    console.log("PRINT:"+output);
+	}
+	
+	/*
+	*  searches for allready "exists" or u,v coordinates.
+	*/
+	var parseJson = (function (){
+			return{
+				parse: function(json){
+					return '';
+				}
+			}
+		}
+	)();
+	</script>
 
 	<script>
+	
             window.onload = function()
       /*0*/      {
             	class NameForm extends React.Component {  /*1*/
@@ -123,7 +153,7 @@
               		    	theProps: this.props.value,
               		        error: null,
               		      	isLoaded: false,
-              		      	items: [],
+              		      	items: '',
               		      	dims: this.props.value.split(':')
 						    }; /*3*/
                    	    } /* 2 */
@@ -132,7 +162,7 @@
                    	    fetch("http://www.localhost:8080/johntredden-1.0/userDesignatedSystem.html?udimension=" + this.state.dims[0] + "&vdimension="+ this.state.dims[1]).then(res => res.json()).then(result => { /* 3 */
                    	      this.setState({  /* 4 */
                    	        isLoaded: true,
-                   	        items: result.items
+                   	        items: result
                    	      });  /* 4 */
                    	   	  alert("items:"+ result);
                    	    }, /* 3 */
@@ -160,6 +190,8 @@
                    		    } else if (!isLoaded) {
                    		      return /*#__PURE__*/React.createElement("div", null, "Loading...");
                    		    } else {
+                   		    	print_recursive(this.state.items);
+                   		    	parseJson.parse(this.state.items);
                    		    	return 'Udim:' + this.state.dims[0] + ' Vdim:' + this.state.dims[1] + " items:" + this.state.items;
                    		    }
                    	    		
