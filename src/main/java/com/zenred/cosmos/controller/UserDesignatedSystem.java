@@ -16,6 +16,7 @@ import com.zenred.cosmos.domain.System;
 public class UserDesignatedSystem implements Controller {
 	
 	private static Logger logger = Logger.getLogger(UserDesignatedSystem.class);
+	private static String headMessage = "SystemUV:";
 
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -39,7 +40,11 @@ public class UserDesignatedSystem implements Controller {
 			System system = GenSystem.genSystemFromOrigin(uDimension, vDimension);
 			GenSystem.candidate(system);
 			BasicMessageResponse basicMessageResponse = new BasicMessageResponse();
-			String message = system.getUcoordinate().toString() + ':' + system.getVcoordinate().toString();
+			int iUcoord = system.getUcoordinate().intValue();
+			int iVcoord = system.getVcoordinate().intValue();
+			String sUcoord = Integer.toString(iUcoord);
+			String sVcoord = Integer.toString(iVcoord);
+			String message = headMessage + sUcoord + ':' + sVcoord;
 			basicMessageResponse.setTheMessage(message); 
 			modelAndView = new ModelAndView(new BasicMessageView());
 			modelAndView.addObject(BasicMessageView.JSON_ROOT, basicMessageResponse);

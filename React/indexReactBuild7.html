@@ -26,12 +26,55 @@
 	}
 	
 	/*
-	*  searches for allready "exists" or u,v coordinates.
+	*  parses json message from the server
 	*/
 	var parseJson = (function (){
+		// private
+		var lineArray;
+		var lineCount;
+		var state;
+		// public
 			return{
+				parseStart: function(json){
+					lineArray = [];
+					lineCount = 0;
+					output = '';
+					return parseJson.parse(json);
+				},
 				parse: function(json){
-					return '';
+					if(Array.isArray(json) || typeof(json) == 'object') {
+						for(var idex in json) {
+							console.log("Next idex:" + idex);
+				        	switch(idex){
+				        	case "createMessageResponse":
+				        		state = 'Start0';
+				        		break;
+				        	case "theMessage":
+				        		state = 'Start1';
+				        		break;
+				        	default:
+				        	}
+			        	}
+						parseJson.parse(json[idex]);
+					}else{
+						switch (state){
+						case 'Start0':
+							console.log("json0:" + json);
+							break;
+						case 'Start1':
+							console.log("json1:" + json);
+							if(json === 'Exists'){
+								lineArray = 'Exists';
+							}
+							else{
+								if(json.includes('SystemUV')){
+									lineArray = json;
+								}
+							}
+							break;
+						}	
+					}	
+					return lineArray;
 				}
 			}
 		}
@@ -190,10 +233,18 @@
                    		    } else if (!isLoaded) {
                    		      return /*#__PURE__*/React.createElement("div", null, "Loading...");
                    		    } else {
-                   		    	print_recursive(this.state.items);
-                   		    	parseJson.parse(this.state.items);
-                   		    	return 'Udim:' + this.state.dims[0] + ' Vdim:' + this.state.dims[1] + " items:" + this.state.items;
-                   		    }
+                   		    	// print_recursive(this.state.items);
+                   		    	var response = parseJson.parseStart(this.state.items);
+                   		    	if(response === 'Exists'){
+                   		    		alert(" System Ucoordinate " + this.state.dims[0] + " Vcoordinate" + this.state.dims[1] 
+                   		    		+ " allready exists, choose different U and V coordinates");
+                   		    		return React.createElement(NameForm, null);
+                   		    	}
+                   		    	else{
+                   		    		var serverDims = response.split(':');
+                   		    	}
+                   		    	return 'Udim:' + this.state.dims[0] + ' Vdim:' + this.state.dims[1] + " response:" + response;
+                   		    }/* 2 */
                    	    		
                    	    }
                    	  } /* 1 */
