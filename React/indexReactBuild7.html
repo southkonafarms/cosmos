@@ -79,6 +79,33 @@
 			}
 		}
 	)();
+	
+	/**
+		The current working dimension of the System
+		
+		This object must be instantiated
+	*/
+	var UVworkingDimension = (function (){
+			// private
+			var uDimension;
+			var vDimension;
+			// public
+			return{
+				instance: function (udim, vdim){
+					uDimension = udim;
+					vDimension = vdim;
+				},
+				getUdim: function(){
+					return uDimension;
+				},
+				getVdim: function(){
+					return vDimension;
+				}
+			}
+		}
+	);
+	
+	
 	</script>
 
 	<script>
@@ -221,7 +248,7 @@
                    	  } /* 2 */
                    		
                    	    render(){ /* 2 */
-                   			alert('combined props: ' + this.state.theProps);
+                   			// alert('combined props: ' + this.state.theProps);
                    			const {
                    		      error,
                    		      isLoaded,
@@ -242,6 +269,9 @@
                    		    	}
                    		    	else{
                    		    		var serverDims = response.split(':');
+                   		    		var workingUVworkingDimension = new UVworkingDimension();
+                   		    		workingUVworkingDimension.instance(serverDims[1], serverDims[2]);
+                   		    		alert("working UV:" + serverDims[1] + " " + serverDims[2]);
                    		    	}
                    		    	return 'Udim:' + this.state.dims[0] + ' Vdim:' + this.state.dims[1] + " response:" + response;
                    		    }/* 2 */
