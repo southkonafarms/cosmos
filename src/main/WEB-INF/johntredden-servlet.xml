@@ -32,6 +32,7 @@
 	<bean id="visitSingleStarSystem" class="com.zenred.cosmos.controller.VisitSingleStarSystem"/>
 	<bean id="isEntityRenamed" class="com.zenred.cosmos.controller.IsEntityRenamed"/>
 	<bean id="userDesignatedSystem" class="com.zenred.cosmos.controller.UserDesignatedSystem"/>
+	<bean id="userDesignatedSubCluster" class="com.zenred.cosmos.controller.UserDesignatedSubCluster"/>
 
 	<bean id="urlMapping"
 		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
@@ -56,6 +57,7 @@
 				<prop key="/visitSingleStarSystem.html">visitSingleStarSystem</prop>
 				<prop key="/isEntityRenamed.html">isEntityRenamed</prop>
 				<prop key="/userDesignatedSystem.html">userDesignatedSystem</prop>
+				<prop key="/userDesignatedSubCluster.html">userDesignatedSubCluster</prop>
 			</props>
 		</property>
 	</bean>
