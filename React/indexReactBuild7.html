@@ -272,11 +272,28 @@
                    		    		var workingUVworkingDimension = new UVworkingDimension();
                    		    		workingUVworkingDimension.instance(serverDims[1], serverDims[2]);
                    		    		alert("working UV:" + serverDims[1] + " " + serverDims[2]);
+                   		    		return React.createElement(ClusterSelection, {value: workingUVworkingDimension});
                    		    	}
                    		    	return 'Udim:' + this.state.dims[0] + ' Vdim:' + this.state.dims[1] + " response:" + response;
                    		    }/* 2 */
                    	    		
                    	    }
+                   	  } /* 1 */
+                   	  
+                   	  class ClusterSelection extends React.Component {  /*1*/
+                     		constructor(props) { /*2*/
+                          		 super(props);
+                          		 this.state = { /*3*/
+                          			theProps: this.props.value	
+                          		 } /* 3 */
+                   	  		} /* 2 */
+                   	  		
+                     		render(){ /* 2 */
+                     			console.log("working U and V:" + this.state.theProps.getUdim() + " " + this.state.theProps.getVdim());
+                     			// print_recursive(this.state.theProps);
+                     			return "u dim: " + this.state.theProps.getUdim() + "v dim: " + this.state.theProps.getVdim();
+                   	  		} /* 2 */
+                   		  
                    	  } /* 1 */
 
             	ReactDOM.render( /*#__PURE__*/React.createElement(NameForm, null), document.getElementById('root'));           	
