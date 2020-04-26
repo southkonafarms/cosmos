@@ -10,6 +10,7 @@
 	<div id="root"></div>
 	
 	<script type="text/javascript">
+	
 	//for debugging
 	function print_recursive(printthis) {
 	    var output = '';
@@ -285,59 +286,90 @@
                    	    }
                    	  } /* 1 */
                    	  
-                   	  class ClusterSelection extends React.Component {  /*1*/
-                     		constructor(props) { /*2*/
-                          		 super(props);
-                          		 this.state = { /*3*/
-                          			theProps: this.props.value,
-                      		        error: null,
-                      		      	isLoaded: false,
-                      		      	items: ''
-                          		 } /* 3 */
-                   	  		} /* 2 */
-                   	  		
-                          	componentDidMount() { /* 2 */
-                            	    fetch("http://www.localhost:8080/johntredden-1.0/userDesignatedSubCluster.html").then(res => res.json()).then(result => { /* 3 */
-                            	      this.setState({  /* 4 */
-                            	        isLoaded: true,
-                            	        items: result
-                            	      });  /* 4 */
-                            	   	  // alert("items:"+ result);
-                            	    }, /* 3 */
-                            	    // Note: it's important to handle errors here
-                            	    // instead of a catch() block so that we don't swallow
-                            	    // exceptions from actual bugs in components.
-                            	    error => { /* 3 */
-                            	      this.setState({ /* 4 */
-                            	        isLoaded: true,
-                            	        error
-                            	      }); /* 4 */
-                            	    }); /* 3 */
-                            } /* 2 */
-                	  		
-                     		render(){ /* 2 */
-                       			const {
-                         		      error,
-                         		      isLoaded,
-                         		      items
-                         		    } = this.state;
+                   	class ClusterSelection extends React.Component {
+                   	  /*1*/
+                   	  constructor(props) {
+                   	    /*2*/
+                   	    super(props);
+                   	    this.state = {
+                   	      /*3*/
+                   	      theProps: this.props.value,
+                   	      error: null,
+                   	      isLoaded: false,
+                   	      items: ''
+                   	    };
+                   	    /* 3 */
+                   	  }
+                   	  /* 2 */
 
-                         		    if (error) {
-                         		      return /*#__PURE__*/React.createElement("div", null, "Error: ", error.message);
-                         		    } else if (!isLoaded) {
-                         		      return /*#__PURE__*/React.createElement("div", null, "Loading cluster selection ...");
-                         		    } else {
-                         		    	var response = parseJson.parseStart(this.state.items);
-                         		    	var clusterTypes = response.split(':');
-                     					console.log("working U and V:" + this.state.theProps.getUdim() + " " + this.state.theProps.getVdim());
-                     					// print_recursive(this.state.theProps);		
-                     					return "u dim: " + this.state.theProps.getUdim() + "v dim: " + this.state.theProps.getVdim() + " Bulk CLusters: " + clusterTypes;
-                         		    }
-                   	  		} /* 2 */
-                   		  
-                   	  } /* 1 */
 
-            	ReactDOM.render( /*#__PURE__*/React.createElement(NameForm, null), document.getElementById('root'));           	
+                   	  componentDidMount() {
+                   	    /* 2 */
+                   	    fetch("http://www.localhost:8080/johntredden-1.0/userDesignatedSubCluster.html").then(res => res.json()).then(result => {
+                   	      /* 3 */
+                   	      this.setState({
+                   	        /* 4 */
+                   	        isLoaded: true,
+                   	        items: result
+                   	      });
+                   	      /* 4 */
+                   	      // alert("items:"+ result);
+                   	    },
+                   	    /* 3 */
+                   	    // Note: it's important to handle errors here
+                   	    // instead of a catch() block so that we don't swallow
+                   	    // exceptions from actual bugs in components.
+                   	    error => {
+                   	      /* 3 */
+                   	      this.setState({
+                   	        /* 4 */
+                   	        isLoaded: true,
+                   	        error
+                   	      });
+                   	      /* 4 */
+                   	    });
+                   	    /* 3 */
+                   	  }
+                   	  /* 2 */
+
+
+                   	  render() {
+                   	    /* 2 */
+                   	    const {
+                   	      error,
+                   	      isLoaded,
+                   	      items
+                   	    } = this.state;
+
+                   	    if (error) {
+                   	      return /*#__PURE__*/React.createElement("div", null, "Error: ", error.message);
+                   	    } else if (!isLoaded) {
+                   	      return /*#__PURE__*/React.createElement("div", null, "Loading cluster selection ...");
+                   	    } else {
+                   	      var response = parseJson.parseStart(this.state.items);
+                   	      var clusterTypes = response.split(':');
+                   	      var data = [];
+                   	      for(var i = 1; i < clusterTypes.length; i++){
+                   	    	data.push({
+                                value: clusterTypes[i],
+                                label: clusterTypes[i]
+                            })
+                   	      }
+                   	   	  const myComponent = () => /*#__PURE__*/React.createElement(Select, {
+                   		     options: data
+                   		  });
+                   	   	  
+                     	  console.log("working U and V:" + this.state.theProps.getUdim() + " " + this.state.theProps.getVdim()); // print_recursive(this.state.theProps);		
+
+                   	      return "u dim: " + this.state.theProps.getUdim() + "v dim: " + this.state.theProps.getVdim() + " Bulk CLusters: " + myComponent;
+  						  
+                   	    }
+                   	  }
+                   	  /* 2 */
+                   	}
+                   	/* 1 */
+ 
+                   	ReactDOM.render( /*#__PURE__*/React.createElement(NameForm, null), document.getElementById('root'));           	
             	} /* 0 */
             
         </script>
