@@ -118,56 +118,71 @@
 	
             window.onload = function()
       /*0*/      {
-            	class NameForm extends React.Component {  /*1*/
-            		  constructor(props) { /*2*/
+            	class NameForm extends React.Component {
+            		  /*1*/
+            		  constructor(props) {
+            		    /*2*/
             		    super(props);
-            		    this.state = { /*3*/
-            		      uDim: '',
-            		      submitted: false
+            		    this.state = {
+            		      /*3*/ uDim: "",
+            		      submitted: false,
             		    }; /*3*/
             		    this.handleChange = this.handleChange.bind(this);
             		    this.handleSubmit = this.handleSubmit.bind(this);
             		  } /*2*/
 
-            		  handleChange(event) { /*2 */
+            		  handleChange(event) {
+            		    /*2 */
             		    const regexpr = /^[0-9\b]+$/;
 
-            		    if (event.target.value === '' || regexpr.test(event.target.value)) { /* 3 */
-            		      this.setState({ /* 4 */
-            		       uDim: event.target.value
+            		    if (event.target.value === "" || regexpr.test(event.target.value)) {
+            		      /* 3 */
+            		      this.setState({
+            		        /* 4 */ uDim: event.target.value,
             		      }); /* 4 */
             		    } /* 3 */
             		  } /* 2 */
 
-            		  handleSubmit(event) { /* 2 */
+            		  handleSubmit(event) {
+            		    /* 2 */
             		    event.preventDefault();
-            		    const { /* 3 */
-            		      value
-            		    } = this.state; /* 3 */
-            		    alert('U dimension was submitted: ' + this.state.uDim);
-            		    this.setState({ /* 3 */
-            		      submitted: true
+            		    const { /* 3 */ value } = this.state; /* 3 */
+            		    alert("U dimension was submitted: " + this.state.uDim);
+            		    this.setState({
+            		      /* 3 */ submitted: true,
             		    }); /* 3 */
             		  } /* 2 */
-            		  
-            		  render() { /* 2 */
-            				    return this.state.submitted ? /*#__PURE__*/React.createElement(NameProcess, { /* 3 */
-            				      value: this.state.uDim
-            				    }) : 
-            				    	 /*#__PURE__*/React.createElement("form", { /* 3 */ /* 3 */ 
-            				           onSubmit: this.handleSubmit
-            				    }, 
-            				    /*#__PURE__*/React.createElement("label", null, "U Dimension:"), /*#__PURE__*/React.createElement("input", { /* 3 */ /* 3 */ 
-            				      type: "text",
-            				      value: this.state.uDim,
-            				      onChange: this.handleChange
-            				    }), 
-            				    /*#__PURE__*/React.createElement("input", { /* 3 */ /* 3 */ 
-            				      type: "submit",
-            				      value: "Submit"
-            				    })); /* 3 */ 
-            				  } /* 2 */
-            		  } /* 1 */
+
+            		  render() {
+            		    /* 2 */
+            		    return this.state.submitted
+            		      ? /*#__PURE__*/ React.createElement(NameProcess, {
+            		          /* 3 */ value: this.state.uDim,
+            		        })
+            		      : /*#__PURE__*/ React.createElement(
+            		          "form",
+            		          {
+            		            /* 3 */ /* 3 */
+
+            		            onSubmit: this.handleSubmit,
+            		          },
+            		          /*#__PURE__*/ React.createElement("label", null, "U Dimension:"),
+            		          /*#__PURE__*/ React.createElement("input", {
+            		            /* 3 */ /* 3 */
+
+            		            type: "text",
+            		            value: this.state.uDim,
+            		            onChange: this.handleChange,
+            		          }),
+            		          /*#__PURE__*/ React.createElement("input", {
+            		            /* 3 */ /* 3 */
+
+            		            type: "submit",
+            		            value: "Submit",
+            		          })
+            		        ); /* 3 */
+            		  } /* 2 */
+            		} /* 1 */
             		  
             		  class NameProcess extends React.Component {  /*1*/
                 		  constructor(props) { /*2*/
@@ -296,8 +311,8 @@
                    	      theProps: this.props.value,
                    	      error: null,
                    	      isLoaded: false,
-                   	      items: '',
-                   	      value: ''
+                   	      items: "",
+                   	      value: "",
                    	    };
                    	    /* 3 */
 
@@ -306,131 +321,249 @@
                    	  }
                    	  /* 2 */
 
-
                    	  handleChange(event) {
                    	    this.setState({
-                   	      value: event.target.value
+                   	      value: event.target.value,
                    	    });
                    	  }
 
                    	  handleSubmit(event) {
-                   	    alert('first choice is: ' + this.state.value);
+                   	    alert("first choice is: " + this.state.value);
                    	    event.preventDefault();
+                   	    this.setState({
+                   	      /* 3 */ submitted: true,
+                   	    }); /* 3 */
                    	  }
 
                    	  componentDidMount() {
                    	    /* 2 */
-                   	    fetch("http://www.localhost:8080/johntredden-1.0/userDesignatedSubCluster.html").then(res => res.json()).then(result => {
-                   	      /* 3 */
-                   	      this.setState({
-                   	        /* 4 */
-                   	        isLoaded: true,
-                   	        items: result
-                   	      });
-                   	      /* 4 */
-                   	      // alert("items:"+ result);
-                   	    },
-                   	    /* 3 */
-                   	    // Note: it's important to handle errors here
-                   	    // instead of a catch() block so that we don't swallow
-                   	    // exceptions from actual bugs in components.
-                   	    error => {
-                   	      /* 3 */
-                   	      this.setState({
-                   	        /* 4 */
-                   	        isLoaded: true,
-                   	        error
-                   	      });
-                   	      /* 4 */
-                   	    });
+                   	    fetch(
+                   	      "http://www.localhost:8080/johntredden-1.0/userDesignatedSubCluster.html"
+                   	    )
+                   	      .then((res) => res.json())
+                   	      .then(
+                   	        (result) => {
+                   	          /* 3 */
+                   	          this.setState({
+                   	            /* 4 */
+                   	            isLoaded: true,
+                   	            items: result,
+                   	          });
+                   	          /* 4 */
+                   	          // alert("items:"+ result);
+                   	        },
+                   	        /* 3 */
+                   	        // Note: it's important to handle errors here
+                   	        // instead of a catch() block so that we don't swallow
+                   	        // exceptions from actual bugs in components.
+                   	        (error) => {
+                   	          /* 3 */
+                   	          this.setState({
+                   	            /* 4 */
+                   	            isLoaded: true,
+                   	            error,
+                   	          });
+                   	          /* 4 */
+                   	        }
+                   	      );
                    	    /* 3 */
                    	  }
                    	  /* 2 */
 
-
                    	  render() {
                    	    /* 2 */
-                   	    const {
-                   	      error,
-                   	      isLoaded,
-                   	      items
-                   	    } = this.state;
+                   	    const { error, isLoaded, items } = this.state;
 
                    	    if (error) {
-                   	      return /*#__PURE__*/React.createElement("div", null, "Error: ", error.message);
+                   	      return /*#__PURE__*/ React.createElement(
+                   	        "div",
+                   	        null,
+                   	        "Error: ",
+                   	        error.message
+                   	      );
                    	    } else if (!isLoaded) {
-                   	      return /*#__PURE__*/React.createElement("div", null, "Loading cluster selection ...");
+                   	      return /*#__PURE__*/ React.createElement(
+                   	        "div",
+                   	        null,
+                   	        "Loading cluster selection ..."
+                   	      );
                    	    } else {
                    	      var response = parseJson.parseStart(this.state.items);
-                   	      var clusterTypes = response.split(':');
+                   	      var clusterTypes = response.split(":");
                    	      var data = [];
 
                    	      for (var i = 1; i < clusterTypes.length; i++) {
                    	        data[i] = clusterTypes[i];
                    	      }
 
- //                  	      const myComponent = () => /*#__PURE__*/React.createElement("select", {
- //                  	        options: data,
- //                 	        onChange: this.handleChange
- //                  	      });
+                   	      //                  	      const myComponent = () => /*#__PURE__*/React.createElement("select", {
+                   	      //                  	        options: data,
+                   	      //                 	        onChange: this.handleChange
+                   	      //                  	      });
 
-                   	      console.log("working U and V:" + this.state.theProps.getUdim() + " " + this.state.theProps.getVdim()); // print_recursive(this.state.theProps);		
+                   	      console.log(
+                   	        "working U and V:" +
+                   	          this.state.theProps.getUdim() +
+                   	          " " +
+                   	          this.state.theProps.getVdim()
+                   	      ); // print_recursive(this.state.theProps);
 
-                   	   return /*#__PURE__*/React.createElement("form", {
-             		      onSubmit: this.handleSubmit
-             		    }, /*#__PURE__*/React.createElement("label", null, "Select cluster configuration:", /*#__PURE__*/React.createElement("select", {
-             		      value: this.state.value,
-             		      onChange: this.handleChange
-             		    }, /*#__PURE__*/React.createElement("option", {
-             		      value: data[1]
-             		    }, data[1]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[2]
-             		    }, data[2]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[3]
-             		    }, data[3]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[4]
-             		    }, data[4]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[5]
-             		    }, data[5]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[6]
-             		    }, data[6]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[7]
-             		    }, data[7]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[8]
-             		    }, data[8]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[9]
-             		    }, data[9]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[10]
-             		    }, data[10]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[11]
-             		    }, data[11]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[12]
-             		    }, data[12]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[13]
-             		    }, data[13]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[14]
-             		    }, data[14]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[15]
-             		    }, data[15]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[16]
-             		    }, data[16]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[17]
-             		    }, data[17]), /*#__PURE__*/React.createElement("option", {
-             		      value: data[18]
-             		    }, data[18]
-             		    
-             		   ))), /*#__PURE__*/React.createElement("input", {
-              		      type: "submit",
-              		      value: "Submit"
-              		    }),
-                          React.createElement(ClusterSelectionResponse, {value: 		                              
-                        	  this.state.theProps})                                      
-                         );
-                    	}
+                   	      return this.state.submitted
+            		      ? /*#__PURE__*/ React.createElement(ClusterSelectionResponse, {
+            		          /* 3 */ value: this.theProps, value2: this.state.value
+            		        })
+            		      :
+            		    	  /*#__PURE__*/ React.createElement(
+                   	        "form",
+                   	        {
+                   	          onSubmit: this.handleSubmit,
+                   	        },
+                   	        /*#__PURE__*/ React.createElement(
+                   	          "label",
+                   	          null,
+                   	          "Select cluster configuration:",
+                   	          /*#__PURE__*/ React.createElement(
+                   	            "select",
+                   	            {
+                   	              value: this.state.value,
+                   	              onChange: this.handleChange,
+                   	            },
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[1],
+                   	              },
+                   	              data[1]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[2],
+                   	              },
+                   	              data[2]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[3],
+                   	              },
+                   	              data[3]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[4],
+                   	              },
+                   	              data[4]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[5],
+                   	              },
+                   	              data[5]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[6],
+                   	              },
+                   	              data[6]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[7],
+                   	              },
+                   	              data[7]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[8],
+                   	              },
+                   	              data[8]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[9],
+                   	              },
+                   	              data[9]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[10],
+                   	              },
+                   	              data[10]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[11],
+                   	              },
+                   	              data[11]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[12],
+                   	              },
+                   	              data[12]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[13],
+                   	              },
+                   	              data[13]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[14],
+                   	              },
+                   	              data[14]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[15],
+                   	              },
+                   	              data[15]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[16],
+                   	              },
+                   	              data[16]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[17],
+                   	              },
+                   	              data[17]
+                   	            ),
+                   	            /*#__PURE__*/ React.createElement(
+                   	              "option",
+                   	              {
+                   	                value: data[18],
+                   	              },
+                   	              data[18]
+                   	            )
+                   	          )
+                   	        ),
+                   	        /*#__PURE__*/ React.createElement("input", {
+                   	          type: "submit",
+                   	          value: "Submit",
+                   	        })
+                   	      );
+                   	    }
                    	  }
                    	  /* 2 */
-
-
                    	}
                    	/* 1 */
                    	
@@ -440,11 +573,12 @@
                      	    /*2*/
                      	    super(props);
                      	    this.state = {
-                     	    		
+                     	    	UVdimObject: this.props.value,
+                     	    	spread: this.props.value2
                      	    }
                      	  }
                      	  render(){
-                     		  return "huh?";
+                     		  return this.state.spread + " " + this.state.UVdimObject.getUdim() + " " + this.state.UVdimObject.getVdim();
                      	  }
                    	}
                    	ReactDOM.render( /*#__PURE__*/React.createElement(NameForm, null), document.getElementById('root'));           	
