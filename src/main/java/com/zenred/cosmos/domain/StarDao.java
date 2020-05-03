@@ -130,6 +130,7 @@ public class StarDao extends AbstractJDBCDao {
 			+ " ON cts." + CLUSTER_TO_STAR_ID + " = st." + CLUSTER_TO_STAR_ID_2
 			+ " WHERE st." + STAR_ID + " = ?"
 			;
+	private static String readDistinctStarColors = "SELECT DISTINCT " + STAR_COLOR + " FROM " + STAR;
 	
 	private static String starCount = "SELECT COUNT("+ NAME + ")FROM " + STAR;
 	private static String randomStarName = "SELECT " + NAME + " FROM " + STAR + " LIMIT " + " ?, ?";

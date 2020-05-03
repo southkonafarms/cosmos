@@ -19,7 +19,7 @@ public class SubClusterBuildTypes {
 		ClusterToStarDao clusterToStarDao = new ClusterToStarDao();
 		List<String> unEditedList = clusterToStarDao.readSubClusterDescription();
 		for (String clusterType : unEditedList) {
-			if(clusterType != "NONE"){
+			if(clusterType.trim() != "NONE"){
 				if(!firstTime){
 					editedList += ":";
 				}
