@@ -616,108 +616,442 @@
             		}
             		/* 1 */
 
-            		class ClusterSelectionResponse extends React.Component {
-            		  /*1*/
-            		  constructor(props) {
-            		    /*2*/
-            		    super(props);
-            		    this.state = {
-            		      UVdimObject: this.props.value,
-            		      spread: this.props.value2,
-            		      error: null,
-            		      isLoaded: false,
-            		      items: "",
-            		      value: "",
-            		    };
-            		    this.handleChange = this.handleChange.bind(this);
-            		    this.handleSubmit = this.handleSubmit.bind(this);
-            		  }
+class ClusterSelectionResponse extends React.Component {
+  /*1*/
+  constructor(props) {
+    /*2*/
+    super(props);
+    this.state = {
+      UVdimObject: this.props.value,
+      spread: this.props.value2,
+      error: null,
+      isLoaded: false,
+      items: "",
+      value: "",
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-            		  handleChange(event) {
-            		    this.setState({
-            		      value: event.target.value,
-            		    });
-            		  }
+  handleChange(event) {
+    this.setState({
+      value: event.target.value,
+    });
+  }
 
-            		  handleSubmit(event) {
-            		    alert("star type choice is: " + this.state.value);
-            		    event.preventDefault();
-            		    this.setState({
-            		      /* 3 */ submitted: true,
-            		    }); /* 3 */
-            		  }
-            		  
-            		  componentDidMount() {
-              		    /* 2 */
-              		    fetch(
-              		      "http://www.localhost:8080/johntredden-1.0/userDesignatedStarColor.html"
-              		    )
-              		      .then((res) => res.json())
-              		      .then(
-              		        (result) => {
-              		          /* 3 */
-              		          this.setState({
-              		            /* 4 */
-              		            isLoaded: true,
-              		            items: result,
-              		          });
-              		          /* 4 */
-              		          // alert("items:"+ result);
-              		        },
-              		        /* 3 */
-              		        // Note: it's important to handle errors here
-              		        // instead of a catch() block so that we don't swallow
-              		        // exceptions from actual bugs in components.
-              		        (error) => {
-              		          /* 3 */
-              		          this.setState({
-              		            /* 4 */
-              		            isLoaded: true,
-              		            error,
-              		          });
-              		          /* 4 */
-              		        }
-              		      );
-              		    /* 3 */
-              		  }
-              		  /* 2 */
+  handleSubmit(event) {
+    alert("star type choice is: " + this.state.value);
+    event.preventDefault();
+    this.setState({
+      /* 3 */
+      submitted: true,
+    });
+    /* 3 */
+  }
+
+  componentDidMount() {
+    /* 2 */
+    fetch(
+      "http://www.localhost:8080/johntredden-1.0/userDesignatedStarColor.html"
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          /* 3 */
+          this.setState({
+            /* 4 */
+            isLoaded: true,
+            items: result,
+          });
+          /* 4 */
+          // alert("items:"+ result);
+        },
+        /* 3 */
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          /* 3 */
+          this.setState({
+            /* 4 */
+            isLoaded: true,
+            error,
+          });
+          /* 4 */
+        }
+      );
+    /* 3 */
+  }
+  /* 2 */
+
+  render() {
+    /* 2 */
+    const { error, isLoaded, items } = this.state;
+
+    if (error) {
+      return /*#__PURE__*/ React.createElement(
+        "div",
+        null,
+        "Error: ",
+        error.message
+      );
+    } else if (!isLoaded) {
+      return /*#__PURE__*/ React.createElement(
+        "div",
+        null,
+        "Loading star color selection ..."
+      );
+    } else {
+      var response = parseJson.parseStart(this.state.items);
+      var starColors = response.split(":");
+      var data = [];
+
+      for (var i = 1; i < starColors.length; i++) {
+        data[i] = starColors[i];
+      }
+    }
+
+    return this.state.submitted
+      ? /*#__PURE__*/ React.createElement(SystemDataToServer, {
+          /* 3 */
+          value: this.state.UVdimObject,
+          value2: this.state.spread,
+          value3: this.state.value
+        })
+      : /*#__PURE__*/ React.createElement(
+          "form",
+          {
+            onSubmit: this.handleSubmit,
+          },
+          /*#__PURE__*/ React.createElement(
+            "label",
+            null,
+            "Select star color:",
+            /*#__PURE__*/ React.createElement(
+              "select",
+              {
+                value: this.state.value,
+                onChange: this.handleChange,
+              },
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: " ",
+                },
+                "Select star color"
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[1],
+                },
+                data[1]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[2],
+                },
+                data[2]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[3],
+                },
+                data[3]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[4],
+                },
+                data[4]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[5],
+                },
+                data[5]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[6],
+                },
+                data[6]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[7],
+                },
+                data[7]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[8],
+                },
+                data[8]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[9],
+                },
+                data[9]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[10],
+                },
+                data[10]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[11],
+                },
+                data[11]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[12],
+                },
+                data[12]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[13],
+                },
+                data[13]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[14],
+                },
+                data[14]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[15],
+                },
+                data[15]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[16],
+                },
+                data[16]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[17],
+                },
+                data[17]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[18],
+                },
+                data[18]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[19],
+                },
+                data[19]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[20],
+                },
+                  data[20]
+               ),
+                    
+               /*#__PURE__*/ React.createElement(
+                 "option",
+                 {
+                   value: data[21],
+                 },
+                   data[21]
+               ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[22],
+                },
+                data[22]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[23],
+                },
+                data[23]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[24],
+                },
+                data[24]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[25],
+                },
+                data[25]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[26],
+                },
+                data[26]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[27],
+                },
+                data[27]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[28],
+                },
+                data[28]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[29],
+                },
+                data[29]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[30],
+                },
+                data[30]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[31],
+                },
+                data[31]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[32],
+                },
+                data[32]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[33],
+                },
+                data[33]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[34],
+                },
+                data[34]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[35],
+                },
+                data[35]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[36],
+                },
+                data[36]
+              ),
+              /*#__PURE__*/ React.createElement(
+                "option",
+                {
+                  value: data[37],
+                },
+                data[37]
+              )
+            )
+          ),
+          /*#__PURE__*/ React.createElement("input", {
+            type: "submit",
+            value: "Submit",
+          })
+        );
+  }
+  /* 2 */
+}
+/* 1 */
+class SystemDataToServer extends React.Component {
+  /*1*/
+  constructor(props) {
+    /*2*/
+    super(props);
+    this.state = {
+      UVdimObject: this.props.value,
+      spread: this.props.value2,
+      starColor: this.props.value3,
+      error: null,
+      isLoaded: false,
+      items: "",
+      value: "",
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  
+  handleChange(event) {
+	    this.setState({
+	      value: event.target.value,
+	    });
+	  }
+
+	  handleSubmit(event) {
+	    alert("star color choice is: " + this.state.value);
+	    event.preventDefault();
+	    this.setState({
+	      /* 3 */
+	      submitted: true,
+	    });
+	    /* 3 */
+	  }
 
 
-            		  render() {
-              		    /* 2 */
-              		    const { error, isLoaded, items } = this.state;
+  render() {
+    return "next: " + this.state.UVdimObject.getUdim() + " " + this.state.UVdimObject.getUdim() +
+           " " + this.state.spread + " " + this.state.starColor;
+  }
+} /* 1 */
 
-              		    if (error) {
-              		      return /*#__PURE__*/ React.createElement(
-              		        "div",
-              		        null,
-              		        "Error: ",
-              		        error.message
-              		      );
-              		    } else if (!isLoaded) {
-              		      return /*#__PURE__*/ React.createElement(
-              		        "div",
-              		        null,
-              		        "Loading star color selection ..."
-              		      );
-              		    } else {
-              		      var response = parseJson.parseStart(this.state.items);
-              		      var starColors = response.split(":");
-              		      var data = [];
-
-              		      for (var i = 1; i < starColors.length; i++) {
-              		        data[i] = starColors[i];
-              		      }
-              		    }
-            		    return (
-            		      this.state.spread +
-            		      " " +
-            		      this.state.UVdimObject.getUdim() +
-            		      " " +
-            		      this.state.UVdimObject.getVdim()
-            		    );
-            		  }
-            		} /* 1 */
                    	ReactDOM.render( /*#__PURE__*/React.createElement(NameForm, null), document.getElementById('root'));           	
             	} /* 0 */
             
