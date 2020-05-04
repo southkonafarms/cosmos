@@ -302,6 +302,20 @@ public class StarDao extends AbstractJDBCDao {
 		return starName;
 	}
 	
+	/*
+	 * reads distinct star colors
+	 */
+	public List<String> readStarColors(){
+		List<String> starColors = new ArrayList<String>();
+		List<Map<String, Object>> starColorListMap = super.jdbcSetUp()
+				.getSimpleJdbcTemplate()
+				.queryForList(readDistinctStarColors);
+		for(Map<String, Object> starColorMap :starColorListMap ){
+			starColors.add((String) starColorMap.get(STAR_COLOR));
+		}
+		return starColors; 
+	}
+	
 	/**
 	 * 
 	 * @param starMap

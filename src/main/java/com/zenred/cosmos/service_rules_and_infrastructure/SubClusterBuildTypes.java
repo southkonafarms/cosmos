@@ -2,6 +2,8 @@ package com.zenred.cosmos.service_rules_and_infrastructure;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.zenred.cosmos.domain.ClusterToStarDao;
 /**
  * 
@@ -12,6 +14,8 @@ import com.zenred.cosmos.domain.ClusterToStarDao;
  */
 public class SubClusterBuildTypes {
 	
+	private static Logger logger = Logger.getLogger(SubClusterBuildTypes.class);
+	
 	public static String  getUsefullTypes(){
 		
 		String editedList = "";
@@ -19,7 +23,8 @@ public class SubClusterBuildTypes {
 		ClusterToStarDao clusterToStarDao = new ClusterToStarDao();
 		List<String> unEditedList = clusterToStarDao.readSubClusterDescription();
 		for (String clusterType : unEditedList) {
-			if(clusterType.trim() != "NONE"){
+			logger.info("Next clusterType:" + clusterType.trim());
+			if(!clusterType.trim().equals("NONE")){
 				if(!firstTime){
 					editedList += ":";
 				}

@@ -72,6 +72,11 @@
 	                if (json.includes("SubClusters")) {
 	                  lineArray = json;
 	                }
+	                else{
+	                	if (json.includes("StarColors")){
+	                	  lineArray = json;
+	                	}
+	                }
 	              }
 	            }
 	            break;
@@ -641,8 +646,69 @@
             		      /* 3 */ submitted: true,
             		    }); /* 3 */
             		  }
+            		  
+            		  componentDidMount() {
+              		    /* 2 */
+              		    fetch(
+              		      "http://www.localhost:8080/johntredden-1.0/userDesignatedStarColor.html"
+              		    )
+              		      .then((res) => res.json())
+              		      .then(
+              		        (result) => {
+              		          /* 3 */
+              		          this.setState({
+              		            /* 4 */
+              		            isLoaded: true,
+              		            items: result,
+              		          });
+              		          /* 4 */
+              		          // alert("items:"+ result);
+              		        },
+              		        /* 3 */
+              		        // Note: it's important to handle errors here
+              		        // instead of a catch() block so that we don't swallow
+              		        // exceptions from actual bugs in components.
+              		        (error) => {
+              		          /* 3 */
+              		          this.setState({
+              		            /* 4 */
+              		            isLoaded: true,
+              		            error,
+              		          });
+              		          /* 4 */
+              		        }
+              		      );
+              		    /* 3 */
+              		  }
+              		  /* 2 */
+
 
             		  render() {
+              		    /* 2 */
+              		    const { error, isLoaded, items } = this.state;
+
+              		    if (error) {
+              		      return /*#__PURE__*/ React.createElement(
+              		        "div",
+              		        null,
+              		        "Error: ",
+              		        error.message
+              		      );
+              		    } else if (!isLoaded) {
+              		      return /*#__PURE__*/ React.createElement(
+              		        "div",
+              		        null,
+              		        "Loading star color selection ..."
+              		      );
+              		    } else {
+              		      var response = parseJson.parseStart(this.state.items);
+              		      var starColors = response.split(":");
+              		      var data = [];
+
+              		      for (var i = 1; i < starColors.length; i++) {
+              		        data[i] = starColors[i];
+              		      }
+              		    }
             		    return (
             		      this.state.spread +
             		      " " +
