@@ -1045,6 +1045,42 @@ class SystemDataToServer extends React.Component {
 	    /* 3 */
 	  }
 
+	  componentDidMount() {
+		    /* 2 */
+		    fetch(
+		      "http://www.localhost:8080/johntredden-1.0/buildSpecifiedClusterAndStars.html?udimension="+ this.state.UVdimObject.getUdim() +
+		    		  "&vdimension=" + this.state.UVdimObject.getVdim() + "&spread=" + this.state.spread + "&star_color=" + this.state.starColor
+		    )
+		      .then((res) => res.json())
+		      .then(
+		        (result) => {
+		          /* 3 */
+		          this.setState({
+		            /* 4 */
+		            isLoaded: true,
+		            items: result,
+		          });
+		          /* 4 */
+		          // alert("items:"+ result);
+		        },
+		        /* 3 */
+		        // Note: it's important to handle errors here
+		        // instead of a catch() block so that we don't swallow
+		        // exceptions from actual bugs in components.
+		        (error) => {
+		          /* 3 */
+		          this.setState({
+		            /* 4 */
+		            isLoaded: true,
+		            error,
+		          });
+		          /* 4 */
+		        }
+		      );
+		    /* 3 */
+		  }
+		  /* 2 */
+
 
   render() {
     return "next: " + this.state.UVdimObject.getUdim() + " " + this.state.UVdimObject.getUdim() +
