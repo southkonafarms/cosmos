@@ -76,6 +76,11 @@
 	                	if (json.includes("StarColors")){
 	                	  lineArray = json;
 	                	}
+	                	else{
+							if (json.includes("Complete")){
+							  lineArray = json;
+							}	                	  
+	                	}
 	                }
 	              }
 	            }
@@ -165,7 +170,7 @@
 
             		            onSubmit: this.handleSubmit,
             		          },
-            		          /*#__PURE__*/ React.createElement("label", null, "U Dimension:"),
+            		          /*#__PURE__*/ React.createElement("label", null, "  Starting definition of new system: U Dimension:"),
             		          /*#__PURE__*/ React.createElement("input", {
             		            /* 3 */ /* 3 */
 
@@ -1083,11 +1088,32 @@ class SystemDataToServer extends React.Component {
 
 
   render() {
+  	    const { error, isLoaded, items } = this.state;
+
+	    if (error) {
+	        return /*#__PURE__*/ React.createElement(
+	          "div",
+	          null,
+	          "Error: ",
+	          error.message
+	        );
+	      } else if (!isLoaded) {
+	        return /*#__PURE__*/ React.createElement(
+	          "div",
+	          null,
+	          "Loading response from server ..."
+	        );
+	      } else {
+	        var response = parseJson.parseStart(this.state.items);
+	        if(response.includes("Complete")){
+	        	alert(" Server response is complete, you can define a new system");
+	        	return React.createElement(NameForm, null);
+	        }
+	      }
     return "next: " + this.state.UVdimObject.getUdim() + " " + this.state.UVdimObject.getUdim() +
            " " + this.state.spread + " " + this.state.starColor;
   }
 } /* 1 */
-
                    	ReactDOM.render( /*#__PURE__*/React.createElement(NameForm, null), document.getElementById('root'));           	
             	} /* 0 */
             
