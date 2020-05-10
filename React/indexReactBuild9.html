@@ -5,6 +5,7 @@
 <title>React WTF</title>
 <script src="../js/react.development.js"></script>
 <script src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../../js/buckets.js"></script>
 </head>
 <body>
 	<div id="root"></div>
@@ -79,7 +80,12 @@
 	                	else{
 							if (json.includes("Complete")){
 							  lineArray = json;
-							}	                	  
+							}
+							else{
+								if (json.includes("MoreStars")){
+								  lineArray = json;
+								}
+							}
 	                	}
 	                }
 	              }
@@ -116,6 +122,35 @@
 	  };
 	};
 	
+	/**
+	number of additional stars to be generated.
+	this object controls the process
+	**/
+	
+	var starCountState = (function () {
+		
+		var starDictionary;
+		var numberStarsNeeded;
+		var currentNumber;
+		
+		return{
+			instance: function(count){
+				starDictionary = new buckets.Dictionary();
+				numberStarsNeeded = count;
+				currentNumber = 0;
+			},
+			addStar: function(colorType){
+				currentNumber++;
+				starDictionary.set(currentNumber, colorType);
+			},
+			numberReached: function(){
+				if(currentNumber === numberStarsNeeded){
+					return true;
+				}
+				return false;
+			}
+		};
+	});
 	</script>
 
 	<script>
@@ -1108,6 +1143,12 @@ class SystemDataToServer extends React.Component {
 	        if(response.includes("Complete")){
 	        	alert(" Server response is complete, you can define a new system");
 	        	return React.createElement(NameForm, null);
+	        } else{
+	        	var count = response.split(":");
+	        	console.log("star need count:" + count);
+	        	var starCountStateInstance = new starCountState();
+	        	starCountStateInstance.instance(count);
+	        	starCountStateInstance.addStar(this.state.starColor);
 	        }
 	      }
     return "next: " + this.state.UVdimObject.getUdim() + " " + this.state.UVdimObject.getUdim() +

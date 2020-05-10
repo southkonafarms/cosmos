@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.zenred.cosmos.domain.ClusterFactory;
 import com.zenred.cosmos.domain.ClusterToStarDao;
 /**
  * 
@@ -35,6 +36,14 @@ public class SubClusterBuildTypes {
 		// NONE will not map to a reasonable generated sub cluster
 		return editedList;
 		
+	}
+	
+	/*
+	 * tells the web page how many more stars should be specified for this cluster
+	 * if one, no more work for the web page
+	 */
+	public static Integer howManyStarsForCluster(String spread){
+		return ClusterFactory.getStarCount(spread);
 	}
 
 }

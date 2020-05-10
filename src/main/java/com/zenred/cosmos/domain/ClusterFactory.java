@@ -29,6 +29,8 @@ interface NormalizedName{
 	String normalizedName();
 }
 
+
+
 class NormalizedNameImpl {
 	protected static NormalizedName singleStarName = new NormalizedName() {		
 		public String normalizedName() {
@@ -139,6 +141,10 @@ public enum ClusterFactory {
 		NormalizedName getName(){
 			return NormalizedNameImpl.singleStarName;
 		}
+		
+		Integer getStarCount(){
+			return new Integer(1);
+		}
 	},
 	DOUBLESTAR_BINARY("DOUBLESTAR_BINARY") {
 		Operation get() {
@@ -148,6 +154,11 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.doubleStarBinaryName;
 		}
+		
+		Integer getStarCount(){
+			return new Integer(2);
+		}
+
 	},
 	DOUBLESTAR_SPREAD("DOUBLESTAR_SPREAD") {
 		Operation get() {
@@ -157,6 +168,10 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.doubleStarSpreadName;
 		}
+		Integer getStarCount(){
+			return new Integer(2);
+		}
+
 	},
 	THREESTAR_TRINARY("THREESTAR_TRINARY") {
 		Operation get() {
@@ -166,6 +181,10 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.threeStarTrinaryName;
 		}
+		Integer getStarCount(){
+			return new Integer(3);
+		}
+
 	},
 	THREESTAR_BINARYPLUSONE("THREESTAR_BINARYPLUSONE") {
 		Operation get() {
@@ -175,6 +194,10 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.threeStarBinaryPlusOneName;
 		}
+		Integer getStarCount(){
+			return new Integer(3);
+		}
+
 	},
 	THREESTAR_SPREAD("THREESTAR_SPREAD") {
 		Operation get() {
@@ -184,6 +207,10 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.threeStarSpreadName;
 		}
+		Integer getStarCount(){
+			return new Integer(3);
+		}
+
 	},
 	FOURSTAR_TRINARYPLUSONE("FOURSTAR_TRINARYPLUSONE") {
 		Operation get() {
@@ -194,6 +221,10 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.fourStarTrinaryPlusOneName;
 		}
+		Integer getStarCount(){
+			return new Integer(4);
+		}
+
 	},
 	FOURSTAR_TWOBINARIES("FOURSTAR_TWOBINARIES") {
 		Operation get() {
@@ -203,6 +234,10 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.fourStarTwoBinariesName;
 		}
+		Integer getStarCount(){
+			return new Integer(4);
+		}
+
 	},
 	FOURSTAR_SPREAD("FOURSTAR_SPREAD") {
 		Operation get() {
@@ -212,6 +247,10 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.fourStarSpreadName;
 		}
+		Integer getStarCount(){
+			return new Integer(4);
+		}
+
 	},
 	FIVESTAR_FOURSTARSPREADPLUSONE("FIVESTAR_FOURSTARSPREADPLUSONE") {
 		Operation get() {
@@ -221,6 +260,10 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.fiveStarFourStarSpreadPlusOneName;
 		}
+		Integer getStarCount(){
+			return new Integer(5);
+		}
+		
 	},
 	FIVESTAR_SPREAD("FIVESTAR_SPREAD") {
 		Operation get() {
@@ -230,6 +273,10 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.fiveStarSpreadName;
 		}
+		Integer getStarCount(){
+			return new Integer(5);
+		}
+
 	},
 	CLUSTER_N("CLUSTER_N") {
 		Operation get() {
@@ -239,6 +286,10 @@ public enum ClusterFactory {
 		NormalizedName getName() {
 			return NormalizedNameImpl.clusterNname;
 		}
+		Integer getStarCount(){
+			return new Integer(0);
+		}
+
 	},
 	;
 
@@ -247,6 +298,7 @@ public enum ClusterFactory {
 	private static Map<String, ClusterFactory> operationMap = new HashMap<String, ClusterFactory>();
 	private static Map<String, NormalizedName> normalizedNameMap = new HashMap<String, NormalizedName>();
 	private static Map<String, Integer[]> chanceMap = new HashMap<String, Integer[]>();
+	private static Map<String, Integer> starCountMap = new HashMap<String, Integer>();
 
 	private ClusterFactory(String type) {
 		this.type = type;
@@ -281,6 +333,31 @@ public enum ClusterFactory {
 		normalizedNameMap.put("FIVESTAR_FOURSTARSPREADPLUSONE", FIVESTAR_FOURSTARSPREADPLUSONE.getName());
 		normalizedNameMap.put("FIVESTAR_SPREAD", FIVESTAR_SPREAD.getName());
 		normalizedNameMap.put("CLUSTER_N", CLUSTER_N.getName());
+		
+		starCountMap.put("SINGLESTAR", SINGLESTAR.getStarCount());
+		starCountMap.put("DOUBLESTAR_BINARY_1", DOUBLESTAR_BINARY.getStarCount());
+		starCountMap.put("DOUBLESTAR_BINARY_0", DOUBLESTAR_BINARY.getStarCount());
+		starCountMap.put("DOUBLESTAR_SPREAD", DOUBLESTAR_SPREAD.getStarCount());
+		starCountMap.put("THREESTAR_TRINARY_0", THREESTAR_TRINARY.getStarCount());
+		starCountMap.put("THREESTAR_TRINARY_1", THREESTAR_TRINARY.getStarCount());
+		starCountMap.put("THREESTAR_TRINARY_2", THREESTAR_TRINARY.getStarCount());
+		starCountMap.put("THREESTAR_BINARYPLUSONE_BINARY_0", THREESTAR_BINARYPLUSONE.getStarCount());
+		starCountMap.put("THREESTAR_BINARYPLUSONE_BINARY_1", THREESTAR_BINARYPLUSONE.getStarCount());
+		starCountMap.put("THREESTAR_BINARYPLUSONE_2", THREESTAR_BINARYPLUSONE.getStarCount());
+		starCountMap.put("THREESTAR_SPREAD", THREESTAR_SPREAD.getStarCount());
+		starCountMap.put("FOURSTAR_TRINARYPLUSONE_1", FOURSTAR_TRINARYPLUSONE.getStarCount());
+		starCountMap.put("FOURSTAR_TRINARYPLUSONE_TRINARY_0", FOURSTAR_TRINARYPLUSONE.getStarCount());
+		starCountMap.put("FOURSTAR_TRINARYPLUSONE_TRINARY_1", FOURSTAR_TRINARYPLUSONE.getStarCount());
+		starCountMap.put("FOURSTAR_TRINARYPLUSONE_TRINARY_2", FOURSTAR_TRINARYPLUSONE.getStarCount());
+		starCountMap.put("FOURSTAR_2BINARIES_1_BINARY_0", FOURSTAR_TWOBINARIES.getStarCount());
+		starCountMap.put("FOURSTAR_2BINARIES_0_BINARY_0", FOURSTAR_TWOBINARIES.getStarCount());
+		starCountMap.put("FOURSTAR_2BINARIES_1_BINARY_1", FOURSTAR_TWOBINARIES.getStarCount());
+		starCountMap.put("FOURSTAR_2BINARIES_0_BINARY_1", FOURSTAR_TWOBINARIES.getStarCount());
+		starCountMap.put("FOURSTAR_SPREAD", FOURSTAR_SPREAD.getStarCount());
+		starCountMap.put("FIVESTAR_FOURSTARSPREADPLUSONE", FIVESTAR_FOURSTARSPREADPLUSONE.getStarCount());
+		starCountMap.put("FIVESTAR_SPREAD", FIVESTAR_SPREAD.getStarCount());
+		starCountMap.put("CLUSTER_N", CLUSTER_N.getStarCount());
+
 		}
 
 	public static ClusterFactory fromString(String type) {
@@ -291,6 +368,10 @@ public enum ClusterFactory {
 		NormalizedName normalizedName = normalizedNameMap.get(clusterType);
 		return normalizedName.normalizedName();
 	}
+	
+	public static Integer getStarCount(String clusterType){
+		return starCountMap.get(clusterType);
+	}
 
 	@Override
 	public String toString() {
@@ -300,6 +381,8 @@ public enum ClusterFactory {
 	abstract Operation get();
 	
 	abstract NormalizedName getName();
+	
+	abstract Integer getStarCount();
 
 	protected static Operation singleStar = new Operation() {
 		public ClusterRep process(ClusterRep clusterRep) {
