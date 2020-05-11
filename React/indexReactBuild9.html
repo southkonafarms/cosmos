@@ -148,7 +148,14 @@
 					return true;
 				}
 				return false;
-			}
+			},
+			fetchNextStar: function(){
+				var star = starDictionary.get(currentNumber);
+				--currentNumber;
+			},
+			fetchCountNeeded(){
+				return numberStarsNeeded;
+			},
 		};
 	});
 	</script>
@@ -1149,12 +1156,102 @@ class SystemDataToServer extends React.Component {
 	        	var starCountStateInstance = new starCountState();
 	        	starCountStateInstance.instance(count);
 	        	starCountStateInstance.addStar(this.state.starColor);
+	        	// this.state.value = starCountStateInstance;
+	        	return React.createElement(ContinuedSystemDataToServer, {value: this.state.UVdimObject, value2: this.state.spread, value3: starCountStateInstance});
 	        }
 	      }
     return "next: " + this.state.UVdimObject.getUdim() + " " + this.state.UVdimObject.getUdim() +
            " " + this.state.spread + " " + this.state.starColor;
   }
 } /* 1 */
+
+class ContinuedSystemDataToServer extends React.Component {
+	  /* 1 */
+	  constructor(props) {
+	    /*2*/
+	    super(props);
+	    this.state = {
+	      UVdimObject: this.props.value,
+	      spread: this.props.value2,
+	      starCountStateInstance: this.props.value3,
+	      error: null,
+	      isLoaded: false,
+	      value: "",
+	    };
+	    this.handleChange = this.handleChange.bind(this);
+	    this.handleSubmit = this.handleSubmit.bind(this);
+	  }
+	  handleChange(event) {
+	    this.setState({
+	      value: event.target.value,
+	    });
+	  }
+
+	  handleSubmit(event) {
+	    event.preventDefault();
+	    this.setState({
+	      /* 3 */
+	      submitted: true,
+	    });
+	    /* 3 */
+	  }
+	  componentDidMount() {
+	    /* 2 */
+	    fetch(
+	      "http://www.localhost:8080/johntredden-1.0/buildSpecifiedClusterAndStars.html?udimension=" +
+	        this.state.UVdimObject.getUdim() +
+	        "&vdimension=" +
+	        this.state.UVdimObject.getVdim() +
+	        "&spread=" +
+	        this.state.spread +
+	        "&star_color=" +
+	        this.state.starColor
+	    )
+	      .then((res) => res.json())
+	      .then(
+	        (result) => {
+	          /* 3 */
+	          this.setState({
+	            /* 4 */
+	            isLoaded: true,
+	            items: result,
+	          });
+	          /* 4 */
+	          // alert("items:"+ result);
+	        },
+	        /* 3 */
+	        // Note: it's important to handle errors here
+	        // instead of a catch() block so that we don't swallow
+	        // exceptions from actual bugs in components.
+	        (error) => {
+	          /* 3 */
+	          this.setState({
+	            /* 4 */
+	            isLoaded: true,
+	            error,
+	          });
+	          /* 4 */
+	        }
+	      );
+	    /* 3 */
+	  }
+	  /* 2 */
+	  render() {
+	    /* 2 */
+	    const { error, isLoaded, items } = this.state;
+	    return (
+	      "next: " +
+	      this.state.UVdimObject.getUdim() +
+	      " " +
+	      this.state.UVdimObject.getVdim() +
+	      " " +
+	      this.state.spread +
+	      " " +
+	      this.state.starCountStateInstance.fetchCountNeeded()
+	    );
+	  } /* 2 */
+	} /* 1 */
+
                    	ReactDOM.render( /*#__PURE__*/React.createElement(NameForm, null), document.getElementById('root'));           	
             	} /* 0 */
             
