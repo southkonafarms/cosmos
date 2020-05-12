@@ -140,8 +140,8 @@
 				currentNumber = 0;
 			},
 			addStar: function(colorType){
-				currentNumber++;
 				starDictionary.set(currentNumber, colorType);
+				currentNumber++;
 			},
 			numberReached: function(){
 				if(currentNumber === numberStarsNeeded){
@@ -156,6 +156,9 @@
 			fetchCountNeeded(){
 				return numberStarsNeeded;
 			},
+			fetchNumberStar(number){
+				return starDictionary.get(number);
+			}
 		};
 	});
 	
@@ -1097,7 +1100,7 @@ class SystemDataToServer extends React.Component {
 		    /* 2 */
 		    fetch(
 		      "http://www.localhost:8080/johntredden-1.0/buildSpecifiedClusterAndStars.html?udimension="+ this.state.UVdimObject.getUdim() +
-		    		  "&vdimension=" + this.state.UVdimObject.getVdim() + "&spread=" + this.state.spread + "&star_color=" + this.state.starColor
+		    		  "&vdimension=" + this.state.UVdimObject.getVdim() + "&spread=" + this.state.spread + "&star_color0=" + this.state.starColor
 		    )
 		      .then((res) => res.json())
 		      .then(
@@ -1234,7 +1237,11 @@ class ContinuedSystemDataToServer extends React.Component {
 	  render() {
 	    /* 2 */
 	    if(this.state.starCountStateInstance.numberReached()){
-	    	return React.createElement(NameForm, null);
+	    	return React.createElement(FinalSystemDataToServer, {
+		          value: this.state.UVdimObject,
+		          value2: this.state.spread,
+		          value3: this.state.starCountStateInstance,
+		        });
 	    }
 	    const { error, isLoaded, items } = this.state;
 
@@ -1561,7 +1568,100 @@ class ContinuedSystemDataToServer extends React.Component {
 	  /* 2 */
 	}
 	/* 1 */
+	
+class FinalSystemDataToServer extends React.Component {
+  /* 1 */
+  constructor(props) {
+    /*2*/
+    super(props);
+    this.state = {
+      UVdimObject: this.props.value,
+      spread: this.props.value2,
+      starCountStateInstance: this.props.value3,
+      error: null,
+      isLoaded: false,
+      value: ""
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
+  handleChange(event) {
+    this.state.starCountStateInstance.addStar(event.target.value);
+    this.setState({
+      value: event.target.value
+    });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.setState({
+      /* 3 */
+      submitted: true
+    });
+    /* 3 */
+  }
+
+  componentDidMount() {
+    /* 2 */
+    var request = "http://www.localhost:8080/johntredden-1.0/buildSpecifiedClusterAndStars.html?udimension=" + this.state.UVdimObject.getUdim() + "&vdimension=" + this.state.UVdimObject.getVdim() + "&spread=" + this.state.spread;
+    var totalNumber = this.state.starCountStateInstance.fetchCountNeeded();
+
+    for (var idex = 0; idex != totalNumber; ++idex) {
+      var star = this.state.starCountStateInstance.fetchNumberStar(idex);
+      var httpSeg = "&star_color" + idex + "=" + star;
+      request += httpSeg;
+    }
+
+    fetch(request).then(res => res.json()).then(result => {
+      /* 3 */
+      this.setState({
+        /* 4 */
+        isLoaded: true,
+        items: result
+      });
+      /* 4 */
+      // alert("items:"+ result);
+    },
+    /* 3 */
+    // Note: it's important to handle errors here
+    // instead of a catch() block so that we don't swallow
+    // exceptions from actual bugs in components.
+    error => {
+      /* 3 */
+      this.setState({
+        /* 4 */
+        isLoaded: true,
+        error
+      });
+      /* 4 */
+    });
+    /* 3 */
+  }
+  /* 2 */
+
+
+  render() {
+    /* 2 */
+    const {
+      error,
+      isLoaded,
+      items
+    } = this.state;
+
+    if (error) {
+      return /*#__PURE__*/React.createElement("div", null, "Error: ", error.message);
+    } else if (!isLoaded) {
+      return /*#__PURE__*/React.createElement("div", null, "Loading final star selection ...");
+    } else {
+      var response = parseJson.parseStart(this.state.items);
+      alert(response);
+      return React.createElement(NameForm, null);
+    }
+  }
+
+}
+/* 1 */
                    	ReactDOM.render( /*#__PURE__*/React.createElement(NameForm, null), document.getElementById('root'));           	
             	} /* 0 */
             
