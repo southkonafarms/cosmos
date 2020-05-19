@@ -6,6 +6,7 @@ import com.zenred.cosmos.domain.SystemDao;
 import com.zenred.cosmos.domain.System;
 import com.zenred.cosmos.domain.ClusterFactory;
 import com.zenred.cosmos.domain.ClusterRep;
+import com.zenred.cosmos.domain.Star;
 
 public class GenUserSpecSystem {
 
@@ -17,8 +18,9 @@ public class GenUserSpecSystem {
 		Integer iVDimension = vDimension.intValue();
 		System system = systemDao.readSystemByUVCoordinates(iUDimension, iVDimension);
 		ClusterRep clusterRep = GenCluster.genUserSpecCluster(spread, system);
-		GenCluster.persist(clusterRep);
+		clusterRep = GenCluster.persist(clusterRep);
 		ClusterFactory clusterFactory = ClusterFactory
 				.fromString(clusterRep.getCluster_description());
+		List<Star> starList = GenStar.persistUserSpecStars(clusterFactory, clusterRep, stars);
 	}
 }

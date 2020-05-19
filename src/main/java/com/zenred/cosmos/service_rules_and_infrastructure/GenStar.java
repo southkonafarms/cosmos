@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -408,6 +409,74 @@ public class GenStar {
 		endTogetherList.add(SubClusterFactory.FOURSTAR_2BINARIES_1_BINARY_1);
 	}
 	
+	protected static List<DecoratedStar>  buildUserDesignatedStarsInCluster(
+			ClusterFactory clusterFactory, String starName, List<String> starColors) {
+		Double distance = null;
+		Double angleInRadians = null;
+		SubClusterFactory subClusterFactory = null;
+		
+		List<DecoratedStar> stars = new ArrayList<DecoratedStar>();
+		Map<SubClusterFactory, List<DistanceDetailsIF>> map = ClusterFactory
+				.getStarToDistanceDetails(clusterFactory);
+		Set<SubClusterFactory> keys = map.keySet();
+		Iterator<SubClusterFactory> iter = keys.iterator();
+		Double lastAngleInRadians = null;
+		int idex = 0;
+		while (iter.hasNext()) {
+			subClusterFactory = iter.next();
+			logger.info("SUBCLUSTER_FACTORY:"+subClusterFactory);
+			List<DistanceDetailsIF> detailsIFs = map.get(subClusterFactory);
+			for (DistanceDetailsIF distanceDetailsIF : detailsIFs) {
+				distance = distanceDetailsIF.getDistanceBetweenStars();
+				angleInRadians = null;
+				if (null == lastAngleInRadians) {
+					angleInRadians = Math.toRadians(GenRandomRolls.Instance()
+							.getD360());
+				} else {
+					Integer flipACoin = GenRandomRolls.Instance().get_D2();
+					double draw = GenRandomRolls.Instance()
+							.draw_rand()*(100.0) + 0.05;
+					if (1 == flipACoin) {
+						angleInRadians = lastAngleInRadians
+								+ twoDegToRadian
+								+ (twoDegToRadian / draw);
+					} else {
+						angleInRadians = lastAngleInRadians
+								- twoDegToRadian
+								+ (twoDegToRadian / draw);
+					}
+				}
+				if (closeTogetherList.contains(subClusterFactory)) {
+					lastAngleInRadians = angleInRadians; // so as to keep these
+															// stars in a close
+															// cluster
+				}
+				if (endTogetherList.contains(subClusterFactory)) {
+					lastAngleInRadians = null; // reset to typical mode
+				}
+			}
+		} // refactor to common build-gen method
+		
+		ListIterator<String> litr = starColors.listIterator();
+		while(litr.hasNext()){
+			String starColor = litr.next();
+			StarFactory starFactory = StarFactory.accessByFullName(starColor);
+			Star star = new Star(null, new Integer(0), starName, distance,
+					StarTypeFactory.genLuminsoity(StarFactory.getSubCode(starFactory), StarFactory.getStarTypeFactory(starFactory),
+							starFactory, StarFactory.getSequence(starFactory)),
+					null, angleInRadians== null ? new Double(Math.toRadians(GenRandomRolls.Instance()
+							.getAngle())): angleInRadians, StarFactory.getRead(starFactory),
+					StarFactory.getCode(starFactory), StarTypeFactory.genMass(
+							StarFactory.getSubCode(starFactory), StarFactory.getStarTypeFactory(starFactory), starFactory,
+							StarFactory.getSequence(starFactory)), null);
+			logger.info("User designated STAR:" + star);
+			DecoratedStar decoratedStar = new DecoratedStar(star);
+			decoratedStar.setSubClusterFactory(subClusterFactory);
+			stars.add(decoratedStar);
+		}
+		return stars;
+	}
+	
 	/**
 	 * 
 	 *  the angles for binary and trinary clusters are close together,  
@@ -520,8 +589,14 @@ public class GenStar {
 	 * @return
 	 */
 	public static List<Star> persistUserSpecStars(ClusterFactory clusterFactory,
-			ClusterRep clusterRep, List<String> stars){
-		
-		return null;
+			ClusterRep clusterRep, List<String> starColors){
+		String starName = "Star." + clusterRep.getClusterName();
+		List<DecoratedStar> stars = buildUserDesignatedStarsInCluster(clusterFactory, starName, starColors);
+		List<Star> plainStars = new ArrayList<Star>();
+		for (DecoratedStar star : stars) {
+			plainStars.add(starDao.addStar(star, clusterRep, star.getSubClusterFactory().name()));
+		}
+
+		return plainStars;
 	}
 }
