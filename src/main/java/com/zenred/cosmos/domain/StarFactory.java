@@ -20,6 +20,46 @@ import com.zenred.util.GenRandomRolls;
  * BLUE_DWARF, LTBL_DWARF, WHIT_DWARF, PYEL_DWARF, YELO_DWARF, ORNG_DWARF,
  * RED__DWARF, PURPLE_RED, BROWN_SUBS, DRKBRN_SDW
  * 
+| BLUE_DWARF, Blue Dwarf                |
+| BLUE_GI_I, Blue Giant I              |
+| BLUE_MAINS, Blue Main Sequence        |
+| BLUE_SUBDW, Blue Sub Dwarf            |
+| DRKBRN_SDW, Dark Brown Sub Dwarf      |
+| LTBL_GI_I, Light Blue  Giant I       |
+| LTBL_GI_II, Light Blue  Giant II      |
+| LTBL_DWARF, Light Blue Dwarf          |
+| LTBL_MAINS, Light Blue Main Sequence  |
+| LTBL_SUBDW, Light Blue Sub Dwarf      |
+| LTBL_SUBGI, Light Blue Sub Giant      |
+| ORNG_DWARF, Orange Dwarf              |
+| ORNG_MAINS, Orange Main Sequence      |
+| ORNG_SUBDW, Orange Sub Dwarf          |
+| ORNG_SG_I, Orange Super Giant I      |
+| PYEL_DWARF, Pale Yellow Dwarf         |
+| PYEL_GI_II, Pale Yellow Giant II      |
+| PYEL_MAINS, Pale Yellow Main Sequence |
+| PYEL_SUBDW, Pale Yellow Sub Dwarf     |
+| PYEL_SUBGI, Pale Yellow SubGiant      |
+| PURPLE_RED, Purple Red Dwarf          |
+| RED__DWARF, Red Dwarf                 |
+| RED__GI_II, Red Giant II              |
+| RED__MAINS, Red Main Sequence         |
+| RED__SUBDW, Red Sub Dwarf             |
+| WHIT_DWAR, White Dwarf               |
+| WHIT_GI_I, White Giant I             |
+| WHIT_GI_II, White Giant II            |
+| WHIT_MAINS, White Main Sequence       |
+| WHIT_SUBDW, White Sub Dwarf           |
+| WHIT_SUBGI, White Sub Giant           |
+| YELO_DWARF, Yellow Dwarf              |
+| YELO_GI_I, Yellow Giant I            |
+| YELO_GI_II, Yellow Giant II           |
+| YELO_MAINS, Yellow Main Sequence      |
+| YELO_SUBDW, Yellow Sub Dwarf          |
+| YELO_SUBGI, Yellow Super Giant I      |
+
+
+ * 
  * @author jredden
  *
  */

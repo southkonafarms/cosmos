@@ -299,6 +299,7 @@ public enum ClusterFactory {
 	private static Map<String, NormalizedName> normalizedNameMap = new HashMap<String, NormalizedName>();
 	private static Map<String, Integer[]> chanceMap = new HashMap<String, Integer[]>();
 	private static Map<String, Integer> starCountMap = new HashMap<String, Integer>();
+	private static Map<String, String> dataStoreRename = new HashMap<String, String>();
 
 	private ClusterFactory(String type) {
 		this.type = type;
@@ -357,6 +358,31 @@ public enum ClusterFactory {
 		starCountMap.put("FIVESTAR_FOURSTARSPREADPLUSONE", FIVESTAR_FOURSTARSPREADPLUSONE.getStarCount());
 		starCountMap.put("FIVESTAR_SPREAD", FIVESTAR_SPREAD.getStarCount());
 		starCountMap.put("CLUSTER_N", CLUSTER_N.getStarCount());
+		
+		dataStoreRename.put("SINGLESTAR", SINGLESTAR.name());
+		dataStoreRename.put("DOUBLESTAR_BINARY_1", DOUBLESTAR_BINARY.name());
+		dataStoreRename.put("DOUBLESTAR_BINARY_0", DOUBLESTAR_BINARY.name());
+		dataStoreRename.put("DOUBLESTAR_SPREAD", DOUBLESTAR_SPREAD.name());
+		dataStoreRename.put("THREESTAR_TRINARY_0", THREESTAR_TRINARY.name());
+		dataStoreRename.put("THREESTAR_TRINARY_1", THREESTAR_TRINARY.name());
+		dataStoreRename.put("THREESTAR_TRINARY_2", THREESTAR_TRINARY.name());
+		dataStoreRename.put("THREESTAR_BINARYPLUSONE_BINARY_0", THREESTAR_BINARYPLUSONE.name());
+		dataStoreRename.put("THREESTAR_BINARYPLUSONE_BINARY_1", THREESTAR_BINARYPLUSONE.name());
+		dataStoreRename.put("THREESTAR_BINARYPLUSONE_2", THREESTAR_BINARYPLUSONE.name());
+		dataStoreRename.put("THREESTAR_SPREAD", THREESTAR_SPREAD.name());
+		dataStoreRename.put("FOURSTAR_TRINARYPLUSONE_1", FOURSTAR_TRINARYPLUSONE.name());
+		dataStoreRename.put("FOURSTAR_TRINARYPLUSONE_TRINARY_0", FOURSTAR_TRINARYPLUSONE.name());
+		dataStoreRename.put("FOURSTAR_TRINARYPLUSONE_TRINARY_1", FOURSTAR_TRINARYPLUSONE.name());
+		dataStoreRename.put("FOURSTAR_TRINARYPLUSONE_TRINARY_2", FOURSTAR_TRINARYPLUSONE.name());
+		dataStoreRename.put("FOURSTAR_2BINARIES_1_BINARY_0", FOURSTAR_TWOBINARIES.name());
+		dataStoreRename.put("FOURSTAR_2BINARIES_0_BINARY_0", FOURSTAR_TWOBINARIES.name());
+		dataStoreRename.put("FOURSTAR_2BINARIES_1_BINARY_1", FOURSTAR_TWOBINARIES.name());
+		dataStoreRename.put("FOURSTAR_2BINARIES_0_BINARY_1", FOURSTAR_TWOBINARIES.name());
+		dataStoreRename.put("FOURSTAR_SPREAD", FOURSTAR_SPREAD.name());
+		dataStoreRename.put("FIVESTAR_FOURSTARSPREADPLUSONE", FIVESTAR_FOURSTARSPREADPLUSONE.name());
+		dataStoreRename.put("FIVESTAR_SPREAD", FIVESTAR_SPREAD.name());
+		dataStoreRename.put("CLUSTER_N", CLUSTER_N.name());
+
 
 		}
 
@@ -371,6 +397,10 @@ public enum ClusterFactory {
 	
 	public static Integer getStarCount(String clusterType){
 		return starCountMap.get(clusterType);
+	}
+	
+	public static String getInternalName(String name){
+		return dataStoreRename.get(name);
 	}
 
 	@Override

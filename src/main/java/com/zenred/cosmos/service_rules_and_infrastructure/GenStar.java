@@ -496,6 +496,12 @@ public class GenStar {
 		return star;
 	}
 	
+	/**
+	 * pure generated stars
+	 * @param clusterFactory
+	 * @param clusterRep
+	 * @return
+	 */
 	public static List<Star> persistStars(ClusterFactory clusterFactory,
 			ClusterRep clusterRep) {
 		List<DecoratedStar> stars = generateStarsInCluster(clusterFactory,
@@ -505,5 +511,17 @@ public class GenStar {
 			plainStars.add(starDao.addStar(star, clusterRep, star.getSubClusterFactory().name()));
 		}
 		return plainStars;
+	}
+	/**
+	 * user specifies star type
+	 * @param clusterFactory
+	 * @param clusterRep
+	 * @param stars
+	 * @return
+	 */
+	public static List<Star> persistUserSpecStars(ClusterFactory clusterFactory,
+			ClusterRep clusterRep, List<String> stars){
+		
+		return null;
 	}
 }

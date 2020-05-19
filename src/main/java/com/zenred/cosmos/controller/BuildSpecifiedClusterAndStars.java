@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import com.zenred.cosmos.controller.json.BasicMessageView;
+import com.zenred.cosmos.service_rules_and_infrastructure.GenUserSpecSystem;
 import com.zenred.cosmos.service_rules_and_infrastructure.SubClusterBuildTypes;
 import com.zenred.cosmos.vizualization.BasicMessageResponse;
 
@@ -67,6 +68,7 @@ public class BuildSpecifiedClusterAndStars implements Controller {
 		String message = "";
 		if(starCount < 2){
 			message = headMessage;
+			done = Boolean.TRUE;
 		}
 		else{
 			if(done.equals(Boolean.FALSE)){
@@ -75,6 +77,9 @@ public class BuildSpecifiedClusterAndStars implements Controller {
 			else{
 				message = headMessage;
 			}
+		}
+		if(done){
+			GenUserSpecSystem.buildTheSystem(uDimension, vDimension, spread, starList);
 		}
 		basicMessageResponse.setTheMessage(message); 
 		ModelAndView modelAndView = new ModelAndView(new BasicMessageView());

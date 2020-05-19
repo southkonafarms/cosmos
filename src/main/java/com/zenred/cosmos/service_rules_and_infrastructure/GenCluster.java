@@ -6,6 +6,7 @@ import com.zenred.cosmos.domain.ClusterFactory;
 import com.zenred.cosmos.domain.ClusterRep;
 import com.zenred.cosmos.domain.ClusterRepDao;
 import com.zenred.util.GenRandomRolls;
+import com.zenred.cosmos.domain.System;
 
 public class GenCluster {
 	
@@ -36,6 +37,30 @@ public class GenCluster {
 		ClusterRep clusterRep = new ClusterRep(null, system.getSystemId(),
 				clusterName, 0.0, 0.0, cluster_type, null);
 
+		return clusterRep;
+	}
+	
+	/**
+	 * user has already specified the cluster type
+	 * 
+	 * @param spread  cluster type
+	 * @param system
+	 * @return cluster rep 
+	 */
+	public static ClusterRep genUserSpecCluster(String spread, System system ){
+		String internalName = ClusterFactory.getInternalName(spread);
+		ClusterFactory clusterFactory = ClusterFactory
+				.fromString(internalName);
+		String cluster_type = clusterFactory.name();
+		String clusterName = "Cluster." + cluster_type + "."
+				+ system.getUcoordinate().intValue() + "."
+				+ system.getVcoordinate().intValue();
+		Integer draw = GenRandomRolls.Instance().getD1000();
+		Double distanceVirtualCentre = new Double(draw);
+		Double clusterVirtualAngle = new Double(Math.toRadians(GenRandomRolls.Instance()
+				.getAngle()));
+		ClusterRep clusterRep = new ClusterRep(null, system.getSystemId(),
+				clusterName, distanceVirtualCentre, clusterVirtualAngle, cluster_type, null);
 		return clusterRep;
 	}
 	
