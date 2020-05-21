@@ -20,7 +20,7 @@ public class BuildSpecifiedClusterAndStars implements Controller {
 	private static Logger logger = Logger.getLogger(BuildSpecifiedClusterAndStars.class);
 	private static String headMessage = "Complete";
 	private static String moreStars = "MoreStars";
-	private static List<String> starList = new ArrayList();
+	private static List<String> starList;
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		response.addHeader("Access-Control-Allow-Origin", "*");
@@ -35,6 +35,7 @@ public class BuildSpecifiedClusterAndStars implements Controller {
 		String starColor1 = request.getParameter("star_color1");
 		String starColor2 = request.getParameter("star_color2");
 		String starColor3 = request.getParameter("star_color3");
+		starList = new ArrayList<String>();
 		starList.add(starColor0);
 		Boolean done = Boolean.FALSE;
 		if(starColor1  != null){

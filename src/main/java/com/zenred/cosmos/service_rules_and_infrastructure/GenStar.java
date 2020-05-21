@@ -421,7 +421,6 @@ public class GenStar {
 		Set<SubClusterFactory> keys = map.keySet();
 		Iterator<SubClusterFactory> iter = keys.iterator();
 		Double lastAngleInRadians = null;
-		int idex = 0;
 		while (iter.hasNext()) {
 			subClusterFactory = iter.next();
 			logger.info("SUBCLUSTER_FACTORY:"+subClusterFactory);
@@ -457,11 +456,13 @@ public class GenStar {
 			}
 		} // refactor to common build-gen method
 		
+		int idex = 0;
+
 		ListIterator<String> litr = starColors.listIterator();
 		while(litr.hasNext()){
 			String starColor = litr.next();
 			StarFactory starFactory = StarFactory.accessByFullName(starColor);
-			Star star = new Star(null, new Integer(0), starName, distance,
+			Star star = new Star(null, new Integer(0), starName + '.' + idex++, distance,
 					StarTypeFactory.genLuminsoity(StarFactory.getSubCode(starFactory), StarFactory.getStarTypeFactory(starFactory),
 							starFactory, StarFactory.getSequence(starFactory)),
 					null, angleInRadians== null ? new Double(Math.toRadians(GenRandomRolls.Instance()
