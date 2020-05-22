@@ -421,6 +421,7 @@ public class GenStar {
 		Set<SubClusterFactory> keys = map.keySet();
 		Iterator<SubClusterFactory> iter = keys.iterator();
 		Double lastAngleInRadians = null;
+		List<Double> angleList = new ArrayList<Double>();
 		while (iter.hasNext()) {
 			subClusterFactory = iter.next();
 			logger.info("SUBCLUSTER_FACTORY:"+subClusterFactory);
@@ -453,6 +454,8 @@ public class GenStar {
 				if (endTogetherList.contains(subClusterFactory)) {
 					lastAngleInRadians = null; // reset to typical mode
 				}
+				logger.info("NEXT_ANGLE:"+angleInRadians);
+				angleList.add(angleInRadians);
 			}
 		} // refactor to common build-gen method
 		
@@ -462,11 +465,11 @@ public class GenStar {
 		while(litr.hasNext()){
 			String starColor = litr.next();
 			StarFactory starFactory = StarFactory.accessByFullName(starColor);
-			Star star = new Star(null, new Integer(0), starName + '.' + idex++, distance,
+			Star star = new Star(null, new Integer(0), starName + '.' + idex, distance,
 					StarTypeFactory.genLuminsoity(StarFactory.getSubCode(starFactory), StarFactory.getStarTypeFactory(starFactory),
 							starFactory, StarFactory.getSequence(starFactory)),
 					null, angleInRadians== null ? new Double(Math.toRadians(GenRandomRolls.Instance()
-							.getAngle())): angleInRadians, StarFactory.getRead(starFactory),
+							.getAngle())): angleList.get(idex++), StarFactory.getRead(starFactory),
 					StarFactory.getCode(starFactory), StarTypeFactory.genMass(
 							StarFactory.getSubCode(starFactory), StarFactory.getStarTypeFactory(starFactory), starFactory,
 							StarFactory.getSequence(starFactory)), null);
@@ -477,6 +480,7 @@ public class GenStar {
 		}
 		return stars;
 	}
+
 	
 	/**
 	 * 
