@@ -3,11 +3,14 @@
 <html>
 <head>
 <title>React WTF</title>
+
+<link href="css/main.css" rel="stylesheet" type="text/css">
+
 <script src="../js/react.development.js"></script>
 <script src="../js/react-dom.development.js"></script>
 <script type="text/javascript" src="../../js/buckets.js"></script>
 </head>
-<body>
+<body style="background-color:midnightblue;">
 	<div id="root"></div>
 	
 	<script type="text/javascript">
@@ -213,12 +216,24 @@
             		          "form",
             		          {
             		            /* 3 */ /* 3 */
-
-            		            onSubmit: this.handleSubmit,
+            		            onSubmit: this.handleSubmit,            		            
             		          },
-            		          /*#__PURE__*/ React.createElement("label", null, "  Starting definition of new system: U Dimension:"),
+            		          /*#__PURE__*/ React.createElement("label", {
+            		              style: {
+            		                  color: "lightyellow",
+            		                  backgroundColor: "darkblue",
+            		                  fontSize: 30,
+            		                  fontWeight: 'bold',
+            		                }
+            		              }, "  Starting definition of new system: U Dimension:"),
             		          /*#__PURE__*/ React.createElement("input", {
             		            /* 3 */ /* 3 */
+           		              style: {
+            		                  color: "darkblue",
+            		                  backgroundColor: "lightblue",
+            		                  height: 26,
+            		                  fontSize: 30,
+            		                },
 
             		            type: "text",
             		            value: this.state.uDim,
@@ -229,6 +244,15 @@
 
             		            type: "submit",
             		            value: "Submit",
+            		              style: {
+            		                  color: "lightblue",
+            		                  backgroundColor: "darkblue",
+            		                  height: 35,
+            		                  fontSize: 30,
+            		                  textAlign: "center",
+            		                  width: "100%"
+            		                },
+
             		          })
             		        ); /* 3 */
             		  } /* 2 */
@@ -283,9 +307,22 @@
 
             		            onSubmit: this.handleSubmit,
             		          },
-            		          /*#__PURE__*/ React.createElement("label", null, "V Dimension:"),
+            		          /*#__PURE__*/ React.createElement("label", {
+            		              style: {
+            		                  color: "lightyellow",
+            		                  backgroundColor: "darkblue",
+            		                  fontSize: 30,
+            		                  fontWeight: 'bold',
+            		                }
+            		              }, "V Dimension:"),
             		          /*#__PURE__*/ React.createElement("input", {
             		            /* 3 */ /* 3 */
+          		              style: {
+            		                  color: "darkblue",
+            		                  backgroundColor: "lightblue",
+            		                  height: 26,
+            		                  fontSize: 30,
+            		                },
 
             		            type: "text",
             		            value: this.state.vDim,
@@ -296,7 +333,15 @@
 
             		            type: "submit",
             		            value: "Submit",
-            		          })
+          		              style: {
+        		                  color: "lightblue",
+        		                  backgroundColor: "darkblue",
+        		                  height: 35,
+        		                  fontSize: 30,
+        		                  textAlign: "center",
+        		                  width: "100%"
+        		                },
+           		          })
             		        ); /* 3 */
             		  } /* 2 */
             		} /* 1 */
@@ -332,7 +377,7 @@
             		            /* 4 */ isLoaded: true,
             		            items: result,
             		          }); /* 4 */
-            		          alert("items:" + result);
+            		          // alert("items:" + result);
             		        } /* 3 */,
             		        // Note: it's important to handle errors here
             		        // instead of a catch() block so that we don't swallow
@@ -513,7 +558,14 @@
             		            },
             		            /*#__PURE__*/ React.createElement(
             		              "label",
-            		              null,
+            		              {
+                		              style: {
+                		                  color: "lightyellow",
+                		                  backgroundColor: "darkblue",
+                		                  fontSize: 30,
+                		                  fontWeight: 'bold',
+                		                }
+                		          },
             		              "Select cluster configuration:",
             		              /*#__PURE__*/ React.createElement(
             		                "select",
@@ -531,6 +583,14 @@
             		                /*#__PURE__*/ React.createElement(
             		                  "option",
             		                  {
+            		                	  
+                       		              style: {
+                    		                  color: "darkblue",
+                    		                  backgroundColor: "lightblue",
+                    		                  height: 26,
+                    		                  fontSize: 30,
+                    		                },           		                  
+
             		                    value: data[1],
             		                  },
             		                  data[1]
@@ -659,6 +719,14 @@
             		            /*#__PURE__*/ React.createElement("input", {
             		              type: "submit",
             		              value: "Submit",
+            		              style: {
+            		                  color: "lightblue",
+            		                  backgroundColor: "darkblue",
+            		                  height: 35,
+            		                  fontSize: 30,
+            		                  textAlign: "center",
+            		                  width: "100%"
+            		                },
             		            })
             		          );
             		    }
@@ -776,7 +844,14 @@ class ClusterSelectionResponse extends React.Component {
           },
           /*#__PURE__*/ React.createElement(
             "label",
-            null,
+            {
+	              style: {
+	                  color: "lightyellow",
+	                  backgroundColor: "darkblue",
+	                  fontSize: 30,
+	                  fontWeight: 'bold',
+	                }
+	              },
             "Select star color:",
             /*#__PURE__*/ React.createElement(
               "select",
@@ -787,6 +862,12 @@ class ClusterSelectionResponse extends React.Component {
               /*#__PURE__*/ React.createElement(
                 "option",
                 {
+ 		              style: {
+		                  color: "darkblue",
+		                  backgroundColor: "lightblue",
+		                  height: 26,
+		                  fontSize: 30,
+		                },
                   value: " ",
                 },
                 "Select star color"
@@ -1056,6 +1137,15 @@ class ClusterSelectionResponse extends React.Component {
           /*#__PURE__*/ React.createElement("input", {
             type: "submit",
             value: "Submit",
+	              style: {
+	                  color: "lightblue",
+	                  backgroundColor: "darkblue",
+	                  height: 35,
+	                  fontSize: 30,
+	                  textAlign: "center",
+	                  width: "100%"
+	                },
+
           })
         );
   }
@@ -1282,11 +1372,24 @@ class ContinuedSystemDataToServer extends React.Component {
 	          },
 	          /*#__PURE__*/ React.createElement(
 	            "label",
-	            null,
+	            {
+		              style: {
+		                  color: "lightyellow",
+		                  backgroundColor: "darkblue",
+		                  fontSize: 30,
+		                  fontWeight: 'bold',
+		                }
+		         },
 	            "Select star color:",
 	            /*#__PURE__*/ React.createElement(
 	              "select",
 	              {
+   		              style: {
+		                  color: "darkblue",
+		                  backgroundColor: "lightblue",
+		                  height: 26,
+		                  fontSize: 30,
+		                },
 	                value: this.state.value,
 	                onChange: this.handleChange,
 	              },
@@ -1300,7 +1403,14 @@ class ContinuedSystemDataToServer extends React.Component {
 	              /*#__PURE__*/ React.createElement(
 	                "option",
 	                {
-	                  value: data[1],
+     		              style: {
+    		                  color: "darkblue",
+    		                  backgroundColor: "lightblue",
+    		                  height: 26,
+    		                  fontSize: 30,
+    		                },           		                  
+
+	                	value: data[1],
 	                },
 	                data[1]
 	              ),
@@ -1562,6 +1672,14 @@ class ContinuedSystemDataToServer extends React.Component {
 	          /*#__PURE__*/ React.createElement("input", {
 	            type: "submit",
 	            value: "Submit",
+	              style: {
+	                  color: "lightblue",
+	                  backgroundColor: "darkblue",
+	                  height: 35,
+	                  fontSize: 30,
+	                  textAlign: "center",
+	                  width: "100%"
+	                },
 	          })
 	        );
 	  }
@@ -1655,7 +1773,7 @@ class FinalSystemDataToServer extends React.Component {
       return /*#__PURE__*/React.createElement("div", null, "Loading final star selection ...");
     } else {
       var response = parseJson.parseStart(this.state.items);
-      alert(response);
+      // alert(response);
       return React.createElement(NameForm, null);
     }
   }
