@@ -578,10 +578,13 @@
             		              /*#__PURE__*/ React.createElement(
             		                "select",
             		                {
-                 		                  color: "darkblue",
-                		                  backgroundColor: "lightblue",
-                		                  height: 30,
-                		                  fontSize: 30,
+            		  	              style: {
+            			                  color: "lightyellow",
+            			                  backgroundColor: "lightblue",
+            			                  fontSize: 30,
+            			                  fontWeight: 'bold',
+            			                  height: 30,
+            			                },
           		                  value: this.state.value,
             		                  onChange: this.handleChange,
             		                },
@@ -990,12 +993,13 @@ class ClusterSelectionResponse extends React.Component {
               /*#__PURE__*/ React.createElement(
                 "option",
                 {
- 		              style: {
-		                  color: "darkblue",
-		                  backgroundColor: "lightblue",
-		                  height: 30,
-		                  fontSize: 30,
-		                },
+	               	style: {
+	                  color: "lightyellow",
+	                  backgroundColor: "lightblue",
+	                  fontSize: 30,
+	                  fontWeight: 'bold',
+	                  height: 30,
+                	},
                   value: " ",
                 },
                 "                "
@@ -1633,6 +1637,7 @@ class ContinuedSystemDataToServer extends React.Component {
 	  }
 
 	  handleSubmit(event) {
+		alert("star type choice is: " + this.state.value);
 	    event.preventDefault();
 	    this.setState({
 	      /* 3 */
@@ -1736,10 +1741,11 @@ class ContinuedSystemDataToServer extends React.Component {
 	              "select",
 	              {
    		              style: {
-		                  color: "darkblue",
-		                  backgroundColor: "lightblue",
-		                  height: 26,
-		                  fontSize: 30,
+   		                  color: "lightyellow",
+   		                  backgroundColor: "lightblue",
+   		                  fontSize: 30,
+   		                  fontWeight: 'bold',
+   		                  height: 30,
 		                },
 	                value: this.state.value,
 	                onChange: this.handleChange,
@@ -1747,6 +1753,13 @@ class ContinuedSystemDataToServer extends React.Component {
 	              /*#__PURE__*/ React.createElement(
 	                "option",
 	                {
+		               	style: {
+			                  color: "lightyellow",
+			                  backgroundColor: "lightblue",
+			                  fontSize: 30,
+			                  fontWeight: 'bold',
+			                  height: 30,
+		                	},
 	                  value: " ",
 	                },
 	                "Select star color"
