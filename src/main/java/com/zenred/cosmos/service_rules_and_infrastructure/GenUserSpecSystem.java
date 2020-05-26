@@ -34,6 +34,8 @@ public class GenUserSpecSystem {
 			logger.info("STAR:" + star);
 			List<Planetoid> planetoids = GenPlanet.persistPlanetoids(star);
 			if (!planetoids.isEmpty()) {
+				Planetoid oneMore = GenPlanet.genOneMore(star, planetoids.size());
+				planetoids.add(oneMore);
 				GenAtmosphere genAtmosphere = new GenAtmosphere();
 				List<Atmosphere> atmospheres = null;
 				for (Planetoid planetoid : planetoids){

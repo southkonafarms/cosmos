@@ -31,6 +31,7 @@ public class GenPlanet {
 		planetSizeSpread.put(new Integer(100), maxPlanetRadiusS);
 		planetSizeSpread.put(new Integer(90), maxPlanetRadiusM);
 		planetSizeSpread.put(new Integer(30), maxPlanetRadiusT);
+		planetSizeSpread.put(new Integer(50), new Double(65.0));  // only used for user generated goldilocks
 	}
 	
 	/**
@@ -97,5 +98,32 @@ public class GenPlanet {
 			planetoids.add(readPlanetI.getPlanetoid());
 		}
 		return planetoids;
+	}
+	
+	/**
+	 * for a user spec system, try to put "one more" plant in the "goldilocks" zone
+	 * 
+	 * @param star
+	 * @return
+	 */
+	public static Planetoid genOneMore(Star star, Integer lastNumber){
+		Planetoid planetoid = new Planetoid();
+		planetoid.setDegree(Math.toRadians(GenRandomRolls.Instance().getD360()));
+		Double planetRadiusBase = GenRandomRolls.Instance().getDraw(planetSizeSpread.get(50));  // average = 50
+		Double planetRadius = GenRandomRolls.Instance().getDraw(planetRadiusBase)*1000.0;
+		Double targetTemperature = GenRandomRolls.Instance().getD49()+240.0;  // kelvin   240 is a cooler planet
+		Double luminosity4pow = Math.pow(star.getLuminosity(), 4.0);
+		Double luminosity4powtTargTemp = luminosity4pow *= targetTemperature;
+		Double scaled = luminosity4powtTargTemp /= 295.0;   // see temperature method where this scalar originates
+		Double baseDistance = Math.pow(scaled,-8.0);
+		Double distanceKloms = baseDistance *= AstronomicalUnits.AstronomicalUnit; // should be in the goldilocks range
+		String name = star.getName()+".planet."+ lastNumber;
+		planetoid.setPlanetoidName(name);
+		planetoid.setRadius(planetRadius);
+		planetoid.setTemperature(targetTemperature);
+		planetoid.setDistanceToPrimary(distanceKloms);
+		planetoid.setPercentWater(0.0);  // evaluate when generating atmosphere
+		UnifiedPlanetoidI readPlanetI = planetoidDao.addStarPlanetoid(planetoid, star);
+		return readPlanetI.getPlanetoid();
 	}
 }
