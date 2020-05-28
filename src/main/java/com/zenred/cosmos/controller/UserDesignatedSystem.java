@@ -27,6 +27,14 @@ public class UserDesignatedSystem implements Controller {
 		String s_VDimension = request.getParameter("vdimension");	
 		Double uDimension = new Double(s_UDimension);
 		Double vDimension = new Double(s_VDimension);
+		if(uDimension >= 100000.0){
+			uDimension = 99999.0;
+			logger.warn("Udimension over limit " +  s_UDimension);
+		}
+		if(vDimension >= 100000.0){
+			vDimension = 99999.0;
+			logger.warn("Vdimension over limit " +  s_VDimension);
+		}
 		Boolean answer = GenSystem.doesSystemExist(uDimension, vDimension);
 		logger.info("answer for " + uDimension + ':' + vDimension + " answer:" + answer);
 		ModelAndView modelAndView = null;

@@ -26,6 +26,16 @@ public class SystemDao extends AbstractJDBCDao {
 	public static String SYSTEM_NAME = "systemName";
 	public static String DATESTAMP = "Datestamp";
 	
+	/*
+	 * select distinct ucoordinate, vcoordinate  from System where 
+	 * ucoordinate >= 0 and ucoordinate <= 9999 and vcoordinate >= 0 
+	 * and vcoordinate  <=9999 order by ucoordinate,vcoordinate ;
+	 * 
+	 * select distinct ucoordinate, vcoordinate  from System where 
+	 * ucoordinate >= 0 and ucoordinate <= 9999 and vcoordinate >= 10000 and vcoordinate  <=19999 
+	 * order by ucoordinate,vcoordinate ;
+	 */
+	
 	private static String lastInsertSql = "SELECT MAX("+SYSTEM_ID+") FROM "+SYSTEM;
 	
 	private static String readSystemById = "SELECT "
@@ -116,6 +126,20 @@ public class SystemDao extends AbstractJDBCDao {
 			+ " INNER JOIN "
 			+ ClusterRepDao.CLUSTER_REP + " clu "
 			+ " ON sys." + SYSTEM_ID + " = clu." + ClusterRepDao.SYSTEM_ID
+			;
+	
+	private static String readCoordsBySegment =
+			"SELECT DISTINCT "
+			+ " sys."+UCOORDINATE+" "
+			+ " ,sys."+VCOORDINATE+" "
+			+ " FROM " +SYSTEM + " sys "
+			+ " WHERE sys."+UCOORDINATE+" >= ? AND "
+			+ "sys."+UCOORDINATE+" <= ? AND "
+			+ "sys."+VCOORDINATE+" >= ? AND "
+			+ "sys."+VCOORDINATE+" <= ? "
+			+ "  ORDER BY "
+			+ "sys."+UCOORDINATE+","
+			+ "sys."+VCOORDINATE
 			;
 			
 	/**
@@ -332,6 +356,31 @@ public class SystemDao extends AbstractJDBCDao {
 		return systemVcoordinates;
 	}
 	
+	/**
+	 * return u,v segment within  block defined by four values
+	 * 
+	 * @param uGTEvalue
+	 * @param uLTEvalue
+	 * @param vGTEvalue
+	 * @param vLTEvalue
+	 * @return
+	 */
+	public List<UV_Instance> 
+	readSystemSegment(Integer uGTEvalue, Integer uLTEvalue, Integer vGTEvalue, Integer vLTEvalue ){
+		List<UV_Instance> uvInstances = new ArrayList<UV_Instance>();
+		List<Map<String, Object>> systemListMap = super.jdbcSetUp()
+				.getSimpleJdbcTemplate()
+				.queryForList(readCoordsBySegment, uGTEvalue, uLTEvalue, vGTEvalue, vLTEvalue);
+		for(Map<String, Object> systemMap: systemListMap){
+			Double d_Ucoordinate = new Double(systemMap.get(UCOORDINATE).toString());
+			Double d_Vcoordinate = new Double(systemMap.get(VCOORDINATE).toString());
+			Integer uValue = d_Ucoordinate.intValue();
+			Integer vValue = d_Vcoordinate.intValue();
+			UV_Instance uv_Instance = new UV_Instance(uValue, vValue);
+			uvInstances.add(uv_Instance);
+		}
+		return uvInstances; 
+	}
 
 	/**
 	 * 
