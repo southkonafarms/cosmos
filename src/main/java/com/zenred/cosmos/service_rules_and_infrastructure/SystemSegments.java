@@ -1,8 +1,28 @@
 package com.zenred.cosmos.service_rules_and_infrastructure;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import com.zenred.cosmos.domain.SystemDao;
+import com.zenred.cosmos.domain.UV_Instance;
+import com.zenred.cosmos.vizualization.SectorsResponse;
+
+interface RunningWindow{
+		
+	public void setCUrrentMinAndMax(Integer currentMinu, Integer currentMinv, Integer currentMaxu, Integer currentMaxv);
+	
+	public Boolean isRunningUVinWindow(Integer dimU, Integer dimV);
+	
+	public List<Integer> fetchCUrrentMinAndMax();
+	
+}
+
 public class SystemSegments implements SystemSegmentsIF {
+	
+	private static Logger logger = Logger.getLogger(SystemSegments.class);
+	private static SystemDao systemDao = new SystemDao();
 
 	@Override
 	public List<List<Integer>> builder() {
@@ -520,6 +540,115 @@ public class SystemSegments implements SystemSegmentsIF {
 
 		return masterList;
 		
+	}
+	
+	public static SectorsResponse sectorResponse(){
+		
+		
+		/**
+		 * holds the 25 element matrix of the current set of UV coordinates.
+		 */
+		RunningWindow runningWindow = new RunningWindow(){
+
+			Integer minu;
+			Integer minv;
+			Integer maxu;
+			Integer maxv;
+			/**
+			 * set the current 25 element matrix
+			 */
+			@Override
+			public void setCUrrentMinAndMax(Integer currentMinu, Integer currentMinv, Integer currentMaxu,
+					Integer currentMaxv) {
+				minu = currentMinu-2;
+				minv = currentMinv-2;
+				maxu = currentMaxu+2;
+				maxv = currentMaxv+2;
+				if(minu < 0){
+					Integer bump = Math.abs(minu);
+					minu += bump;  // shift quantity of bump
+					minv += bump;
+				}
+				if(minv < 0){
+					Integer bump = Math.abs(minv);
+					minu += bump;  // shift quantity of bump
+					minv += bump;
+				}
+				if(maxu > 999999){
+					Integer bump = maxu - 999999;
+					maxu -= bump;
+					maxv -= bump;
+				}
+				if(maxv > 999999){
+					Integer bump = maxv - 999999;
+					maxu -= bump;
+					maxv -= bump;
+				}
+			}
+
+			/**				Integer countInWimdow = 
+
+			 * is the current uv set in the matrix?
+			 */
+			@Override
+			public Boolean isRunningUVinWindow(Integer dimU, Integer dimV) {
+				Boolean answer = Boolean.FALSE;
+				if(dimU >= minu && dimV >= minv && dimU <= maxu && dimV <= maxv){
+					answer = Boolean.TRUE;
+				}
+				return answer;
+			}
+
+			@Override
+			public List<Integer> fetchCUrrentMinAndMax() {
+				List<Integer> windwow5by5 = new ArrayList<Integer>();
+				windwow5by5.add(minu);
+				windwow5by5.add(minv);
+				windwow5by5.add(maxu);
+				windwow5by5.add(maxv);
+				return windwow5by5;
+			}
+			
+		};
+		
+		runningWindow.setCUrrentMinAndMax(2, 2, 2, 2);  //first centre  
+		Integer key = 0;
+		StringBuilder keyValuePair = new StringBuilder();
+		SystemSegments systemSegments = new SystemSegments();
+		List<List<Integer>> masterList = systemSegments.builder();
+		Integer [] positions = new Integer[4];
+		for(List<Integer> deatailList: masterList){
+			if(deatailList.size() == 0){
+				continue;
+			}
+			for(Integer idex = 0; idex < deatailList.size(); idex++){
+				positions[idex] = deatailList.get(idex);
+			}
+			List<UV_Instance> uvList = systemDao.readSystemSegment(positions[0], positions[1], positions[2], positions[3]);
+			logger.info("seg"+positions[0]+"_"+positions[1]+"_"+positions[2]+"_"
+			+positions[3]+":"+"uvList length:"+uvList.size());
+			for(Integer idex = 0; idex < uvList.size(); idex++){
+				Integer udim = uvList.get(idex).getuDimension();
+				Integer vdim = uvList.get(idex).getvDimension();
+				if(runningWindow.isRunningUVinWindow(udim, vdim)){
+					List<Integer> preSector = runningWindow.fetchCUrrentMinAndMax();
+					String sector = preSector.get(0)+":"+preSector.get(1)+":"+preSector.get(2)+":"+preSector.get(3);
+					if (key.equals(0)) {
+						keyValuePair.append(key).append("=").append(sector);
+					} else {
+						keyValuePair.append(";").append(key).append("=").append(sector);
+					}
+					++key;
+				}
+				else{
+					runningWindow.setCUrrentMinAndMax(udim,vdim,udim,vdim);
+				}
+				
+			}
+		}
+		SectorsResponse sectorsResponse = new SectorsResponse();
+		sectorsResponse.setSectors(keyValuePair.toString());
+		return sectorsResponse;
 	}
 
 }

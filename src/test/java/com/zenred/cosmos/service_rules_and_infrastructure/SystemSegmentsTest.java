@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.zenred.cosmos.domain.SystemDao;
 import com.zenred.cosmos.domain.UV_Instance;
+import com.zenred.cosmos.vizualization.SectorsResponse;
 
 /**
  * @author johnredden
@@ -52,6 +53,13 @@ public class SystemSegmentsTest {
 			}
 		}
 		logger.info("total:"+total);
+		test2();
+	}
+	
+	public void test2(){
+		SystemSegments systemSegments = new SystemSegments();
+		SectorsResponse sectorsResponse = systemSegments.sectorResponse();
+		logger.info("SectorsResponse:"+sectorsResponse);
 	}
 
 }
