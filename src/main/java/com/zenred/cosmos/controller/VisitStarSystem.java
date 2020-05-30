@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.Controller;
 import com.zenred.cosmos.controller.json.SystemView;
 import com.zenred.cosmos.domain.System;
 import com.zenred.cosmos.domain.SystemDao;
+import com.zenred.cosmos.service_rules_and_infrastructure.GenSystem;
 import com.zenred.cosmos.service_rules_and_infrastructure.ImergeFromHyperspace;
 import com.zenred.cosmos.vizualization.SystemResponse;
 
@@ -30,8 +31,14 @@ class VisitStarSystem implements Controller {
 		Double d_Vcoordinate = new Double(s_Vcoordinate_top);
 		SystemDao systemDao = new SystemDao();
 		if(!systemDao.doesSystemExist(d_Ucoordinate, d_Vcoordinate)){
-			// should never get here
-			throw new RuntimeErrorException(new Error(), "System Not Exist:"+s_Ucoordinate_top+"::"+s_Vcoordinate_top);
+			// should never get here  (old method)
+			// throw new RuntimeErrorException(new Error(), "System Not Exist:"+s_Ucoordinate_top+"::"+s_Vcoordinate_top);
+			/*
+			 * now we have to create it
+			 */
+			System system = GenSystem.genSystemFromOrigin(d_Ucoordinate, d_Vcoordinate);
+			GenSystem.candidate(system);
+			logger.warn("Had to generate " + d_Ucoordinate.intValue() + " " + d_Vcoordinate.intValue());
 		}
 		System system = systemDao.readSystemByUVCoordinates(i_Ucoordinate, i_Vcoordinate);
 		SystemResponse systemResponse = ImergeFromHyperspace.doesKnowWhereShipIs(system);

@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import com.zenred.cosmos.controller.json.SectorsView;
-import com.zenred.cosmos.report.GenCSV;
+import com.zenred.cosmos.service_rules_and_infrastructure.SystemSegments;
 import com.zenred.cosmos.vizualization.SectorsResponse;
 
 public class SystemReportChoice implements Controller {
@@ -19,7 +19,7 @@ public class SystemReportChoice implements Controller {
 			HttpServletResponse response) throws Exception {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		logger.info("SESSION ID:"+request.getRequestedSessionId());		
-		SectorsResponse sectorsResponse = GenCSV.sectorsResponse();
+		SectorsResponse sectorsResponse = SystemSegments.sectorResponse();
 		ModelAndView modelAndView = new ModelAndView(new SectorsView());
 		modelAndView.addObject(SectorsView.JSON_ROOT, sectorsResponse);
 		logger.info(modelAndView);

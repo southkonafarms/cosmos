@@ -31,7 +31,7 @@ public class SystemSegmentsTest {
 		Integer [] positions = new Integer[4];
 		Boolean first = Boolean.TRUE;
 		for(List<Integer> deatailList: masterList){
-			for(Integer idex = 0; idex < deatailList.size(); idex++){
+			for(Integer idex = 0; idex < 4; idex++){
 				positions[idex] = deatailList.get(idex);
 			}
 			List<UV_Instance> uvList = systemDao.readSystemSegment(positions[0], positions[1], positions[2], positions[3]);
@@ -53,12 +53,12 @@ public class SystemSegmentsTest {
 			}
 		}
 		logger.info("total:"+total);
-		test2();
+//		test2();
 	}
-	
+	@Test
 	public void test2(){
-		SystemSegments systemSegments = new SystemSegments();
-		SectorsResponse sectorsResponse = systemSegments.sectorResponse();
+		// SystemSegments systemSegments = new SystemSegments();
+		SectorsResponse sectorsResponse = SystemSegments.sectorResponse();
 		logger.info("SectorsResponse:"+sectorsResponse);
 	}
 

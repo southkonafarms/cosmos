@@ -1,6 +1,7 @@
 package com.zenred.cosmos.service_rules_and_infrastructure;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -613,37 +614,55 @@ public class SystemSegments implements SystemSegmentsIF {
 		
 		runningWindow.setCUrrentMinAndMax(2, 2, 2, 2);  //first centre  
 		Integer key = 0;
+		HashSet hashSet = new HashSet();
 		StringBuilder keyValuePair = new StringBuilder();
 		SystemSegments systemSegments = new SystemSegments();
 		List<List<Integer>> masterList = systemSegments.builder();
-		Integer [] positions = new Integer[4];
 		for(List<Integer> deatailList: masterList){
 			if(deatailList.size() == 0){
 				continue;
 			}
-			for(Integer idex = 0; idex < deatailList.size(); idex++){
+			Integer [] positions = new Integer[4];
+			for(Integer idex = 0; idex < 4; idex++){
 				positions[idex] = deatailList.get(idex);
 			}
 			List<UV_Instance> uvList = systemDao.readSystemSegment(positions[0], positions[1], positions[2], positions[3]);
 			logger.info("seg"+positions[0]+"_"+positions[1]+"_"+positions[2]+"_"
 			+positions[3]+":"+"uvList length:"+uvList.size());
-			for(Integer idex = 0; idex < uvList.size(); idex++){
+			for (Integer idex = 0; idex < uvList.size(); idex++) {
 				Integer udim = uvList.get(idex).getuDimension();
 				Integer vdim = uvList.get(idex).getvDimension();
-				if(runningWindow.isRunningUVinWindow(udim, vdim)){
-					List<Integer> preSector = runningWindow.fetchCUrrentMinAndMax();
-					String sector = preSector.get(0)+":"+preSector.get(1)+":"+preSector.get(2)+":"+preSector.get(3);
-					if (key.equals(0)) {
-						keyValuePair.append(key).append("=").append(sector);
-					} else {
-						keyValuePair.append(";").append(key).append("=").append(sector);
-					}
+				Double d_Udim = new Double(udim.doubleValue());
+				Double d_Vdim = new Double(vdim.doubleValue());
+				/*
+				 * not an issue
+				 * 
+				if(systemDao.doesSystemExist(d_Udim, d_Vdim) == Boolean.FALSE){
+					logger.warn("System uDim:"  + udim + " vDim:" + vdim + " isn't in the database!");
+					continue;
+				}
+				*/
+					
+				if (runningWindow.isRunningUVinWindow(udim, vdim) == Boolean.FALSE) {
+					runningWindow.setCUrrentMinAndMax(udim, vdim, udim, vdim);
+				}
+
+				List<Integer> preSector = runningWindow.fetchCUrrentMinAndMax();
+				String sector = preSector.get(0) + ":" + preSector.get(1) + ":" + preSector.get(2) + ":"
+						+ preSector.get(3);
+				if (key.equals(0)) {
+					keyValuePair.append(key).append("=").append(sector);
+					hashSet.add(sector);
+					logger.info("Zero KV pair->" + key + " sector->" + sector);
 					++key;
+				} else {
+					if (hashSet.contains(sector) == Boolean.FALSE) {
+						keyValuePair.append(";").append(key).append("=").append(sector);
+						logger.info("KV pair->" + key + " sector->" + sector);
+						hashSet.add(sector);
+						++key;
+					}
 				}
-				else{
-					runningWindow.setCUrrentMinAndMax(udim,vdim,udim,vdim);
-				}
-				
 			}
 		}
 		SectorsResponse sectorsResponse = new SectorsResponse();
