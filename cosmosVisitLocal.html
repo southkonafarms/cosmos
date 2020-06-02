@@ -186,6 +186,7 @@ var processReport = (function(){
 	
 	return{
 		readSectors: function (){
+			$('#spinner').show();
 			$.getJSON("http://www.localhost:8080/johntredden-1.0/systemReportChoice.html",
 					function(json){           // callback
 						console.log("in cosmosVisit:"+json);
@@ -203,7 +204,7 @@ var processSectorChoice = (function(){
 	
 	return {
 		jsonProcess: function(json){
-			var hideList = ['jumping'];
+			var hideList = ['jumping', 'spinner'];
 			tagOperations.hide(hideList);
 			var choiceMessage = json.sectors.sectors;
 			var result = orderedPairToArray2.getOrderedPair(choiceMessage);
