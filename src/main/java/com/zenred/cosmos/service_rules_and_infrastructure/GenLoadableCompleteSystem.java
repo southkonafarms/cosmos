@@ -8,6 +8,7 @@ import com.zenred.cosmos.domain.BasicSystem;
 import com.zenred.cosmos.domain.ClusterRep;
 import com.zenred.cosmos.domain.BasicClusterRep;
 import com.zenred.cosmos.domain.ClusterRepDao;
+import com.zenred.cosmos.domain.RenameDao;
 import com.google.gson.Gson; 
 
 
@@ -16,6 +17,7 @@ public class GenLoadableCompleteSystem {
 	
 	static private SystemDao systemDao = new SystemDao();
 	static private ClusterRepDao clusterRepDao = new ClusterRepDao();
+	static private RenameDao renameDao = new RenameDao();
 	
 	static private Logger logger = Logger.getLogger(GenLoadableCompleteSystem.class);
 	

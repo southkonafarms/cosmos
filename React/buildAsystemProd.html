@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Specify a Star System</title>
+
+<link href="css/main.css" rel="stylesheet" type="text/css">
+
+<script src="../js/react.production.js"></script>
+<script src="../js/react-dom.production.js"></script>
+<script type="text/javascript" src="../../js/buckets.js"></script>
+</head>
+<body style="background-color:midnightblue;">
+	<h1 style="color:lightblue">Return to the <a href="http://www.johntredden.com">Home</a> Page</h1>
+	<h1 style="color:lightblue"> Build a Star System</h1>
+	<div id="root"></div>
+	
+	<script type="text/javascript">
+	//for debugging
+	function print_recursive(printthis) {
+	  var output = "";
+
+	  if (Array.isArray(printthis) || typeof printthis == "object") {
+	    for (var i in printthis) {
+	      console.log("??:" + printthis[i] + "::" + i);
+	      output += i + " : " + print_recursive(printthis[i]) + "\n";
+	    }
+	  } else {
+	    output += printthis;
+	  }
+	  console.log("PRINT:" + output);
+	}
+
+	/*
+	 *  parses json message from the server
+	 */
+	var parseJson = (function () {
+	  // private
+	  var lineArray;
+	  var lineCount;
+	  var state;
+	  // public
+	  return {
+	    parseStart: function (json) {
+	      lineArray = [];
+	      lineCount = 0;
+	      output = "";
+	      return parseJson.parse(json);
+	    },
+	    parse: function (json) {
+	      if (Array.isArray(json) || typeof json == "object") {
+	        for (var idex in json) {
+	          console.log("Next idex:" + idex);
+	          switch (idex) {
+	            case "createMessageResponse":
+	              state = "Start0";
+	              break;
+	            case "theMessage":
+	              state = "Start1";
+	              break;
+	            default:
+	          }
+	        }
+	        parseJson.parse(json[idex]);
+	      } else {
+	        switch (state) {
+	          case "Start0":
+	            console.log("json0:" + json);
+	            break;
+	          case "Start1":
+	            console.log("json1:" + json);
+	            if (json === "Exists") {
+	              lineArray = "Exists";
+	            } else {
+	              if (json.includes("SystemUV")) {
+	                lineArray = json;
+	              } else {
+	                if (json.includes("SubClusters")) {
+	                  lineArray = json;
+	                }
+	                else{
+	                	if (json.includes("StarColors")){
+	                	  lineArray = json;
+	                	}
+	                	else{
+							if (json.includes("Complete")){
+							  lineArray = json;
+							}
+							else{
+								if (json.includes("MoreStars")){
+								  lineArray = json;
+								}
+							}
+	                	}
+	                }
+	              }
+	            }
+	            break;
+	        }
+	      }
+	      return lineArray;
+	    },
+	  };
+	})();
+
+	/**
+			The current working dimension of the System
+			
+			This object must be instantiated
+		*/
+	var UVworkingDimension = function () {
+	  // private
+	  var uDimension;
+	  var vDimension;
+	  // public
+	  return {
+	    instance: function (udim, vdim) {
+	      uDimension = udim;
+	      vDimension = vdim;
+	    },
+	    getUdim: function () {
+	      return uDimension;
+	    },
+	    getVdim: function () {
+	      return vDimension;
+	    },
+	  };
+	};
+	
+	/**
+	number of additional stars to be generated.
+	this object controls the process
+	**/
+	
+	var starCountState = (function () {
+		
+		var starDictionary;
+		var numberStarsNeeded;
+		var currentNumber;
+		
+		return{
+			instance: function(count){
+				starDictionary = new buckets.Dictionary();
+				numberStarsNeeded = parseInt(count);
+				currentNumber = 0;
+			},
+			addStar: function(colorType){
+				starDictionary.set(currentNumber, colorType);
+				currentNumber++;
+			},
+			numberReached: function(){
+				if(currentNumber === numberStarsNeeded){
+					return true;
+				}
+				return false;
+			},
+			fetchNextStar: function(){
+				var star = starDictionary.get(currentNumber);
+				--currentNumber;
+			},
+			fetchCountNeeded(){
+				return numberStarsNeeded;
+			},
+			fetchNumberStar(number){
+				return starDictionary.get(number);
+			}
+		};
+	});
+	
+	</script>
+
+	<script>
+	
+			const labelStyle = {
+                color: "lightyellow",
+                backgroundColor: "darkblue",
+                fontSize: 30,
+                fontWeight: 'bold',
+			}
+				
+            window.onload = function()
+      /*0*/      {
+				class UDimension extends React.Component {
+					  /*1*/
+					  constructor(props) {
+					    /*2*/
+					    super(props);
+					    this.state = {
+					      /*3*/ uDim: "",
+					      submitted: false,
+					    }; /*3*/
+					    this.handleChange = this.handleChange.bind(this);
+					    this.handleSubmit = this.handleSubmit.bind(this);
+					  } /*2*/
+
+					  handleChange(event) {
+					    /*2 */
+					    const regexpr = /^[0-9\b]+$/;
+
+					    if (event.target.value === "" || regexpr.test(event.target.value)) {
+					      /* 3 */
+					      this.setState({
+					        /* 4 */ uDim: event.target.value,
+					      }); /* 4 */
+					    } /* 3 */
+					  } /* 2 */
+
+					  handleSubmit(event) {
+					    /* 2 */
+					    event.preventDefault();
+					    const { /* 3 */ value } = this.state; /* 3 */
+					    alert("U dimension was submitted: " + this.state.uDim);
+					    this.setState({
+					      /* 3 */ submitted: true,
+					    }); /* 3 */
+					  } /* 2 */
+
+					  render() {
+					    /* 2 */
+					    return this.state.submitted
+					      ? /*#__PURE__*/ React.createElement(VDimension, {
+					          /* 3 */ value: this.state.uDim,
+					        })
+					      : /*#__PURE__*/ React.createElement(
+					          "form",
+					          {
+					            /* 3 */ /* 3 */ onSubmit: this.handleSubmit,
+					          },
+					          /*#__PURE__*/ React.createElement(
+					            "label",
+					            {
+					              style: {
+					                color: "lightyellow",
+					                backgroundColor: "darkblue",
+					                fontSize: 30,
+					                fontWeight: "bold",
+					              },
+					            },
+					            "  Starting definition of new system: U Dimension:"
+					          ),
+					          /*#__PURE__*/ React.createElement("input", {
+					            /* 3 */ /* 3 */
+					            style: {
+					              color: "darkblue",
+					              backgroundColor: "lightblue",
+					              height: 26,
+					              fontSize: 30,
+					            },
+
+					            type: "text",
+					            value: this.state.uDim,
+					            onChange: this.handleChange,
+					          }),
+					          /*#__PURE__*/ React.createElement("input", {
+					            /* 3 */ /* 3 */
+
+					            type: "submit",
+					            value: "Submit",
+					            style: {
+					              color: "lightblue",
+					              backgroundColor: "darkblue",
+					              height: 35,
+					              fontSize: 30,
+					              textAlign: "center",
+					              width: "100%",
+					            },
+					          })
+					        ); /* 3 */
+					  } /* 2 */
+					} /* 1 */
+
+					class VDimension extends React.Component {
+					  /*1*/
+					  constructor(props) {
+					    /*2*/
+					    super(props);
+					    this.state = {
+					      /*3*/ uDim: this.props.value,
+					      vDim: "",
+					      submitted: false,
+					    }; /*3*/
+					    this.handleChange = this.handleChange.bind(this);
+					    this.handleSubmit = this.handleSubmit.bind(this);
+					  } /*2*/
+
+					  handleChange(event) {
+					    /*2 */
+					    const regexpr = /^[0-9\b]+$/;
+
+					    if (event.target.value === "" || regexpr.test(event.target.value)) {
+					      /* 3 */
+					      this.setState({
+					        /* 4 */ vDim: event.target.value,
+					      }); /* 4 */
+					    } /* 3 */
+					  } /* 2 */
+
+					  handleSubmit(event) {
+					    /* 2 */
+					    event.preventDefault();
+					    const { /* 3 */ value } = this.state; /* 3 */
+					    alert("V dimension was submitted: " + this.state.vDim);
+					    this.setState({
+					      /* 3 */ submitted: true,
+					    }); /* 3 */
+					  } /* 2 */
+
+					  render() {
+					    /* 2 */
+					    return this.state.submitted
+					      ? /*#__PURE__*/ React.createElement(AjaxProcess, {
+					          /* 3 */ value: this.state.uDim + ":" + this.state.vDim,
+					        })
+					      : /*#__PURE__*/ React.createElement(
+					          "form",
+					          {
+					            /* 3 */ /* 3 */
+
+					            onSubmit: this.handleSubmit,
+					          },
+					          /*#__PURE__*/ React.createElement(
+					            "label",
+					            {
+					              style: {
+					                color: "lightyellow",
+					                backgroundColor: "darkblue",
+					                fontSize: 30,
+					                fontWeight: "bold",
+					              },
+					            },
+					            "V Dimension:"
+					          ),
+					          /*#__PURE__*/ React.createElement("input", {
+					            /* 3 */ /* 3 */
+					            style: {
+					              color: "darkblue",
+					              backgroundColor: "lightblue",
+					              height: 26,
+					              fontSize: 30,
+					            },
+
+					            type: "text",
+					            value: this.state.vDim,
+					            onChange: this.handleChange,
+					          }),
+					          /*#__PURE__*/ React.createElement("input", {
+					            /* 3 */ /* 3 */
+
+					            type: "submit",
+					            value: "Submit",
+					            style: {
+					              color: "lightblue",
+					              backgroundColor: "darkblue",
+					              height: 35,
+					              fontSize: 30,
+					              textAlign: "center",
+					              width: "100%",
+					            },
+					          })
+					        ); /* 3 */
+					  } /* 2 */
+					} /* 1 */
+
+					class AjaxProcess extends React.Component {
+					  /*1*/
+
+					  constructor(props) {
+					    /*2*/
+					    super(props);
+					    this.state = {
+					      /*3*/ theProps: this.props.value,
+					      error: null,
+					      isLoaded: false,
+					      items: "",
+					      dims: this.props.value.split(":"),
+					    }; /*3*/
+					  } /* 2 */
+
+					  componentDidMount() {
+					    /* 2 */
+					    fetch(
+					      "http://www.johntredden.com:8080/johntredden-1.0/userDesignatedSystem.html?udimension=" +
+					        this.state.dims[0] +
+					        "&vdimension=" +
+					        this.state.dims[1]
+					    )
+					      .then((res) => res.json())
+					      .then(
+					        (result) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */ isLoaded: true,
+					            items: result,
+					          }); /* 4 */
+					          // alert("items:" + result);
+					        } /* 3 */,
+					        // Note: it's important to handle errors here
+					        // instead of a catch() block so that we don't swallow
+					        // exceptions from actual bugs in components.
+					        (error) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */ isLoaded: true,
+					            error,
+					          }); /* 4 */
+					        }
+					      ); /* 3 */
+					  } /* 2 */
+
+					  render() {
+					    /* 2 */
+					    // alert('combined props: ' + this.state.theProps);
+					    const { error, isLoaded, items } = this.state;
+
+					    if (error) {
+					      return /*#__PURE__*/ React.createElement(
+					        "div",
+					        null,
+					        "Error: ",
+					        error.message
+					      );
+					    } else if (!isLoaded) {
+					      return /*#__PURE__*/ React.createElement("img", {
+					        src: "./cosmos/animatedEllipse.gif",
+					      });
+					    } else {
+					      // print_recursive(this.state.items);
+					      var response = parseJson.parseStart(this.state.items);
+					      if (response === "Exists") {
+					        alert(
+					          " System Ucoordinate " +
+					            this.state.dims[0] +
+					            " Vcoordinate" +
+					            this.state.dims[1] +
+					            " allready exists, choose different U and V coordinates"
+					        );
+					        return React.createElement(UDimension, null);
+					      } else {
+					        var serverDims = response.split(":");
+					        var workingUVworkingDimension = new UVworkingDimension();
+					        workingUVworkingDimension.instance(serverDims[1], serverDims[2]);
+					        alert("working UV:" + serverDims[1] + " " + serverDims[2]);
+					        return React.createElement(ClusterSelection, {
+					          value: workingUVworkingDimension,
+					        });
+					      }
+					      return (
+					        "Udim:" +
+					        this.state.dims[0] +
+					        " Vdim:" +
+					        this.state.dims[1] +
+					        " response:" +
+					        response
+					      );
+					    } /* 2 */
+					  }
+					} /* 1 */
+
+					class ClusterSelection extends React.Component {
+					  /*1*/
+					  constructor(props) {
+					    /*2*/
+					    super(props);
+					    this.state = {
+					      /*3*/
+					      theProps: this.props.value,
+					      error: null,
+					      isLoaded: false,
+					      items: "",
+					      value: "",
+					    };
+					    /* 3 */
+
+					    this.handleChange = this.handleChange.bind(this);
+					    this.handleSubmit = this.handleSubmit.bind(this);
+					  }
+					  /* 2 */
+
+					  handleChange(event) {
+					    this.setState({
+					      value: event.target.value,
+					    });
+					  }
+
+					  handleSubmit(event) {
+					    alert("first choice is: " + this.state.value);
+					    event.preventDefault();
+					    this.setState({
+					      /* 3 */ submitted: true,
+					    }); /* 3 */
+					  }
+
+					  componentDidMount() {
+					    /* 2 */
+					    fetch(
+					      "http://www.johntredden.com:8080/johntredden-1.0/userDesignatedSubCluster.html"
+					    )
+					      .then((res) => res.json())
+					      .then(
+					        (result) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */
+					            isLoaded: true,
+					            items: result,
+					          });
+					          /* 4 */
+					          // alert("items:"+ result);
+					        },
+					        /* 3 */
+					        // Note: it's important to handle errors here
+					        // instead of a catch() block so that we don't swallow
+					        // exceptions from actual bugs in components.
+					        (error) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */
+					            isLoaded: true,
+					            error,
+					          });
+					          /* 4 */
+					        }
+					      );
+					    /* 3 */
+					  }
+					  /* 2 */
+
+					  render() {
+					    /* 2 */
+					    const { error, isLoaded, items } = this.state;
+
+					    if (error) {
+					      return /*#__PURE__*/ React.createElement(
+					        "div",
+					        null,
+					        "Error: ",
+					        error.message
+					      );
+					    } else if (!isLoaded) {
+					      return /*#__PURE__*/ React.createElement(
+					        "div",
+					        null,
+					        "Loading cluster selection ..."
+					      );
+					    } else {
+					      var response = parseJson.parseStart(this.state.items);
+					      var clusterTypes = response.split(":");
+					      var data = [];
+
+					      for (var i = 1; i < clusterTypes.length; i++) {
+					        data[i] = clusterTypes[i];
+					      }
+
+					      //                  	      const myComponent = () => /*#__PURE__*/React.createElement("select", {
+					      //                  	        options: data,
+					      //                 	        onChange: this.handleChange
+					      //                  	      });
+
+					      console.log(
+					        "working U and V:" +
+					          this.state.theProps.getUdim() +
+					          " " +
+					          this.state.theProps.getVdim()
+					      ); // print_recursive(this.state.theProps);
+
+					      return this.state.submitted
+					        ? /*#__PURE__*/ React.createElement(ClusterSelectionResponse, {
+					            /* 3 */ value: this.state.theProps,
+					            value2: this.state.value,
+					          })
+					        : /*#__PURE__*/ React.createElement(
+					            "form",
+					            {
+					              onSubmit: this.handleSubmit,
+					            },
+					            /*#__PURE__*/ React.createElement(
+					              "label",
+					              {
+					                style: {
+					                  color: "lightyellow",
+					                  backgroundColor: "darkblue",
+					                  fontSize: 30,
+					                  height: 30,
+					                  fontWeight: "bold",
+					                },
+					              },
+					              "Select cluster configuration:",
+					              /*#__PURE__*/ React.createElement(
+					                "select",
+					                {
+					                  style: {
+					                    color: "lightyellow",
+					                    backgroundColor: "lightblue",
+					                    fontSize: 30,
+					                    fontWeight: "bold",
+					                    height: 30,
+					                  },
+					                  value: this.state.value,
+					                  onChange: this.handleChange,
+					                },
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 30,
+					                      fontSize: 30,
+					                    },
+					                    value: " ",
+					                  },
+					                  "Select cluster type"
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+
+					                    value: data[1],
+					                  },
+					                  data[1]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[2],
+					                  },
+					                  data[2]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[3],
+					                  },
+					                  data[3]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[4],
+					                  },
+					                  data[4]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[5],
+					                  },
+					                  data[5]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[6],
+					                  },
+					                  data[6]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[7],
+					                  },
+					                  data[7]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[8],
+					                  },
+					                  data[8]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[9],
+					                  },
+					                  data[9]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[10],
+					                  },
+					                  data[10]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[11],
+					                  },
+					                  data[11]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[12],
+					                  },
+					                  data[12]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[13],
+					                  },
+					                  data[13]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[14],
+					                  },
+					                  data[14]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[15],
+					                  },
+					                  data[15]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[16],
+					                  },
+					                  data[16]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[17],
+					                  },
+					                  data[17]
+					                ),
+					                /*#__PURE__*/ React.createElement(
+					                  "option",
+					                  {
+					                    style: {
+					                      color: "darkblue",
+					                      backgroundColor: "lightblue",
+					                      height: 26,
+					                      fontSize: 30,
+					                    },
+					                    value: data[18],
+					                  },
+					                  data[18]
+					                )
+					              )
+					            ),
+					            /*#__PURE__*/ React.createElement("input", {
+					              type: "submit",
+					              value: "Submit",
+					              style: {
+					                color: "lightblue",
+					                backgroundColor: "darkblue",
+					                height: 35,
+					                fontSize: 30,
+					                textAlign: "center",
+					                width: "100%",
+					              },
+					            })
+					          );
+					    }
+					  }
+					  /* 2 */
+					}
+					/* 1 */
+
+					class ClusterSelectionResponse extends React.Component {
+					  /*1*/
+					  constructor(props) {
+					    /*2*/
+					    super(props);
+					    this.state = {
+					      UVdimObject: this.props.value,
+					      spread: this.props.value2,
+					      error: null,
+					      isLoaded: false,
+					      items: "",
+					      value: "",
+					    };
+					    this.handleChange = this.handleChange.bind(this);
+					    this.handleSubmit = this.handleSubmit.bind(this);
+					  }
+
+					  handleChange(event) {
+					    this.setState({
+					      value: event.target.value,
+					    });
+					  }
+
+					  handleSubmit(event) {
+					    alert("star type choice is: " + this.state.value);
+					    event.preventDefault();
+					    this.setState({
+					      /* 3 */
+					      submitted: true,
+					    });
+					    /* 3 */
+					  }
+
+					  componentDidMount() {
+					    /* 2 */
+					    fetch(
+					      "http://www.johntredden.com:8080/johntredden-1.0/userDesignatedStarColor.html"
+					    )
+					      .then((res) => res.json())
+					      .then(
+					        (result) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */
+					            isLoaded: true,
+					            items: result,
+					          });
+					          /* 4 */
+					          // alert("items:"+ result);
+					        },
+					        /* 3 */
+					        // Note: it's important to handle errors here
+					        // instead of a catch() block so that we don't swallow
+					        // exceptions from actual bugs in components.
+					        (error) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */
+					            isLoaded: true,
+					            error,
+					          });
+					          /* 4 */
+					        }
+					      );
+					    /* 3 */
+					  }
+					  /* 2 */
+
+					  render() {
+					    /* 2 */
+					    const { error, isLoaded, items } = this.state;
+
+					    if (error) {
+					      return /*#__PURE__*/ React.createElement(
+					        "div",
+					        null,
+					        "Error: ",
+					        error.message
+					      );
+					    } else if (!isLoaded) {
+					      return /*#__PURE__*/ React.createElement("img", {
+					        src: "./cosmos/animatedEllipse.gif",
+					      });
+					    } else {
+					      var response = parseJson.parseStart(this.state.items);
+					      var starColors = response.split(":");
+					      var data = [];
+
+					      for (var i = 1; i < starColors.length; i++) {
+					        data[i] = starColors[i];
+					      }
+					    }
+
+					    return this.state.submitted
+					      ? /*#__PURE__*/ React.createElement(SystemDataToServer, {
+					          /* 3 */
+					          value: this.state.UVdimObject,
+					          value2: this.state.spread,
+					          value3: this.state.value,
+					        })
+					      : /*#__PURE__*/ React.createElement(
+					          "form",
+					          {
+					            onSubmit: this.handleSubmit,
+					          },
+					          /*#__PURE__*/ React.createElement(
+					            "label",
+					            {
+					              style: {
+					                color: "lightyellow",
+					                backgroundColor: "darkblue",
+					                fontSize: 30,
+					                fontWeight: "bold",
+					                height: 26,
+					              },
+					            },
+					            "Select star color from drop down:",
+					            /*#__PURE__*/ React.createElement(
+					              "select",
+					              {
+					                style: {
+					                  color: "lightyellow",
+					                  backgroundColor: "lightblue",
+					                  fontSize: 30,
+					                  fontWeight: "bold",
+					                  height: 30,
+					                },
+					                value: this.state.value,
+					                onChange: this.handleChange,
+					              },
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "lightyellow",
+					                    backgroundColor: "lightblue",
+					                    fontSize: 30,
+					                    fontWeight: "bold",
+					                    height: 30,
+					                  },
+					                  value: " ",
+					                },
+					                "                "
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[1],
+					                },
+					                data[1]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[2],
+					                },
+					                data[2]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[3],
+					                },
+					                data[3]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[4],
+					                },
+					                data[4]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[5],
+					                },
+					                data[5]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[6],
+					                },
+					                data[6]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[7],
+					                },
+					                data[7]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[8],
+					                },
+					                data[8]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[9],
+					                },
+					                data[9]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[10],
+					                },
+					                data[10]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[11],
+					                },
+					                data[11]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[12],
+					                },
+					                data[12]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[13],
+					                },
+					                data[13]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[14],
+					                },
+					                data[14]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[15],
+					                },
+					                data[15]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[16],
+					                },
+					                data[16]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[17],
+					                },
+					                data[17]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[18],
+					                },
+					                data[18]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[19],
+					                },
+					                data[19]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[20],
+					                },
+					                data[20]
+					              ),
+
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[21],
+					                },
+					                data[21]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[22],
+					                },
+					                data[22]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[23],
+					                },
+					                data[23]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[24],
+					                },
+					                data[24]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[25],
+					                },
+					                data[25]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[26],
+					                },
+					                data[26]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[27],
+					                },
+					                data[27]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[28],
+					                },
+					                data[28]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[29],
+					                },
+					                data[29]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[30],
+					                },
+					                data[30]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[31],
+					                },
+					                data[31]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[32],
+					                },
+					                data[32]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[33],
+					                },
+					                data[33]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[34],
+					                },
+					                data[34]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[35],
+					                },
+					                data[35]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[36],
+					                },
+					                data[36]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+					                  value: data[37],
+					                },
+					                data[37]
+					              )
+					            )
+					          ),
+					          /*#__PURE__*/ React.createElement("input", {
+					            type: "submit",
+					            value: "Submit",
+					            style: {
+					              color: "lightblue",
+					              backgroundColor: "darkblue",
+					              height: 35,
+					              fontSize: 30,
+					              textAlign: "center",
+					              width: "100%",
+					            },
+					          })
+					        );
+					  }
+					  /* 2 */
+					}
+					/* 1 */
+					class SystemDataToServer extends React.Component {
+					  /*1*/
+					  constructor(props) {
+					    /*2*/
+					    super(props);
+					    this.state = {
+					      UVdimObject: this.props.value,
+					      spread: this.props.value2,
+					      starColor: this.props.value3,
+					      error: null,
+					      isLoaded: false,
+					      items: "",
+					      value: "",
+					    };
+					    this.handleChange = this.handleChange.bind(this);
+					    this.handleSubmit = this.handleSubmit.bind(this);
+					  }
+
+					  handleChange(event) {
+					    this.setState({
+					      value: event.target.value,
+					    });
+					  }
+
+					  handleSubmit(event) {
+					    alert("star color choice is: " + this.state.value);
+					    event.preventDefault();
+					    this.setState({
+					      /* 3 */
+					      submitted: true,
+					    });
+					    /* 3 */
+					  }
+
+					  componentDidMount() {
+					    /* 2 */
+					    fetch(
+					      "http://www.johntredden.com:8080/johntredden-1.0/buildSpecifiedClusterAndStars.html?udimension=" +
+					        this.state.UVdimObject.getUdim() +
+					        "&vdimension=" +
+					        this.state.UVdimObject.getVdim() +
+					        "&spread=" +
+					        this.state.spread +
+					        "&star_color0=" +
+					        this.state.starColor
+					    )
+					      .then((res) => res.json())
+					      .then(
+					        (result) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */
+					            isLoaded: true,
+					            items: result,
+					          });
+					          /* 4 */
+					          // alert("items:"+ result);
+					        },
+					        /* 3 */
+					        // Note: it's important to handle errors here
+					        // instead of a catch() block so that we don't swallow
+					        // exceptions from actual bugs in components.
+					        (error) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */
+					            isLoaded: true,
+					            error,
+					          });
+					          /* 4 */
+					        }
+					      );
+					    /* 3 */
+					  }
+					  /* 2 */
+
+					  render() {
+					    const { error, isLoaded, items } = this.state;
+
+					    if (error) {
+					      return /*#__PURE__*/ React.createElement(
+					        "div",
+					        null,
+					        "Error: ",
+					        error.message
+					      );
+					    } else if (!isLoaded) {
+					      return /*#__PURE__*/ React.createElement("img", {
+					        src: "./cosmos/animatedEllipse.gif",
+					      });
+					    } else {
+					      var response = parseJson.parseStart(this.state.items);
+					      if (response.includes("Complete")) {
+					        alert(" Server response is complete, you can define a new system");
+					        return React.createElement(UDimension, null);
+					      } else {
+					        var count = response.split(":");
+					        console.log("star need count:" + count);
+					        var starCountStateInstance = new starCountState();
+					        starCountStateInstance.instance(count[1]);
+					        starCountStateInstance.addStar(this.state.starColor);
+					        // this.state.value = starCountStateInstance;
+					        return React.createElement(ContinuedSystemDataToServer, {
+					          value: this.state.UVdimObject,
+					          value2: this.state.spread,
+					          value3: starCountStateInstance,
+					        });
+					      }
+					    }
+					    return (
+					      "next: " +
+					      this.state.UVdimObject.getUdim() +
+					      " " +
+					      this.state.UVdimObject.getUdim() +
+					      " " +
+					      this.state.spread +
+					      " " +
+					      this.state.starColor
+					    );
+					  }
+					} /* 1 */
+
+					class ContinuedSystemDataToServer extends React.Component {
+					  /* 1 */
+					  constructor(props) {
+					    /*2*/
+					    super(props);
+					    this.state = {
+					      UVdimObject: this.props.value,
+					      spread: this.props.value2,
+					      starCountStateInstance: this.props.value3,
+					      error: null,
+					      isLoaded: false,
+					      value: "",
+					    };
+					    this.handleChange = this.handleChange.bind(this);
+					    this.handleSubmit = this.handleSubmit.bind(this);
+					  }
+					  handleChange(event) {
+					    this.state.starCountStateInstance.addStar(event.target.value);
+					    this.setState({
+					      value: event.target.value,
+					    });
+					  }
+
+					  handleSubmit(event) {
+					    alert("star type choice is: " + this.state.value);
+					    event.preventDefault();
+					    this.setState({
+					      /* 3 */
+					      submitted: true,
+					    });
+					    /* 3 */
+					  }
+					  componentDidMount() {
+					    /* 2 */
+					    fetch(
+					      "http://www.johntredden.com:8080/johntredden-1.0/userDesignatedStarColor.html"
+					    )
+					      .then((res) => res.json())
+					      .then(
+					        (result) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */
+					            isLoaded: true,
+					            items: result,
+					          });
+					          /* 4 */
+					          // alert("items:"+ result);
+					        },
+					        /* 3 */
+					        // Note: it's important to handle errors here
+					        // instead of a catch() block so that we don't swallow
+					        // exceptions from actual bugs in components.
+					        (error) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */
+					            isLoaded: true,
+					            error,
+					          });
+					          /* 4 */
+					        }
+					      );
+					    /* 3 */
+					  }
+					  /* 2 */
+					  render() {
+					    /* 2 */
+					    if (this.state.starCountStateInstance.numberReached()) {
+					      return React.createElement(FinalSystemDataToServer, {
+					        value: this.state.UVdimObject,
+					        value2: this.state.spread,
+					        value3: this.state.starCountStateInstance,
+					      });
+					    }
+					    const { error, isLoaded, items } = this.state;
+
+					    if (error) {
+					      return /*#__PURE__*/ React.createElement(
+					        "div",
+					        null,
+					        "Error: ",
+					        error.message
+					      );
+					    } else if (!isLoaded) {
+					      return /*#__PURE__*/ React.createElement("img", {
+					        src: "./cosmos/animatedEllipse.gif",
+					      });
+					    } else {
+					      var response = parseJson.parseStart(this.state.items);
+					      var clusterTypes = response.split(":");
+					      var data = [];
+
+					      for (var i = 1; i < clusterTypes.length; i++) {
+					        data[i] = clusterTypes[i];
+					      }
+					    }
+
+					    return this.state.submitted
+					      ? /*#__PURE__*/ React.createElement(ContinuedSystemDataToServer, {
+					          /* 3 */
+					          value: this.state.UVdimObject,
+					          value2: this.state.spread,
+					          value3: this.state.starCountStateInstance,
+					        })
+					      : /*#__PURE__*/ React.createElement(
+					          "form",
+					          {
+					            onSubmit: this.handleSubmit,
+					          },
+					          /*#__PURE__*/ React.createElement(
+					            "label",
+					            {
+					              style: {
+					                color: "lightyellow",
+					                backgroundColor: "darkblue",
+					                fontSize: 30,
+					                fontWeight: "bold",
+					                height: 26,
+					              },
+					            },
+					            "Select star color:",
+					            /*#__PURE__*/ React.createElement(
+					              "select",
+					              {
+					                style: {
+					                  color: "lightyellow",
+					                  backgroundColor: "lightblue",
+					                  fontSize: 30,
+					                  fontWeight: "bold",
+					                  height: 30,
+					                },
+					                value: this.state.value,
+					                onChange: this.handleChange,
+					              },
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "lightyellow",
+					                    backgroundColor: "lightblue",
+					                    fontSize: 30,
+					                    fontWeight: "bold",
+					                    height: 30,
+					                  },
+					                  value: " ",
+					                },
+					                "Select star color"
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  style: {
+					                    color: "darkblue",
+					                    backgroundColor: "lightblue",
+					                    height: 26,
+					                    fontSize: 30,
+					                  },
+
+					                  value: data[1],
+					                },
+					                data[1]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[2],
+					                },
+					                data[2]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[3],
+					                },
+					                data[3]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[4],
+					                },
+					                data[4]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[5],
+					                },
+					                data[5]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[6],
+					                },
+					                data[6]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[7],
+					                },
+					                data[7]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[8],
+					                },
+					                data[8]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[9],
+					                },
+					                data[9]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[10],
+					                },
+					                data[10]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[11],
+					                },
+					                data[11]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[12],
+					                },
+					                data[12]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[13],
+					                },
+					                data[13]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[14],
+					                },
+					                data[14]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[15],
+					                },
+					                data[15]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[16],
+					                },
+					                data[16]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[17],
+					                },
+					                data[17]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[18],
+					                },
+					                data[18]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[19],
+					                },
+					                data[19]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[20],
+					                },
+					                data[20]
+					              ),
+
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[21],
+					                },
+					                data[21]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[22],
+					                },
+					                data[22]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[23],
+					                },
+					                data[23]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[24],
+					                },
+					                data[24]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[25],
+					                },
+					                data[25]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[26],
+					                },
+					                data[26]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[27],
+					                },
+					                data[27]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[28],
+					                },
+					                data[28]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[29],
+					                },
+					                data[29]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[30],
+					                },
+					                data[30]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[31],
+					                },
+					                data[31]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[32],
+					                },
+					                data[32]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[33],
+					                },
+					                data[33]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[34],
+					                },
+					                data[34]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[35],
+					                },
+					                data[35]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[36],
+					                },
+					                data[36]
+					              ),
+					              /*#__PURE__*/ React.createElement(
+					                "option",
+					                {
+					                  value: data[37],
+					                },
+					                data[37]
+					              )
+					            )
+					          ),
+					          /*#__PURE__*/ React.createElement("input", {
+					            type: "submit",
+					            value: "Submit",
+					            style: {
+					              color: "lightblue",
+					              backgroundColor: "darkblue",
+					              height: 35,
+					              fontSize: 30,
+					              textAlign: "center",
+					              width: "100%",
+					            },
+					          })
+					        );
+					  }
+					  /* 2 */
+					}
+					/* 1 */
+
+					class FinalSystemDataToServer extends React.Component {
+					  /* 1 */
+					  constructor(props) {
+					    /*2*/
+					    super(props);
+					    this.state = {
+					      UVdimObject: this.props.value,
+					      spread: this.props.value2,
+					      starCountStateInstance: this.props.value3,
+					      error: null,
+					      isLoaded: false,
+					      value: "",
+					    };
+					    this.handleChange = this.handleChange.bind(this);
+					    this.handleSubmit = this.handleSubmit.bind(this);
+					  }
+
+					  handleChange(event) {
+					    this.state.starCountStateInstance.addStar(event.target.value);
+					    this.setState({
+					      value: event.target.value,
+					    });
+					  }
+
+					  handleSubmit(event) {
+					    event.preventDefault();
+					    this.setState({
+					      /* 3 */
+					      submitted: true,
+					    });
+					    /* 3 */
+					  }
+
+					  componentDidMount() {
+					    /* 2 */
+					    var request =
+					      "http://www.johntredden.com:8080/johntredden-1.0/buildSpecifiedClusterAndStars.html?udimension=" +
+					      this.state.UVdimObject.getUdim() +
+					      "&vdimension=" +
+					      this.state.UVdimObject.getVdim() +
+					      "&spread=" +
+					      this.state.spread;
+					    var totalNumber = this.state.starCountStateInstance.fetchCountNeeded();
+
+					    for (var idex = 0; idex != totalNumber; ++idex) {
+					      var star = this.state.starCountStateInstance.fetchNumberStar(idex);
+					      var httpSeg = "&star_color" + idex + "=" + star;
+					      request += httpSeg;
+					    }
+
+					    fetch(request)
+					      .then((res) => res.json())
+					      .then(
+					        (result) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */
+					            isLoaded: true,
+					            items: result,
+					          });
+					          /* 4 */
+					          // alert("items:"+ result);
+					        },
+					        /* 3 */
+					        // Note: it's important to handle errors here
+					        // instead of a catch() block so that we don't swallow
+					        // exceptions from actual bugs in components.
+					        (error) => {
+					          /* 3 */
+					          this.setState({
+					            /* 4 */
+					            isLoaded: true,
+					            error,
+					          });
+					          /* 4 */
+					        }
+					      );
+					    /* 3 */
+					  }
+					  /* 2 */
+
+					  render() {
+					    /* 2 */
+					    const { error, isLoaded, items } = this.state;
+
+					    if (error) {
+					      return /*#__PURE__*/ React.createElement(
+					        "div",
+					        null,
+					        "Error: ",
+					        error.message
+					      );
+					    } else if (!isLoaded) {
+					      return /*#__PURE__*/ React.createElement("img", {
+					        src: "./cosmos/animatedEllipse.gif",
+					      });
+					    } else {
+					      var response = parseJson.parseStart(this.state.items);
+					      // alert(response);
+					      return React.createElement(UDimension, null);
+					    }
+					  }
+					}
+					/* 1 */
+
+                   	ReactDOM.render( /*#__PURE__*/React.createElement(UDimension, null), document.getElementById('root'));           	
+            	} /* 0 */
+            
+        </script>
+</body>
+</html>
