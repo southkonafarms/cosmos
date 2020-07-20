@@ -15,7 +15,7 @@ public abstract class AbstractJDBCDao {
 		if(null == driverManagerDataSource){
 			driverManagerDataSource= new DriverManagerDataSource();
 			logger.info("driverManagerDataSource estblished");
-			driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
+			driverManagerDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 
 			driverManagerDataSource
 					.setUrl("jdbc:mysql://localhost/johntredden");

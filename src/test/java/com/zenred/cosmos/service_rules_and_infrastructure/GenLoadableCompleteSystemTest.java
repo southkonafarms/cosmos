@@ -9,6 +9,7 @@ public class GenLoadableCompleteSystemTest {
 	@Test
 	public void test() {
 		GenLoadableCompleteSystem.GenFromUVCoordinates(60606, 27912);
+		GenLoadableCompleteSystem.GenFromUVCoordinates(76974, 79975);
 	}
 
 }
