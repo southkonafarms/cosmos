@@ -5,28 +5,39 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.zenred.cosmos.domain.SystemDao;
-import com.zenred.cosmos.domain.System;
+
 import com.zenred.cosmos.domain.BasicSystem;
-import com.zenred.cosmos.domain.ClusterRep;
 import com.zenred.cosmos.domain.BasicClusterRep;
 import com.zenred.cosmos.domain.BasicRename;
 import com.zenred.cosmos.domain.BasicStar;
+import com.zenred.cosmos.domain.BasicPlanetoid;
+import com.zenred.cosmos.domain.BasicAtmosphere;
+
+import com.zenred.cosmos.domain.SystemDao;
+import com.zenred.cosmos.domain.UnifiedPlanetoidI;
+import com.zenred.cosmos.domain.System;
+import com.zenred.cosmos.domain.ClusterRep;
 import com.zenred.cosmos.domain.ClusterRepDao;
+import com.zenred.cosmos.domain.PlanetoidDao;
 import com.zenred.cosmos.domain.Rename;
 import com.zenred.cosmos.domain.RenameDao;
 import com.zenred.cosmos.domain.Star;
 import com.zenred.cosmos.domain.StarDao;
+import com.zenred.cosmos.domain.Atmosphere;
+import com.zenred.cosmos.domain.AtmosphereDao;
 import com.google.gson.Gson; 
 
 
 public class GenLoadableCompleteSystem {
 	
 	
+	private static final String BasicPlanetoid = null;
 	static private SystemDao systemDao = new SystemDao();
 	static private ClusterRepDao clusterRepDao = new ClusterRepDao();
 	static private RenameDao renameDao = new RenameDao();
 	static private StarDao starDao = new StarDao();
+	static private PlanetoidDao planetoidDao = new PlanetoidDao();
+	static private AtmosphereDao atmosphereDao = new AtmosphereDao();
 	
 	static private Logger logger = Logger.getLogger(GenLoadableCompleteSystem.class);
 	
@@ -74,8 +85,70 @@ public class GenLoadableCompleteSystem {
 	    	    				rename.getRenameName(), rename.getRenameCount());
 	    	    		basicRenames.add(basicRename);
 	    	    	}
-	    	    	String jsonClusterRenames = gson.toJson(basicRenames);
-	    	    	logger.info("JSON_star_renames:" + jsonClusterRenames );
+	    	    	String jsonStarRenames = gson.toJson(basicRenames);
+	    	    	logger.info("JSON_star_renames:" + jsonStarRenames );
+	    		}
+	    		List<UnifiedPlanetoidI> plentoidIList = planetoidDao.readPlanetoidsAroundStar(star);
+	    		for(UnifiedPlanetoidI unifiedPlanetoidI: plentoidIList){
+	    			BasicPlanetoid basicPlanetoid = new BasicPlanetoid(unifiedPlanetoidI.getPlanetoid().getPlanetoidName(),
+	    					unifiedPlanetoidI.getPlanetoid().getDegree(), 
+	    					unifiedPlanetoidI.getPlanetoid().getTemperature(),
+	    					unifiedPlanetoidI.getPlanetoid().getPercentWater(),
+	    					unifiedPlanetoidI.getPlanetoid().getRadius(),
+	    					unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary());
+	    			String jsonPlanetRep = gson.toJson(basicPlanetoid);
+	    			logger.info("JSON_planet:" + jsonPlanetRep);
+		    		List<Rename> planetRenames = renameDao.fetchRenamesForGenericName(basicPlanetoid.getPlanetoidName());
+		    		if(!planetRenames.isEmpty()){
+		    			List<BasicRename> basicRenames = new ArrayList<BasicRename>();
+		    	    	for(Rename rename : renames){
+		    	    		BasicRename basicRename = new BasicRename(rename.getRenameObjectType(), rename.getGenericName(), 
+		    	    				rename.getRenameName(), rename.getRenameCount());
+		    	    		basicRenames.add(basicRename);
+		    	    	}
+		    	    	String jsonPlanetRenames = gson.toJson(basicRenames);
+		    	    	logger.info("JSON_planet_renames:" + jsonPlanetRenames );
+		    		}
+		    		List<Atmosphere> planetAtmospheres = 
+		    				atmosphereDao.readAtmosphereAroundPlanet(unifiedPlanetoidI.getPlanetoid());
+		    		List<BasicAtmosphere> basicPlanetAtmospheres = new ArrayList<BasicAtmosphere>();
+		    		for(Atmosphere atmosphere : planetAtmospheres){
+		    			BasicAtmosphere basicAtmosphere = new BasicAtmosphere(atmosphere.getChem_name(), atmosphere.getPercentage());
+		    			basicPlanetAtmospheres.add(basicAtmosphere);
+		    		}
+		    		String jsonPlanetAtmospheres = gson.toJson(basicPlanetAtmospheres);
+		    		logger.info("JSON_planet_atmospheres:" + jsonPlanetAtmospheres);
+		    		List<UnifiedPlanetoidI> moonIList = planetoidDao.readMoonsAroundPlanetoid(unifiedPlanetoidI.getPlanetoid());
+		    		for(UnifiedPlanetoidI unifiedMoonI: moonIList){
+		    			BasicPlanetoid basicMoon = new BasicPlanetoid(unifiedMoonI.getPlanetoid().getPlanetoidName(),
+		    					unifiedMoonI.getPlanetoid().getDegree(), 
+		    					unifiedMoonI.getPlanetoid().getTemperature(),
+		    					unifiedMoonI.getPlanetoid().getPercentWater(),
+		    					unifiedMoonI.getPlanetoid().getRadius(),
+		    					unifiedMoonI.getPlanetoid().getDistanceToPrimary());
+		    			String jsonMoonRep = gson.toJson(basicPlanetoid);
+		    			logger.info("JSON_moon:" + jsonMoonRep);
+			    		List<Rename> moonRenames = renameDao.fetchRenamesForGenericName(basicMoon.getPlanetoidName());
+			    		if(!moonRenames.isEmpty()){
+			    			List<BasicRename> basicRenames = new ArrayList<BasicRename>();
+			    	    	for(Rename rename : renames){
+			    	    		BasicRename basicRename = new BasicRename(rename.getRenameObjectType(), rename.getGenericName(), 
+			    	    				rename.getRenameName(), rename.getRenameCount());
+			    	    		basicRenames.add(basicRename);
+			    	    	}
+			    	    	String jsonPlanetRenames = gson.toJson(basicRenames);
+			    	    	logger.info("JSON_moon_renames:" + jsonPlanetRenames );
+			    		}
+			    		List<Atmosphere> moonAtmospheres = 
+			    				atmosphereDao.readAtmosphereAroundPlanet(unifiedMoonI.getPlanetoid());
+			    		List<BasicAtmosphere> basicMoonAtmospheres = new ArrayList<BasicAtmosphere>();
+			    		for(Atmosphere atmosphere : moonAtmospheres){
+			    			BasicAtmosphere basicAtmosphere = new BasicAtmosphere(atmosphere.getChem_name(), atmosphere.getPercentage());
+			    			basicMoonAtmospheres.add(basicAtmosphere);
+			    		}
+			    		String jsonMoonAtmospheres = gson.toJson(basicMoonAtmospheres);
+			    		logger.info("JSON_moon_atmospheres:" + jsonMoonAtmospheres);
+		    		}
 	    		}
 	    	}
 	    }

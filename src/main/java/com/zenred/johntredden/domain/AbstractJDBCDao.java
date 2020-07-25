@@ -18,7 +18,7 @@ public abstract class AbstractJDBCDao {
 			driverManagerDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
 
 			driverManagerDataSource
-					.setUrl("jdbc:mysql://localhost/johntredden");
+					.setUrl("jdbc:mysql://localhost/johntredden?useSSL=false");
 			driverManagerDataSource.setUsername("jredden");
 			driverManagerDataSource
 					.setPassword("nCXL3O2GVAwLBJnT");
