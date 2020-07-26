@@ -1,8 +1,11 @@
 package com.zenred.cosmos.service_rules_and_infrastructure;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 
@@ -18,6 +21,7 @@ import com.zenred.cosmos.domain.UnifiedPlanetoidI;
 import com.zenred.cosmos.domain.System;
 import com.zenred.cosmos.domain.ClusterRep;
 import com.zenred.cosmos.domain.ClusterRepDao;
+import com.zenred.cosmos.domain.ConfigurationDao;
 import com.zenred.cosmos.domain.PlanetoidDao;
 import com.zenred.cosmos.domain.Rename;
 import com.zenred.cosmos.domain.RenameDao;
@@ -41,18 +45,57 @@ public class GenLoadableCompleteSystem {
 	
 	static private Logger logger = Logger.getLogger(GenLoadableCompleteSystem.class);
 	
+	static private String fullPathToYourWebappRoot = com.zenred.cosmos.domain.Configuration.readReportRoot();
+	static private String reportDirectory = new ConfigurationDao().reportDirectory();
+	static private String relativePath;
+	static private String jsonReportFile;
+	static private StringBuilder fileContents;
+	/**
+	 * where the JSON formatted report goes
+	 * String building is also initialized
+	 */
+	private static void initReportDirectory(Integer uCoordinate, Integer vCoordinate){
+		relativePath = reportDirectory + File.separator + uCoordinate + ":" + vCoordinate;
+		jsonReportFile = fullPathToYourWebappRoot + File.separator + relativePath;
+		fileContents = new StringBuilder();
+	}
+	/**
+	 * adds one JSON formated line
+	 * @param line
+	 * @param header
+	 */
+	private static void buildNextLine(String line, String header){
+		fileContents.append("{").append(header).append("{").append(line).append("}}");
+	}
+	/**
+	 * only invoked once per UV run
+	 */
+	private static void writeTheFile(){
+		File file = new File(jsonReportFile);
+		try {
+			FileUtils.writeStringToFile(file, fileContents.toString());
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			throw new RuntimeException("File IO Error:" + ioe.getMessage());
+		}
+		logger.info("WROTE file:" + file.getAbsolutePath());
+	}
+	
 	public static void GenFromUVCoordinates(Integer uCoordinate, Integer vCoordinate){
+		initReportDirectory(uCoordinate, vCoordinate);
 		System system = systemDao.readSystemByUVCoordinates(uCoordinate, vCoordinate);
 		BasicSystem basicSystem = new BasicSystem(system.getDistance_to_galaxy_centre(), system.getUcoordinate(), 
 				system.getVcoordinate(), system.getSystemName());
 		Gson gson = new Gson();    
 	    String jsonSystem = gson.toJson(basicSystem);
 	    logger.info("JSON_system:" + jsonSystem );
+	    buildNextLine(jsonSystem, "JSON_system");
 	    ClusterRep clusterRep = clusterRepDao.readClusterRepBySystemId(system);
 	    BasicClusterRep basicClusterRep = new BasicClusterRep(clusterRep.getClusterName(), clusterRep.getDistance_sys_virt_centre(),
 	    		clusterRep.getAngle_in_radians(), clusterRep.getCluster_description());
 	    String jsonClusterRep = gson.toJson(basicClusterRep);
 	    logger.info("JSON_clusterRep:" + jsonClusterRep );
+	    buildNextLine(jsonClusterRep, "JSON_clusterRep");
 	    List<Rename> renames =renameDao.fetchRenamesForGenericName(clusterRep.getClusterName());
 	    if(!renames.isEmpty()){
 	    	List<BasicRename> basicRenames = new ArrayList<BasicRename>();
@@ -63,6 +106,7 @@ public class GenLoadableCompleteSystem {
 	    	}
 	    	String jsonClusterRenames = gson.toJson(basicRenames);
 	    	logger.info("JSON_clustrer_renames:" + jsonClusterRenames );
+	    	buildNextLine(jsonClusterRenames, "JSON_clustrer_renames");
 	    }
 	    List<Star> stars = starDao.readStarsInCluster(clusterRep);
 	    if(!stars.isEmpty()){
@@ -77,16 +121,18 @@ public class GenLoadableCompleteSystem {
 	    				star.getStar_size());
 	    		String jsonStarRep = gson.toJson(basicStar);
 	    		logger.info("JSON_star:" + jsonStarRep );
+	    		buildNextLine(jsonStarRep, "JSON_star");
 	    		List<Rename> starRenames = renameDao.fetchRenamesForGenericName(star.getName());
 	    		if(!starRenames.isEmpty()){
 	    	    	List<BasicRename> basicRenames = new ArrayList<BasicRename>();
-	    	    	for(Rename rename : renames){
+	    	    	for(Rename rename : starRenames){
 	    	    		BasicRename basicRename = new BasicRename(rename.getRenameObjectType(), rename.getGenericName(), 
 	    	    				rename.getRenameName(), rename.getRenameCount());
 	    	    		basicRenames.add(basicRename);
 	    	    	}
 	    	    	String jsonStarRenames = gson.toJson(basicRenames);
 	    	    	logger.info("JSON_star_renames:" + jsonStarRenames );
+	    	    	buildNextLine(jsonStarRenames, "JSON_star_renames");
 	    		}
 	    		List<UnifiedPlanetoidI> plentoidIList = planetoidDao.readPlanetoidsAroundStar(star);
 	    		for(UnifiedPlanetoidI unifiedPlanetoidI: plentoidIList){
@@ -98,16 +144,18 @@ public class GenLoadableCompleteSystem {
 	    					unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary());
 	    			String jsonPlanetRep = gson.toJson(basicPlanetoid);
 	    			logger.info("JSON_planet:" + jsonPlanetRep);
+	    			buildNextLine(jsonPlanetRep, "JSON_planet");
 		    		List<Rename> planetRenames = renameDao.fetchRenamesForGenericName(basicPlanetoid.getPlanetoidName());
 		    		if(!planetRenames.isEmpty()){
 		    			List<BasicRename> basicRenames = new ArrayList<BasicRename>();
-		    	    	for(Rename rename : renames){
+		    	    	for(Rename rename : planetRenames){
 		    	    		BasicRename basicRename = new BasicRename(rename.getRenameObjectType(), rename.getGenericName(), 
 		    	    				rename.getRenameName(), rename.getRenameCount());
 		    	    		basicRenames.add(basicRename);
 		    	    	}
 		    	    	String jsonPlanetRenames = gson.toJson(basicRenames);
 		    	    	logger.info("JSON_planet_renames:" + jsonPlanetRenames );
+		    	    	buildNextLine(jsonPlanetRenames, "JSON_planet_renames");
 		    		}
 		    		List<Atmosphere> planetAtmospheres = 
 		    				atmosphereDao.readAtmosphereAroundPlanet(unifiedPlanetoidI.getPlanetoid());
@@ -118,6 +166,7 @@ public class GenLoadableCompleteSystem {
 		    		}
 		    		String jsonPlanetAtmospheres = gson.toJson(basicPlanetAtmospheres);
 		    		logger.info("JSON_planet_atmospheres:" + jsonPlanetAtmospheres);
+		    		buildNextLine(jsonPlanetAtmospheres, "JSON_planet_atmospheres");
 		    		List<UnifiedPlanetoidI> moonIList = planetoidDao.readMoonsAroundPlanetoid(unifiedPlanetoidI.getPlanetoid());
 		    		for(UnifiedPlanetoidI unifiedMoonI: moonIList){
 		    			BasicPlanetoid basicMoon = new BasicPlanetoid(unifiedMoonI.getPlanetoid().getPlanetoidName(),
@@ -128,16 +177,18 @@ public class GenLoadableCompleteSystem {
 		    					unifiedMoonI.getPlanetoid().getDistanceToPrimary());
 		    			String jsonMoonRep = gson.toJson(basicPlanetoid);
 		    			logger.info("JSON_moon:" + jsonMoonRep);
+		    			buildNextLine(jsonMoonRep, "JSON_moon");
 			    		List<Rename> moonRenames = renameDao.fetchRenamesForGenericName(basicMoon.getPlanetoidName());
 			    		if(!moonRenames.isEmpty()){
 			    			List<BasicRename> basicRenames = new ArrayList<BasicRename>();
-			    	    	for(Rename rename : renames){
+			    	    	for(Rename rename : moonRenames){
 			    	    		BasicRename basicRename = new BasicRename(rename.getRenameObjectType(), rename.getGenericName(), 
 			    	    				rename.getRenameName(), rename.getRenameCount());
 			    	    		basicRenames.add(basicRename);
 			    	    	}
-			    	    	String jsonPlanetRenames = gson.toJson(basicRenames);
-			    	    	logger.info("JSON_moon_renames:" + jsonPlanetRenames );
+			    	    	String jsonMoonRenames = gson.toJson(basicRenames);
+			    	    	logger.info("JSON_moon_renames:" + jsonMoonRenames );
+			    	    	buildNextLine(jsonMoonRenames, "JSON_moon_renames");
 			    		}
 			    		List<Atmosphere> moonAtmospheres = 
 			    				atmosphereDao.readAtmosphereAroundPlanet(unifiedMoonI.getPlanetoid());
@@ -148,11 +199,13 @@ public class GenLoadableCompleteSystem {
 			    		}
 			    		String jsonMoonAtmospheres = gson.toJson(basicMoonAtmospheres);
 			    		logger.info("JSON_moon_atmospheres:" + jsonMoonAtmospheres);
+			    		buildNextLine(jsonMoonAtmospheres, "JSON_moon_atmospheres");
 		    		}
 	    		}
 	    	}
 	    }
-	    
+	   // the end
+	    writeTheFile();
 	}
 
 }
