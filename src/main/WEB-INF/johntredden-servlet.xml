@@ -35,6 +35,7 @@
 	<bean id="userDesignatedSubCluster" class="com.zenred.cosmos.controller.UserDesignatedSubCluster"/>
 	<bean id="userDesignatedStarColor" class="com.zenred.cosmos.controller.UserDesignatedStarColor"/>
 	<bean id="buildSpecifiedClusterAndStars" class="com.zenred.cosmos.controller.BuildSpecifiedClusterAndStars"/>
+	<bean id="loadableSystem" class="com.zenred.cosmos.controller.LoadableSystem"/>
 
 	<bean id="urlMapping"
 		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
@@ -62,6 +63,7 @@
 				<prop key="/userDesignatedSubCluster.html">userDesignatedSubCluster</prop>
 				<prop key="/userDesignatedStarColor.html">userDesignatedStarColor</prop>
 				<prop key="/buildSpecifiedClusterAndStars.html">buildSpecifiedClusterAndStars</prop>
+				<prop key="/loadableSystem.html">loadableSystem</prop>
 			</props>
 		</property>
 	</bean>

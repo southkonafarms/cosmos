@@ -19,6 +19,72 @@
 	window.onload = function()
 	
 	<script type="text/javascript">
+	/*
+	 *  parses json message from the server
+	 */
+	var parseJson = (function () {
+	  // private
+	  var lineArray;
+	  var lineCount;
+	  var state;
+	  // public
+	  return {
+	    parseStart: function (json) {
+	      lineArray = [];
+	      lineCount = 0;
+	      output = "";
+	      return parseJson.parse(json);
+	    },
+	    parse: function (json) {
+	      if (Array.isArray(json) || typeof json == "object") {
+	        for (var idex in json) {
+	          console.log("Next idex:" + idex);
+	          switch (idex) {
+	            case "createMessageResponse":
+	              state = "Start0";
+	              break;
+	            case "theMessage":
+	              state = "Start1";
+	              break;
+	            default:
+	          }
+	        }
+	        parseJson.parse(json[idex]);
+	      } else {
+	        switch (state) {
+	          case "Start0":
+	            console.log("json0:" + json);
+	            break;
+	          case "Start1":
+	            console.log("json1:" + json);
+	            if (json === ":") {
+	              lineArray = ":";
+	            } else {
+                  lineArray = json;
+	            }
+	            break;
+	        }
+	      }
+	      return lineArray;
+	    },
+	  };
+	})();
+
+	var arrayOfData = [];
+	var buildArray = (function () {
+		var id;
+		var name;
+		return{
+			buildProc(index, oneName){
+
+					id = "id:" + index;
+					name = "name:" + oneName;
+					arrayOfData[idex] = {id, name};
+			}
+		}
+	})();
+	
+	
 	
 	class DBReader extends React.Component {
 		constructor(props){
@@ -40,7 +106,7 @@
 		  componentDidMount() {
 			    /* 2 */
 			    fetch(
-			      "http://www.localhost:8080/johntredden-1.0/systemReportChoice.html"
+			      "http://www.localhost:8080/johntredden-1.0/loadableSystem.html"
 			    )
 			      .then((res) => res.json())
 			      .then(
@@ -63,11 +129,18 @@
 			          }); /* 4 */
 			        }
 			      ); /* 3 */
+			      var response = parseJson.parseStart(this.state.items);
+			      serverDims = response.split(":");
+			      for (var i = 1; i < serverDims.length; i++) {
+			    	  buildArray.buildProc(i, serverDims[i] )
+				      }
 			  } /* 2 */
 
 
 		render() {
-			return '';
+			return (
+					React.createElement( DynamicSelect, arrayOfData={arrayOfData}, )
+					);
 		}
 	}
 	
@@ -83,6 +156,7 @@
 			    this.setState({
 			      value: event.target.value,
 			    });
+			    selectedValue = event.target.value;
 			    this.props.onSelectChange(value);
 			  }
 
@@ -94,13 +168,36 @@
 			  }
 		
 		 render(){
-			 arrayOfData = this.props.arrayOfData;
-			 return '';
+			    const { error, isLoaded, items } = this.state;
+			    var serverDims;
+
+			    if (error) {
+			      return /*#__PURE__*/ React.createElement(
+			        "div",
+			        null,
+			        "Error: ",
+			        error.message
+			      );
+			    } else if (!isLoaded) {
+			      return /*#__PURE__*/ React.createElement("img", {
+			        src: "../../animatedEllipse.gif",
+			      });
+			    } else {
+			    	arrayOfData = this.props.arrayOfData;
+ 			    	options = arrayOfData.map((data) =>
+			    	React.createElement("option", 
+                      {value: data.id}, "Option" +data.name	))
+			    }
+		           return (
+		                   <select name="customSearch" className="custom-search-select" onChange={this.handleChange}>
+		                       <option>Select Item</option>
+		                       {options}
+		                  </select>
+		                  )
 		 }
 	}
 	
 	ReactDOM.render( /*#__PURE__*/React.createElement(DBReader , null), document.getElementById('root')); 
-	
     </script>
 </body>
 </html>
