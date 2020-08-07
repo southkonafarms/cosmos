@@ -79,7 +79,7 @@
 
 					id = "id:" + index;
 					name = "name:" + oneName;
-					arrayOfData[idex] = {id, name};
+					arrayOfData[index] = {id, name};
 			}
 		}
 	})();
@@ -93,7 +93,7 @@
 		      selectedValue: 'Nothing selected',
 			  error: null,
 			  isLoaded: false,
-
+			  items: "",
 		    }
 		  }
 		
@@ -116,7 +116,13 @@
 			            /* 4 */ isLoaded: true,
 			            items: result,
 			          }); /* 4 */
-			          // alert("items:" + result);
+			          this.state.items = result;
+				      var response = parseJson.parseStart(this.state.items);
+				      var serverDims = response.split(":");
+				      for (var i = 1; i < serverDims.length; i++) {
+				    	  buildArray.buildProc(i, serverDims[i] )
+					      }
+
 			        } /* 3 */,
 			        // Note: it's important to handle errors here
 			        // instead of a catch() block so that we don't swallow
@@ -129,11 +135,6 @@
 			          }); /* 4 */
 			        }
 			      ); /* 3 */
-			      var response = parseJson.parseStart(this.state.items);
-			      serverDims = response.split(":");
-			      for (var i = 1; i < serverDims.length; i++) {
-			    	  buildArray.buildProc(i, serverDims[i] )
-				      }
 			  } /* 2 */
 
 
@@ -144,9 +145,15 @@
 		}
 	}
 	
-	class DyhnamicSelect extends React.Component {
+	class DynamicSelect extends React.Component {
 		constructor(props){
 	        super(props)
+	        this.state={
+		      selectedValue: 'Nothing selected',
+			  error: null,
+			  isLoaded: false,
+		    }
+
 		    this.handleChange = this.handleChange.bind(this);
 		    this.handleSubmit = this.handleSubmit.bind(this);
 
@@ -188,12 +195,10 @@
 			    	React.createElement("option", 
                       {value: data.id}, "Option" +data.name	))
 			    }
-		           return (
-		                   <select name="customSearch" className="custom-search-select" onChange={this.handleChange}>
-		                       <option>Select Item</option>
-		                       {options}
-		                  </select>
-		                  )
+				           return (
+				        		   React.createElement("select", {},
+				        		   React.createElement("option", {options}, "Options"))
+				                  )
 		 }
 	}
 	
