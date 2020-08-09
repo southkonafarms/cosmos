@@ -96,13 +96,7 @@
 			  items: "",
 		    }
 		  }
-		
-		handleChange(event){
-		    this.setState({
-		      selectedValue: selectedValue
-		    });
-		  }
-		
+				
 		  componentDidMount() {
 			    /* 2 */
 			    fetch(
@@ -112,16 +106,16 @@
 			      .then(
 			        (result) => {
 			          /* 3 */
-			          this.setState({
-			            /* 4 */ isLoaded: true,
-			            items: result,
-			          }); /* 4 */
 			          this.state.items = result;
 				      var response = parseJson.parseStart(this.state.items);
 				      var serverDims = response.split(":");
 				      for (var i = 1; i < serverDims.length; i++) {
 				    	  buildArray.buildProc(i, serverDims[i] )
 					      }
+			          this.setState({
+				            /* 4 */ isLoaded: true,
+				            items: result,
+				          }); /* 4 */
 
 			        } /* 3 */,
 			        // Note: it's important to handle errors here
@@ -138,12 +132,29 @@
 			  } /* 2 */
 
 
-		render() {
-			return (
-					React.createElement( DynamicSelect, arrayOfData={arrayOfData}, )
-					);
+			render() {
+			    const { error, isLoaded, items } = this.state;
+
+			    if (error) {
+			      return /*#__PURE__*/ React.createElement(
+			        "div",
+			        null,
+			        "Error: ",
+			        error.message
+			      );
+			    } else if (!isLoaded) {
+			      return /*#__PURE__*/ React.createElement("img", {
+			        src: "../../animatedEllipse.gif",
+			      });
+			    } else {
+	              if(this.state.isLoaded === true){
+			    	return ( 
+				       React.createElement( DynamicSelect, arrayOfData={arrayOfData}, )
+	                  )
+	           		 }
+	            }  
+			}
 		}
-	}
 	
 	class DynamicSelect extends React.Component {
 		constructor(props){
@@ -151,7 +162,6 @@
 	        this.state={
 		      selectedValue: 'Nothing selected',
 			  error: null,
-			  isLoaded: false,
 		    }
 
 		    this.handleChange = this.handleChange.bind(this);
@@ -175,26 +185,10 @@
 			  }
 		
 		 render(){
-			    const { error, isLoaded, items } = this.state;
-			    var serverDims;
-
-			    if (error) {
-			      return /*#__PURE__*/ React.createElement(
-			        "div",
-			        null,
-			        "Error: ",
-			        error.message
-			      );
-			    } else if (!isLoaded) {
-			      return /*#__PURE__*/ React.createElement("img", {
-			        src: "../../animatedEllipse.gif",
-			      });
-			    } else {
 			    	arrayOfData = this.props.arrayOfData;
- 			    	options = arrayOfData.map((data) =>
+ 			    	var options = arrayOfData.map((data) =>
 			    	React.createElement("option", 
                       {value: data.id}, "Option" +data.name	))
-			    }
 				           return (
 				        		   React.createElement("select", {},
 				        		   React.createElement("option", {options}, "Options"))
