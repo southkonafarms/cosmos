@@ -77,9 +77,9 @@
 		return{
 			buildProc(index, oneName){
 
-					id = "id:" + index;
-					name = "name:" + oneName;
-					arrayOfData[index] = {id, name};
+					id =  index;
+					name =  oneName;
+					arrayOfData[index] = (React.createElement('Option', {id},name));
 			}
 		}
 	})();
@@ -185,14 +185,13 @@
 			  }
 		
 		 render(){
-			    	arrayOfData = this.props.arrayOfData;
- 			    	var options = arrayOfData.map((data) =>
-			    	React.createElement("option", 
-                      {value: data.id}, "Option" +data.name	))
+		    	const data = this.props.arrayOfData;
+       			
 				           return (
-				        		   React.createElement("select", {},
-				        		   React.createElement("option", {options}, "Options"))
-				                  )
+					        	React.createElement("select", {},
+					       	           data
+		                    	)
+					       )          
 		 }
 	}
 	
