@@ -22,180 +22,236 @@
 	/*
 	 *  parses json message from the server
 	 */
-	var parseJson = (function () {
-	  // private
-	  var lineArray;
-	  var lineCount;
-	  var state;
-	  // public
-	  return {
-	    parseStart: function (json) {
-	      lineArray = [];
-	      lineCount = 0;
-	      output = "";
-	      return parseJson.parse(json);
-	    },
-	    parse: function (json) {
-	      if (Array.isArray(json) || typeof json == "object") {
-	        for (var idex in json) {
-	          console.log("Next idex:" + idex);
-	          switch (idex) {
-	            case "createMessageResponse":
-	              state = "Start0";
-	              break;
-	            case "theMessage":
-	              state = "Start1";
-	              break;
-	            default:
-	          }
-	        }
-	        parseJson.parse(json[idex]);
-	      } else {
-	        switch (state) {
-	          case "Start0":
-	            console.log("json0:" + json);
-	            break;
-	          case "Start1":
-	            console.log("json1:" + json);
-	            if (json === ":") {
-	              lineArray = ":";
+	var parseJson = (function() {
+	    // private
+	    var lineArray;
+	    var lineCount;
+	    var state;
+	    // public
+	    return {
+	        parseStart: function(json) {
+	            lineArray = [];
+	            lineCount = 0;
+	            output = "";
+	            return parseJson.parse(json);
+	        },
+	        parse: function(json) {
+	            if (Array.isArray(json) || typeof json == "object") {
+	                for (var idex in json) {
+	                    console.log("Next idex:" + idex);
+	                    switch (idex) {
+	                        case "createMessageResponse":
+	                            state = "Start0";
+	                            break;
+	                        case "theMessage":
+	                            state = "Start1";
+	                            break;
+	                        default:
+	                    }
+	                }
+	                parseJson.parse(json[idex]);
 	            } else {
-                  lineArray = json;
+	                switch (state) {
+	                    case "Start0":
+	                        console.log("json0:" + json);
+	                        break;
+	                    case "Start1":
+	                        console.log("json1:" + json);
+	                        if (json === ":") {
+	                            lineArray = ":";
+	                        } else {
+	                            lineArray = json;
+	                        }
+	                        break;
+	                }
 	            }
-	            break;
-	        }
-	      }
-	      return lineArray;
-	    },
-	  };
+	            return lineArray;
+	        },
+	    };
 	})();
 
 	var arrayOfData = [];
 	var buildArray = (function () {
-		var id;
-		var name;
 		return{
 			buildProc(index, oneName){
-
-					id =  index;
-					name =  oneName;
-					arrayOfData[index] = (React.createElement('Option', {id},name));
+					var key=index;
+					arrayOfData.push(React.createElement('option', {key}, oneName));
 			}
 		}
 	})();
 	
-	
-	
+
+
+
 	class DBReader extends React.Component {
-		constructor(props){
-		    super(props)
-		    this.state={
-		      selectedValue: 'Nothing selected',
-			  error: null,
-			  isLoaded: false,
-			  items: "",
-		    }
-		  }
-				
-		  componentDidMount() {
-			    /* 2 */
-			    fetch(
-			      "http://www.localhost:8080/johntredden-1.0/loadableSystem.html"
-			    )
-			      .then((res) => res.json())
-			      .then(
-			        (result) => {
-			          /* 3 */
-			          this.state.items = result;
-				      var response = parseJson.parseStart(this.state.items);
-				      var serverDims = response.split(":");
-				      for (var i = 1; i < serverDims.length; i++) {
-				    	  buildArray.buildProc(i, serverDims[i] )
-					      }
-			          this.setState({
-				            /* 4 */ isLoaded: true,
-				            items: result,
-				          }); /* 4 */
-
-			        } /* 3 */,
-			        // Note: it's important to handle errors here
-			        // instead of a catch() block so that we don't swallow
-			        // exceptions from actual bugs in components.
-			        (error) => {
-			          /* 3 */
-			          this.setState({
-			            /* 4 */ isLoaded: true,
-			            error,
-			          }); /* 4 */
-			        }
-			      ); /* 3 */
-			  } /* 2 */
-
-
-			render() {
-			    const { error, isLoaded, items } = this.state;
-
-			    if (error) {
-			      return /*#__PURE__*/ React.createElement(
-			        "div",
-			        null,
-			        "Error: ",
-			        error.message
-			      );
-			    } else if (!isLoaded) {
-			      return /*#__PURE__*/ React.createElement("img", {
-			        src: "../../animatedEllipse.gif",
-			      });
-			    } else {
-	              if(this.state.isLoaded === true){
-			    	return ( 
-				       React.createElement( DynamicSelect, arrayOfData={arrayOfData}, )
-	                  )
-	           		 }
-	            }  
-			}
-		}
-	
-	class DynamicSelect extends React.Component {
-		constructor(props){
+	    constructor(props) {
 	        super(props)
-	        this.state={
-		      selectedValue: 'Nothing selected',
-			  error: null,
-		    }
+	        this.state = {
+	            selectedValue: 'Nothing selected',
+	            error: null,
+	            isLoaded: false,
+	            items: "",
+	        }
+	    }
 
-		    this.handleChange = this.handleChange.bind(this);
-		    this.handleSubmit = this.handleSubmit.bind(this);
+	    componentDidMount() {
+	        /* 2 */
+	        fetch(
+	                "http://www.localhost:8080/johntredden-1.0/loadableSystem.html"
+	            )
+	            .then((res) => res.json())
+	            .then(
+	                (result) => {
+	                    /* 3 */
+	                    this.state.items = result;
+	                    var response = parseJson.parseStart(this.state.items);
+	                    var serverDims = response.split(":");
+	                    for (var i = 1; i < serverDims.length; i++) {
+	                        buildArray.buildProc(i, serverDims[i])
+	                    }
+	                    this.setState({
+	                        /* 4 */
+	                        isLoaded: true,
+	                        items: result,
+	                    }); /* 4 */
+
+	                } /* 3 */ ,
+	                // Note: it's important to handle errors here
+	                // instead of a catch() block so that we don't swallow
+	                // exceptions from actual bugs in components.
+	                (error) => {
+	                    /* 3 */
+	                    this.setState({
+	                        /* 4 */
+	                        isLoaded: true,
+	                        error,
+	                    }); /* 4 */
+	                }
+	            ); /* 3 */
+	    } /* 2 */
+
+
+	    render() {
+	        const {
+	            error,
+	            isLoaded,
+	            items
+	        } = this.state;
+
+	        if (error) {
+	            return /*#__PURE__*/ React.createElement(
+	                "div",
+	                null,
+	                "Error: ",
+	                error.message
+	            );
+	        } else if (!isLoaded) {
+	            return /*#__PURE__*/ React.createElement("img", {
+	                src: "../../animatedEllipse.gif",
+	            });
+	        } else {
+	            if (this.state.isLoaded === true) {
+	                return (
+	                    React.createElement(DynamicSelect, arrayOfData = {
+	                        arrayOfData
+	                    }, )
+	                )
+	            }
+	        }
+	    }
+	}
+
+	class DynamicSelect extends React.Component {
+	    constructor(props) {
+	        super(props)
+	        this.state = {
+	            selectedValue: 'Nothing selected',
+	            error: null,
+	            value: "",
+	            submitted: false
+	        }
+
+	        this.handleChange = this.handleChange.bind(this);
+	        this.handleSubmit = this.handleSubmit.bind(this);
 
 	    }
-		
-		  handleChange(event) {
-			    this.setState({
-			      value: event.target.value,
-			    });
-			    selectedValue = event.target.value;
-			    this.props.onSelectChange(value);
-			  }
 
-		handleSubmit(event) {
-			    event.preventDefault();
-			    this.setState({
-			      submitted: true,
-			    }); 
-			  }
-		
+	    handleChange(event) {
+	        this.setState({
+	            value: event.target.value,
+	        });
+	        this.state.selectedValue = event.target.value;
+			    fetch(
+					      "http://www.localhost:8080/johntredden-1.0/extractDBdata.html?UVset="+this.state.selectedValue
+					    )
+					      .then((res) => res.json())
+					      .then(
+					        (result) => {
+					          this.setState({
+					            isLoaded: true,
+					            items: result,
+					          });
+					        },
+					        (error) => {
+					          this.setState({
+					            isLoaded: true,
+					            error,
+					          });
+					        }
+					      );
+	    }
+
+	    handleSubmit(event) {
+	        event.preventDefault();
+	        console.log("Selected Value: " + this.state.selectedValue);
+	        this.setState({
+	            submitted: true,
+	        });
+	    }
+
 		 render(){
 		    	const data = this.props.arrayOfData;
-       			
-				           return (
-					        	React.createElement("select", {},
+        
+				           return  this.state.submitted
+					      ? 
+                          React.createElement(SendUandV,{
+                       })
+        					:
+                        React.createElement(
+					          "form",
+					          {
+					            onSubmit: this.handleSubmit,
+					          },
+
+                          	
+                          
+					        	React.createElement("select", {
+                          
+					        		value: this.state.value,
+					        		onChange: this.handleChange,
+					        	},
 					       	           data
+
 		                    	)
-					       )          
+
+					       		)
+					    		React.createElement("h1", "Okay");
+
+                          
 		 }
 	}
 	
-	ReactDOM.render( /*#__PURE__*/React.createElement(DBReader , null), document.getElementById('root')); 
+	class SendUandV extends React.Component {
+	    constructor(props) {
+	        super(props)
+	    }
+	    
+	    render(){
+          return "";
+	    }
+	}
+
+	ReactDOM.render( /*#__PURE__*/ React.createElement(DBReader, null), document.getElementById('root'));
     </script>
 </body>
 </html>
