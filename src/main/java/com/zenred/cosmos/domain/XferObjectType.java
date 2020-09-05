@@ -18,11 +18,11 @@ public enum XferObjectType {
 			return "JSON_clusterRep";
 		}
 	},
-	CLUSTER_RENAMES("JSON_clustrer_rename") {
+	CLUSTER_RENAMES("JSON_clustrer_renames") {
 		@Override
 		public
 		String getName() {
-			return "JSON_clustrer_rename";
+			return "JSON_clustrer_renames";
 		}
 	}
 	;
