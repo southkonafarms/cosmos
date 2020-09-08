@@ -24,6 +24,28 @@ public enum XferObjectType {
 		String getName() {
 			return "JSON_clustrer_renames";
 		}
+	},
+	STAR("JSON_star"){
+		@Override
+		public String getName() {
+			return "JSON_star";
+		}
+	},
+	PLANET("JSON_planet"){
+
+		@Override
+		public String getName() {
+			return "JSON_planet";
+		}
+		
+	},
+	PLANETATMOSPHERES("JSON_planet_atmospheres"){
+
+		@Override
+		public String getName() {
+			return "JSON_planet_atmospheres";
+		}
+		
 	}
 	;
 

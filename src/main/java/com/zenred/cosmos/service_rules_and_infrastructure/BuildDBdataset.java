@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.zenred.cosmos.domain.PlanetoidObjectType;
+import com.zenred.cosmos.domain.StarObjectType;
 import com.zenred.cosmos.domain.ClusterObjectType;
 import com.zenred.cosmos.domain.ReadAFile;
 import com.zenred.cosmos.domain.RenameObjectLoadType;
@@ -20,7 +22,7 @@ public class BuildDBdataset {
 	}
 
 	private static void parseHead(String[] masterArray) {
-		for (int idex = 0; idex < masterArray.length; ) {
+		for (int idex = 0; idex < masterArray.length;) {
 			if (masterArray[idex].equals("")) {
 				idex++;
 				continue;
@@ -47,19 +49,57 @@ public class BuildDBdataset {
 				parseClusterRep(subList);
 				++idex;
 			}
-			
+
 			xferObjectType = XferObjectType.CLUSTER_RENAMES;
 			if (masterArray[idex].equals(xferObjectType.getName())) {
 				++idex;
 				if (masterArray[idex].equals("")) {
 					++idex;
 				}
-				if(masterArray[idex].equals("[")){
+				if (masterArray[idex].equals("[")) {
 					++idex;
 				}
 				idex = parseClusterRenames(masterArray, idex);
 			}
-			++idex;
+			// ++idex;
+
+			xferObjectType = XferObjectType.STAR;
+			if (masterArray[idex].equals(xferObjectType.getName())) {
+				++idex;
+				if (masterArray[idex].equals("")) {
+					++idex;
+				}
+				String subList = masterArray[idex];
+				parseStar(subList);
+				++idex;
+			}
+			
+			xferObjectType = XferObjectType.PLANET;
+			if (masterArray[idex].equals(xferObjectType.getName())) {
+				++idex;
+				if (masterArray[idex].equals("")) {
+					++idex;
+				}
+				String subList = masterArray[idex];
+				parsePlanet(subList, "Planet");
+				++idex;
+			}
+			
+			xferObjectType = XferObjectType.PLANETATMOSPHERES;
+			if (masterArray[idex].equals(xferObjectType.getName())) {
+				++idex;
+				if (masterArray[idex].equals("")) {
+					++idex;
+				}
+				if (masterArray[idex].equals("[")) {
+					++idex;
+				}
+				String subList = masterArray[idex];
+				parseAtmospheres(subList, "Planet");
+				++idex;
+			}
+		
+
 		}
 	}
 
@@ -102,90 +142,231 @@ public class BuildDBdataset {
 			idex += 1;
 		}
 	}
-	
-	private static void parseClusterRep(String clusterRepTarget){
+
+	private static void parseClusterRep(String clusterRepTarget) {
 		String[] clusterRepArray = clusterRepTarget.split(",");
 		for (int idex = 0; idex < clusterRepArray.length;) {
 			String[] subArray = clusterRepArray[idex].split(":");
-			
+
 			ClusterObjectType clusterObjectType = ClusterObjectType.CLUSTERNAME;
 			String name = clusterObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
 				String clusterName = subArray[1];
 				clusterObjectType.storeValue(clusterName.replace("\"", ""));
 			}
-			idex +=1;
+			idex += 1;
+			subArray = clusterRepArray[idex].split(":");
 			clusterObjectType = ClusterObjectType.DISTANCETOVIRTUALCENTRE;
 			name = clusterObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
 				String distance_sys_virt_centre = subArray[1];
 				clusterObjectType.storeValue(distance_sys_virt_centre.replace("\"", ""));
 			}
-			idex +=1;
+			idex += 1;
+			subArray = clusterRepArray[idex].split(":");
 			clusterObjectType = ClusterObjectType.ANGLEINRADIANS;
 			name = clusterObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
 				String angle_in_radians = subArray[1];
 				clusterObjectType.storeValue(angle_in_radians.replace("\"", ""));
 			}
-			idex +=1;
+			idex += 1;
+			subArray = clusterRepArray[idex].split(":");
 			clusterObjectType = ClusterObjectType.CLUSTERTYPE;
 			name = clusterObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
 				String cluster_type = subArray[1].replace("}", "");
 				clusterObjectType.storeValue(cluster_type.replace("\"", ""));
 			}
-			idex +=1;
+			idex += 1;
 
 		}
 	}
-	
+	/**
+	 * common to all renames
+	 * 
+	 * @param detectRename
+	 * @param idex
+	 * @return
+	 */
+	private static int renameCommon(String[] detectRename, int idex){
+		// do stuff
+		for (int idex2 = 0; idex2 < detectRename.length;) {
+			String[] subArray = detectRename[idex2].split(":");
+			RenameObjectLoadType renameObjectLoadType = RenameObjectLoadType.RENAMEOBJECTTYPE;
+			String name = renameObjectLoadType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				renameObjectLoadType.storeValue(subArray[1].replace("\"", ""));
+			}
+			idex2 += 1;
+			subArray = detectRename[idex2].split(":");
+			renameObjectLoadType = RenameObjectLoadType.GENERICNAME;
+			name = renameObjectLoadType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				renameObjectLoadType.storeValue(subArray[1].replace("\"", ""));
+			}
+			idex2 += 1;
+			subArray = detectRename[idex2].split(":");
+			renameObjectLoadType = RenameObjectLoadType.RENAMENAME;
+			name = renameObjectLoadType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				renameObjectLoadType.storeValue(subArray[1].replace("\"", ""));
+			}
+			idex2 += 1;
+			subArray = detectRename[idex2].split(":");
+			renameObjectLoadType = RenameObjectLoadType.RENAMECOUNT;
+			name = renameObjectLoadType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				renameObjectLoadType.storeValue(subArray[1].replace("\"", "").replace("}", "").replace("]", ""));
+			}
+			idex2 += 1;
+			idex += 1;
+			
+		}
+		return idex;
+		
+	}
+
 	private static int parseClusterRenames(String[] clusterRenamesTarget, int idex) {
 		for (;;) {
 			String clusterRenamesArray = clusterRenamesTarget[idex];
 			String[] detectRename = clusterRenamesArray.split(",");
 			String type = detectRename[0].replace("\"", "");
 			if (!type.equals("renameObjectType:CLUSTER")) {
-				break;
+				return idex;
 			}
-			// do stuff
-			for (int idex2 = 0; idex2 < detectRename.length;){
-				String[] subArray = detectRename[idex2].split(":");
-				RenameObjectLoadType renameObjectLoadType = RenameObjectLoadType.RENAMEOBJECTTYPE;
-				String name = renameObjectLoadType.getName();
-				if (subArray[0].replace("\"", "").equals(name)) {
-					renameObjectLoadType.storeValue(subArray[1].replace("\"", ""));
-				}
-				idex2+=1;
-				subArray = detectRename[idex2].split(":");
-				renameObjectLoadType = RenameObjectLoadType.GENERICNAME;
-				name = renameObjectLoadType.getName();
-				if (subArray[0].replace("\"", "").equals(name)) {
-					renameObjectLoadType.storeValue(subArray[1].replace("\"", ""));
-				}
-				idex2+=1;
-				subArray = detectRename[idex2].split(":");
-				renameObjectLoadType = RenameObjectLoadType.RENAMENAME;
-				name = renameObjectLoadType.getName();
-				if (subArray[0].replace("\"", "").equals(name)) {
-					renameObjectLoadType.storeValue(subArray[1].replace("\"", ""));
-				}
-				idex2+=1;
-				subArray = detectRename[idex2].split(":");
-				renameObjectLoadType = RenameObjectLoadType.RENAMECOUNT;
-				name = renameObjectLoadType.getName();
-				if (subArray[0].replace("\"", "").equals(name)) {
-					renameObjectLoadType.storeValue(subArray[1].replace("\"", "").replace("}", "").replace("]",""));
-				}
-				idex2+=1;
-				
-			}
-			
-			++idex;
+			idex = renameCommon(detectRename, idex);
 		}
-		return idex;
 	}
 
+	private static void parseStar(String starTarget) {
+		String[] starArray = starTarget.split(",");
+		for (int idex = 0; idex < starArray.length-1;) {
+			String[] subArray = starArray[idex].split(":");
+
+			StarObjectType starObjectType = StarObjectType.STAR_NAME;
+			String name = starObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String starName = subArray[1];
+				starObjectType.storeValue(starName);
+			}
+			idex += 1;
+			subArray = starArray[idex].split(":");
+			starObjectType = StarObjectType.DISTANCECLUSTVIRTUALCENTRE;
+			name = starObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String distance_clust_virt_centre = subArray[1];
+				starObjectType.storeValue(distance_clust_virt_centre);
+			}
+			idex += 1;
+			subArray = starArray[idex].split(":");
+			starObjectType = StarObjectType.LUMINOSITY;
+			name = starObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String luminosity = subArray[1];
+				starObjectType.storeValue(luminosity);
+			}
+			idex += 1;
+			subArray = starArray[idex].split(":");
+			starObjectType = StarObjectType.NOPLANETSALLOWED;
+			name = starObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String no_planets_allowed = subArray[1];
+				starObjectType.storeValue(no_planets_allowed);
+			}
+			idex += 1;
+			subArray = starArray[idex].split(":");
+			starObjectType = StarObjectType.ANGLEINRADIANS;
+			name = starObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String angle_in_radians = subArray[1];
+				starObjectType.storeValue(angle_in_radians);
+			}
+			idex += 1;
+			subArray = starArray[idex].split(":");
+			starObjectType = StarObjectType.STARCOLOR;
+			name = starObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String star_color = subArray[1];
+				starObjectType.storeValue(star_color);
+			}
+			idex += 1;
+			subArray = starArray[idex].split(":");
+			starObjectType = StarObjectType.STARSIZE;
+			name = starObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String star_size = subArray[1];
+				starObjectType.storeValue(star_size.replace("}", ""));
+			}
+			idex += 1;
+
+		}
+	}
+
+	private static void parsePlanet(String planetTarget, String planarType){
+		String [] planetArray = planetTarget.split(",");
+		for(int idex=0; idex < planetArray.length;){
+			String[] subArray = planetArray[idex].split(":");
+			
+			PlanetoidObjectType planetoidObjectType;
+			
+			
+			planetoidObjectType = PlanetoidObjectType.PLANETOIDNAME;
+			String name = planetoidObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String planetoidName = subArray[1];
+				planetoidObjectType.storeValue(planetoidName+":"+planarType);
+			}
+			idex+=1;
+			subArray = planetArray[idex].split(":");
+			planetoidObjectType = PlanetoidObjectType.RADIUS;
+			name = planetoidObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String radius = subArray[1];
+				planetoidObjectType.storeValue(radius);
+			}
+			idex+=1;
+			subArray = planetArray[idex].split(":");
+			planetoidObjectType = PlanetoidObjectType.DISTANCETOPRIMARY;
+			name = planetoidObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String distanceToPrimary = subArray[1];
+				planetoidObjectType.storeValue(distanceToPrimary);
+			}
+			idex+=1;
+			subArray = planetArray[idex].split(":");
+			planetoidObjectType = PlanetoidObjectType.DEGREE;
+			name = planetoidObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String degree = subArray[1];
+				planetoidObjectType.storeValue(degree);
+			}
+			idex+=1;
+			subArray = planetArray[idex].split(":");
+			planetoidObjectType = PlanetoidObjectType.TEMPERATURE;
+			name = planetoidObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String temperature = subArray[1];
+				planetoidObjectType.storeValue(temperature);
+			}
+			idex+=1;
+			subArray = planetArray[idex].split(":");
+			planetoidObjectType = PlanetoidObjectType.PERCENTWATER;
+			name = planetoidObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String percentWater = subArray[1];
+				planetoidObjectType.storeValue(percentWater.replace("}", ""));
+			}
+			idex+=1;
+
+
+		}
+	}
+	
+	private static void parseAtmospheres(String planetTarget, String planarType){
+		String[] rawAtmosphere = planetTarget.split(",");
+	}
+	
 	public static String readAndParse(String fileName) {
 
 		String jsonBlock = ReadAFile.readAsString(fileName);
