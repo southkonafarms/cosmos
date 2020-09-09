@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.zenred.cosmos.domain.AtmosphereObjectType;
 import com.zenred.cosmos.domain.PlanetoidObjectType;
 import com.zenred.cosmos.domain.StarObjectType;
 import com.zenred.cosmos.domain.ClusterObjectType;
@@ -94,11 +95,57 @@ public class BuildDBdataset {
 				if (masterArray[idex].equals("[")) {
 					++idex;
 				}
+				String atmosphereArray = new String("");
+				for (;;){
+					String[] testArray = masterArray[idex].split(":");
+					if(testArray[0].replace("\"", "").equals("chem_name")){
+						atmosphereArray+=(masterArray[idex]);
+						++idex;
+					}
+					else{
+						break;
+					}
+				}
+				
+				parseAtmospheres(atmosphereArray, "Planet");
+				
+			}
+
+			xferObjectType = XferObjectType.MOON;
+			if (masterArray[idex].equals(xferObjectType.getName())) {
+				++idex;
+				if (masterArray[idex].equals("")) {
+					++idex;
+				}
 				String subList = masterArray[idex];
-				parseAtmospheres(subList, "Planet");
+				parsePlanet(subList, "Moon");
 				++idex;
 			}
-		
+
+			xferObjectType = XferObjectType.MOONATMOSPHERES;
+			if (masterArray[idex].equals(xferObjectType.getName())) {
+				++idex;
+				if (masterArray[idex].equals("")) {
+					++idex;
+				}
+				if (masterArray[idex].equals("[")) {
+					++idex;
+				}
+				String atmosphereArray = new String("");
+				for (;;){
+					String[] testArray = masterArray[idex].split(":");
+					if(testArray[0].replace("\"", "").equals("chem_name")){
+						atmosphereArray+=(masterArray[idex]);
+						++idex;
+					}
+					else{
+						break;
+					}
+				}
+				
+				parseAtmospheres(atmosphereArray, "Moon");
+
+			}
 
 		}
 	}
@@ -364,7 +411,20 @@ public class BuildDBdataset {
 	}
 	
 	private static void parseAtmospheres(String planetTarget, String planarType){
-		String[] rawAtmosphere = planetTarget.split(",");
+		AtmosphereObjectType atmosphereObjectType;
+		atmosphereObjectType = AtmosphereObjectType.CHEMNAME;
+		atmosphereObjectType.setPlanarType(planarType);
+		
+		String [] basicList = planetTarget.replace("]", "").split(",");
+		int idex2 = 0;
+		for(; idex2 < basicList.length; ){
+			String [] chemicalName = basicList[idex2].split(":");
+			idex2+=1;
+			String [] percentage = basicList[idex2].split(":");
+			atmosphereObjectType.storeValue(chemicalName[1].replace("\"", ""), percentage[1].replace("}", ""));
+			idex2+=1;
+		}
+		return;
 	}
 	
 	public static String readAndParse(String fileName) {

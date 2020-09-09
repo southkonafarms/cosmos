@@ -46,6 +46,22 @@ public enum XferObjectType {
 			return "JSON_planet_atmospheres";
 		}
 		
+	},
+	MOON("JSON_moon"){
+
+		@Override
+		public String getName() {
+			return "JSON_moon";
+		}
+		
+	},
+	MOONATMOSPHERES("JSON_moon_atmospheres"){
+
+		@Override
+		public String getName() {
+			return "JSON_moon_atmospheres";
+		}
+		
 	}
 	;
 
