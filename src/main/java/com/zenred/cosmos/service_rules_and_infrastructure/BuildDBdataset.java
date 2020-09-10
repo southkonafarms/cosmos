@@ -42,6 +42,7 @@ public class BuildDBdataset {
 
 			xferObjectType = XferObjectType.CLUSTER_REP;
 			if (masterArray[idex].equals(xferObjectType.getName())) {
+				logger.info("Next Parse:" + xferObjectType.getName());
 				++idex;
 				if (masterArray[idex].equals("")) {
 					++idex;
@@ -52,7 +53,9 @@ public class BuildDBdataset {
 			}
 
 			xferObjectType = XferObjectType.CLUSTER_RENAMES;
-			if (masterArray[idex].equals(xferObjectType.getName())) {
+
+			if (masterArray[idex].equals(xferObjectType.getName())){
+				logger.info("Next Parse:" + masterArray[idex]);
 				++idex;
 				if (masterArray[idex].equals("")) {
 					++idex;
@@ -62,10 +65,49 @@ public class BuildDBdataset {
 				}
 				idex = parseClusterRenames(masterArray, idex);
 			}
-			// ++idex;
+			xferObjectType = XferObjectType.STAR_RENAMES;
+			if (masterArray[idex].equals(xferObjectType.getName())){
+				logger.info("Next Parse:" + masterArray[idex]);
+				++idex;
+				if (masterArray[idex].equals("")) {
+					++idex;
+				}
+				if (masterArray[idex].equals("[")) {
+					++idex;
+				}
+				idex = parseStarRenames(masterArray, idex);
+			}
+
+			xferObjectType = XferObjectType.PLANET_RENAMES;
+			if (masterArray[idex].equals(xferObjectType.getName())){
+				logger.info("Next Parse:" + masterArray[idex]);
+				++idex;
+				if (masterArray[idex].equals("")) {
+					++idex;
+				}
+				if (masterArray[idex].equals("[")) {
+					++idex;
+				}
+				idex = parsePlanetRenames(masterArray, idex);
+			}
+
+			xferObjectType = XferObjectType.MOON_RENAMES;
+			if (masterArray[idex].equals(xferObjectType.getName())){
+				logger.info("Next Parse:" + masterArray[idex]);
+				++idex;
+				if (masterArray[idex].equals("")) {
+					++idex;
+				}
+				if (masterArray[idex].equals("[")) {
+					++idex;
+				}
+				idex = parseMoonRenames(masterArray, idex);
+			}
+
 
 			xferObjectType = XferObjectType.STAR;
 			if (masterArray[idex].equals(xferObjectType.getName())) {
+				logger.info("Next Parse:" + xferObjectType.getName());
 				++idex;
 				if (masterArray[idex].equals("")) {
 					++idex;
@@ -75,8 +117,14 @@ public class BuildDBdataset {
 				++idex;
 			}
 			
+			if(idex == masterArray.length){
+				break;
+			}
+
+			
 			xferObjectType = XferObjectType.PLANET;
 			if (masterArray[idex].equals(xferObjectType.getName())) {
+				logger.info("Next Parse:" + xferObjectType.getName());
 				++idex;
 				if (masterArray[idex].equals("")) {
 					++idex;
@@ -86,8 +134,14 @@ public class BuildDBdataset {
 				++idex;
 			}
 			
+			if(idex == masterArray.length){
+				break;
+			}
+
+			
 			xferObjectType = XferObjectType.PLANETATMOSPHERES;
 			if (masterArray[idex].equals(xferObjectType.getName())) {
+				logger.info("Next Parse:" + xferObjectType.getName());
 				++idex;
 				if (masterArray[idex].equals("")) {
 					++idex;
@@ -105,14 +159,23 @@ public class BuildDBdataset {
 					else{
 						break;
 					}
+					if(idex == masterArray.length){
+						break;
+					}
 				}
 				
 				parseAtmospheres(atmosphereArray, "Planet");
 				
 			}
+			
+			if(idex == masterArray.length){
+				break;
+			}
+
 
 			xferObjectType = XferObjectType.MOON;
 			if (masterArray[idex].equals(xferObjectType.getName())) {
+				logger.info("Next Parse:" + xferObjectType.getName());
 				++idex;
 				if (masterArray[idex].equals("")) {
 					++idex;
@@ -122,8 +185,13 @@ public class BuildDBdataset {
 				++idex;
 			}
 
+			if(idex == masterArray.length){
+				break;
+			}
+
 			xferObjectType = XferObjectType.MOONATMOSPHERES;
 			if (masterArray[idex].equals(xferObjectType.getName())) {
+				logger.info("Next Parse:" + xferObjectType.getName());
 				++idex;
 				if (masterArray[idex].equals("")) {
 					++idex;
@@ -141,11 +209,18 @@ public class BuildDBdataset {
 					else{
 						break;
 					}
+					if(idex == masterArray.length){
+						break;
+					}
 				}
 				
 				parseAtmospheres(atmosphereArray, "Moon");
 
 			}
+			if(idex == masterArray.length){
+				break;
+			}
+
 
 		}
 	}
@@ -280,6 +355,40 @@ public class BuildDBdataset {
 			String[] detectRename = clusterRenamesArray.split(",");
 			String type = detectRename[0].replace("\"", "");
 			if (!type.equals("renameObjectType:CLUSTER")) {
+				return idex;
+			}
+			idex = renameCommon(detectRename, idex);
+		}
+	}
+	private static int parseStarRenames(String[] starRenamesTarget, int idex) {
+		for (;;) {
+			String starRenamesArray = starRenamesTarget[idex];
+			String[] detectRename = starRenamesArray.split(",");
+			String type = detectRename[0].replace("\"", "");
+			if (!type.equals("renameObjectType:STAR")) {
+				return idex;
+			}
+			idex = renameCommon(detectRename, idex);
+		}
+	}
+	private static int parsePlanetRenames(String[] planetRenamesTarget, int idex) {
+		for (;;) {
+			String planetRenamesArray = planetRenamesTarget[idex];
+			String[] detectRename = planetRenamesArray.split(",");
+			String type = detectRename[0].replace("\"", "");
+			if (!type.equals("renameObjectType:PLANETOID")) {
+				return idex;
+			}
+			idex = renameCommon(detectRename, idex);
+		}
+	}
+
+	private static int parseMoonRenames(String[] moonRenamesTarget, int idex) {
+		for (;;) {
+			String moonRenamesArray = moonRenamesTarget[idex];
+			String[] detectRename = moonRenamesArray.split(",");
+			String type = detectRename[0].replace("\"", "");
+			if (!type.equals("renameObjectType:PLANETOID")) {
 				return idex;
 			}
 			idex = renameCommon(detectRename, idex);
