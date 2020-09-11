@@ -1,5 +1,7 @@
 package com.zenred.cosmos.domain;
 
+
+
 public enum SystemObjectType{
 	DISTANCE_TO_GALAXY_CENTRE("distance_to_galaxy_centre"){
 		@Override
@@ -7,8 +9,14 @@ public enum SystemObjectType{
 			return "distance_to_galaxy_centre";
 		}
 		public void storeValue(String value){
-			
+			dbxferObject = new DBxferObject();
+			system = new System();
+			dbxferObject.setType(system);
+			system = (System)dbxferObject.getType();
 			Double distance_to_galatic_centre = new Double(value);
+			system.setDistance_to_galaxy_centre(distance_to_galatic_centre);
+			dbxferList = DBxferList.instance();
+			dbxferList.initList();   // System is always the first object and there is only one.
 		}
 		
 	},
@@ -22,7 +30,7 @@ public enum SystemObjectType{
 		@Override
 		public void storeValue(String value) {
 			Double ucoordinate = new Double(value);
-			
+			system.setUcoordinate(ucoordinate);
 		}
 		
 	}
@@ -37,7 +45,7 @@ public enum SystemObjectType{
 		@Override
 		public void storeValue(String value) {
 			Double vcoordinate = new Double(value);
-			
+			system.setVcoordinate(vcoordinate);
 		}
 	}
 	,
@@ -51,7 +59,9 @@ public enum SystemObjectType{
 			@Override
 			public void storeValue(String value) {
 				String systemName = value;
-				
+				system.setSystemName(systemName);
+				dbxferObject.setType(system);   // last field, update
+				dbxferList.addDomainObject(dbxferObject);
 			}
 					
 	}
@@ -61,6 +71,10 @@ public enum SystemObjectType{
 	private SystemObjectType( String type){
 		
 	}
+	
+	private static DBxferObject dbxferObject;
+	private static System system;
+	private static DBxferList dbxferList;
 	
 	public abstract String getName();
 	public abstract void storeValue(String value);

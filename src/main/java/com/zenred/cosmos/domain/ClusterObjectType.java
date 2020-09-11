@@ -10,8 +10,13 @@ public enum ClusterObjectType {
 
 		@Override
 		public void storeValue(String value) {
-			String clusterNamme = value;
-			
+			dbxferObject = new DBxferObject();
+			clusterRep = new ClusterRep();
+			dbxferObject.setType(clusterRep);
+			clusterRep = (ClusterRep)dbxferObject.getType();
+			String clusterName = value;
+			clusterRep.setClusterName(clusterName);
+			dbxferList = DBxferList.instance();
 		}
 	},
 	DISTANCETOVIRTUALCENTRE("distance_sys_virt_centre"){
@@ -24,6 +29,7 @@ public enum ClusterObjectType {
 		@Override
 		public void storeValue(String value) {
 			Double distance_sys_virt_centre = new Double(value);
+			clusterRep.setDistance_sys_virt_centre(distance_sys_virt_centre);
 		}
 		
 	},
@@ -37,6 +43,7 @@ public enum ClusterObjectType {
 		@Override
 		public void storeValue(String value) {
 			Double angle_in_radians = new Double(value);
+			clusterRep.setAngle_in_radians(angle_in_radians);
 		}
 		
 	},
@@ -50,6 +57,9 @@ public enum ClusterObjectType {
 		@Override
 		public void storeValue(String value) {
 			String cluster_type = value;
+			clusterRep.setCluster_description(cluster_type);
+			dbxferObject.setType(clusterRep);
+			dbxferList.addDomainObject(dbxferObject);
 		}
 		
 	}
@@ -62,5 +72,9 @@ public enum ClusterObjectType {
 	
 	public abstract String getName();
 	public abstract void storeValue(String value);
+	
+	private static DBxferObject dbxferObject;
+	private static DBxferList dbxferList;
+	private static ClusterRep clusterRep;
 
 }

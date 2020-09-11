@@ -10,7 +10,12 @@ public enum RenameObjectLoadType {
 
 		@Override
 		public void storeValue(String value) {
+			dbxferObject = new DBxferObject();
+			rename = new Rename();
+			dbxferObject.setType(rename);
+			rename = (Rename)dbxferObject.getType();
 			String renameObjectType = value;
+			
 			
 		}
 	},
@@ -60,6 +65,11 @@ public enum RenameObjectLoadType {
 	
 	public abstract String getName();
 	public abstract void storeValue(String value);
+	
+	private static DBxferObject dbxferObject;
+	private static DBxferList dbxferList;
+	private static Rename rename;
+
 
 }
 
