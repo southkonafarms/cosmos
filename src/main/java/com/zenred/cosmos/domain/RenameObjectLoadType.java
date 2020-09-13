@@ -15,7 +15,8 @@ public enum RenameObjectLoadType {
 			dbxferObject.setType(rename);
 			rename = (Rename)dbxferObject.getType();
 			String renameObjectType = value;
-			
+			rename.renameObjectType = RenameObjectType.valueOf(renameObjectType);
+			dbxferList = DBxferList.instance();
 			
 		}
 	},
@@ -28,7 +29,7 @@ public enum RenameObjectLoadType {
 		@Override
 		public void storeValue(String value) {
 			String genericName = value;
-			
+			rename.setGenericName(genericName);
 		}
 	},
 	RENAMENAME ("renameName"){
@@ -41,6 +42,7 @@ public enum RenameObjectLoadType {
 		@Override
 		public void storeValue(String value) {
 			String renameName = value;
+			rename.setRenameName(renameName);
 		}
 	},
 	RENAMECOUNT ("renameCount"){
@@ -53,7 +55,9 @@ public enum RenameObjectLoadType {
 		@Override
 		public void storeValue(String value) {
 			Integer renameCount = new Integer(value);
-			
+			rename.setRenameCount(renameCount);
+			dbxferObject.setType(rename);
+			dbxferList.addDomainObject(dbxferObject);
 		}
 	}
 	;

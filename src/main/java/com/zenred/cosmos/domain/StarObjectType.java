@@ -11,8 +11,13 @@ public enum StarObjectType {
 
 		@Override
 		public void storeValue(String value) {
-			String name = value;       
-			
+			dbxferObject = new DBxferObject();
+			star = new Star();
+			dbxferObject.setType(star);
+			star =(Star)dbxferObject.getType();
+			String name = value; 
+			star.setName(name);
+			dbxferList = DBxferList.instance();
 		}
 		
 	},
@@ -25,7 +30,8 @@ public enum StarObjectType {
 
 		@Override
 		public void storeValue(String value) {
-			Double distance_clust_virt_centre = new Double(value);			
+			Double distance_clust_virt_centre = new Double(value);	
+			star.setDistance_clust_virt_centre(distance_clust_virt_centre);
 		}
 		
 	},
@@ -39,7 +45,7 @@ public enum StarObjectType {
 		@Override
 		public void storeValue(String value) {
 			Double luminosity = new Double(value);	
-			
+			star.setLuminosity(luminosity);
 		}
 		
 	},
@@ -55,7 +61,7 @@ public enum StarObjectType {
 			
 			Boolean no_planets_allowed = Boolean.FALSE;
 			no_planets_allowed = value.equals("true");
-			
+			star.setNo_planets_allowed(no_planets_allowed);
 		}
 		
 	},
@@ -69,7 +75,7 @@ public enum StarObjectType {
 		@Override
 		public void storeValue(String value) {
 			Double angle_in_radians = new Double(value);
-			
+			star.setAngle_in_radians_s(angle_in_radians);
 		}
 		
 	},
@@ -83,7 +89,7 @@ public enum StarObjectType {
 		@Override
 		public void storeValue(String value) {
 			String star_color = value;
-			
+			star.setStar_color(star_color);
 		}
 		
 	},
@@ -97,7 +103,7 @@ public enum StarObjectType {
 		@Override
 		public void storeValue(String value) {
 			String star_type = value;
-			
+			star.setStar_type(star_type);
 		}
 		
 	},
@@ -111,7 +117,9 @@ public enum StarObjectType {
 		@Override
 		public void storeValue(String value) {
 			Double star_size = new Double(value);
-			
+			star.setStar_size(star_size);
+			dbxferObject.setType(star);
+			dbxferList.addDomainObject(dbxferObject);
 		}
 		
 	}
@@ -124,5 +132,7 @@ public enum StarObjectType {
 	public abstract String getName();
 	public abstract void storeValue(String value);
 
-
+	private static DBxferObject dbxferObject;
+	private static DBxferList dbxferList;
+	private static Star star;
 }

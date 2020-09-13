@@ -26,6 +26,11 @@ public enum PlanetoidObjectType {
 			String [] tinyArray = value.split(":");
 			String planetoidName = tinyArray[0];
 			setType(tinyArray[1]);  // a moon or a planet
+			dbxferObject = new DBxferObject();
+			planetoid = new Planetoid();
+			dbxferObject.setType(planetoid);
+			planetoid.setPlanetoidName(planetoidName);
+			dbxferList = DBxferList.instance();
 		}
 		
 	},
@@ -39,7 +44,7 @@ public enum PlanetoidObjectType {
 		@Override
 		public void storeValue(String value) {
 			Double radius = new Double(value);
-			
+			planetoid.setRadius(radius);
 		}
 		
 	},
@@ -53,7 +58,7 @@ public enum PlanetoidObjectType {
 		@Override
 		public void storeValue(String value) {
 			Double distanceToPrimary = new Double(value);
-			
+			planetoid.setDistanceToPrimary(distanceToPrimary);
 		}
 		
 	},
@@ -67,7 +72,7 @@ public enum PlanetoidObjectType {
 		@Override
 		public void storeValue(String value) {
 			Double degree = new Double(value);
-			
+			planetoid.setDegree(degree);
 		}
 		
 	},
@@ -81,7 +86,7 @@ public enum PlanetoidObjectType {
 		@Override
 		public void storeValue(String value) {
 			Double temperature = new Double(value);
-			
+			planetoid.setTemperature(temperature);
 		}
 		
 	},
@@ -95,7 +100,9 @@ public enum PlanetoidObjectType {
 		@Override
 		public void storeValue(String value) {
 			Double percentWater = new Double(value);
-			
+			planetoid.setPercentWater(percentWater);
+			dbxferObject.setType(planetoid);
+			dbxferList.addDomainObject(dbxferObject);
 		}
 		
 	}
@@ -111,5 +118,9 @@ public enum PlanetoidObjectType {
 	public void setType(String p_type){
 		planarType.setType(p_type);
 	}
+
+	private static DBxferObject dbxferObject;
+	private static DBxferList dbxferList;
+	private static Planetoid planetoid;
 
 }
