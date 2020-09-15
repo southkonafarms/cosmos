@@ -9,9 +9,16 @@ public enum AtmosphereObjectType {
 
 		@Override
 		public void storeValue(String name, String percentage) {
+			dbxferObject = new DBxferObject();
+			atmosphere = new Atmosphere();
+			dbxferObject.setType(atmosphere);
+			atmosphere = (Atmosphere)dbxferObject.getType();
 			Double d_percentage = new Double(percentage);
-			String chemName = name;
-			
+			String chem_name = name;
+			atmosphere.setChem_name(chem_name);
+			atmosphere.setPercentage(d_percentage);
+			dbxferList = DBxferList.instance();
+			dbxferList.addDomainObject(dbxferObject);
 		}
 
 		@Override
@@ -21,7 +28,7 @@ public enum AtmosphereObjectType {
 
 		@Override
 		public void setPlanarType(String planarType) {
-			String planetoidType = planarType;
+			planetoidType = planarType;
 		}
 		
 	}
@@ -37,4 +44,5 @@ public enum AtmosphereObjectType {
 	private static DBxferObject dbxferObject;
 	private static DBxferList dbxferList;
 	private static Atmosphere atmosphere;
+	private static String planetoidType;
 }

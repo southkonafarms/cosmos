@@ -2,14 +2,20 @@ package com.zenred.cosmos.domain;
 
 import java.util.LinkedList;
 
+import org.apache.log4j.Logger;
+
+import java.util.Iterator;
+
+
 class Head{
 	static String head = "Head";
 }
 
 
 public class DBxferList {
+	static private Logger logger = Logger.getLogger(DBxferList.class);
 	
-	private LinkedList<DBxferObject>  xferList = new LinkedList<DBxferObject>();
+	private static LinkedList<DBxferObject>  xferList = new LinkedList<DBxferObject>();
 	private static DBxferList DBxferListthis = new DBxferList();
 
 	public DBxferList() {
@@ -28,5 +34,42 @@ public class DBxferList {
 	
 	public static DBxferList instance(){
 		return DBxferListthis;
+	}
+	
+	public static void traverseList() throws Exception{
+		Iterator<DBxferObject> iterator= xferList.iterator();
+		SystemDao systemDao = new SystemDao();
+		Integer currentSystemId = null;
+		ClusterRepDao clusterRepDao = new ClusterRepDao();
+		Integer currentClusterRepId = null;
+		while(iterator.hasNext()){
+			DBxferObject dbxferObject = iterator.next();
+			
+			logger.info("Type:" + dbxferObject.getType().getClass().getCanonicalName());
+			
+			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.System")){
+				System system = (System)dbxferObject.getType();
+				logger.info("System:" + system.getSystemName());
+				if(systemDao.doesSystemExist(system.getUcoordinate(), system.getVcoordinate())){
+					throw new Exception("system " + system.getSystemName() + " already exists!");
+				}
+				System newSystem = systemDao.addSystem(system);
+				currentSystemId = newSystem.getSystemId();
+			}
+			
+			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.ClusterRep")){
+				ClusterRep clusterRep = (ClusterRep)dbxferObject.getType();
+				logger.info("ClusterRep:" + clusterRep.getClusterName());
+				clusterRep.setSystemId(currentSystemId);
+				ClusterRep newClusterRep = clusterRepDao.addClusterRep(clusterRep);
+				currentClusterRepId = newClusterRep.getClusterRepId();
+			}
+
+			
+			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Atmosphere")){
+				Atmosphere atmosphere = (Atmosphere)dbxferObject.getType();
+				logger.info("Atmosphere:" + atmosphere.getChem_name());
+			}
+		}
 	}
 }
