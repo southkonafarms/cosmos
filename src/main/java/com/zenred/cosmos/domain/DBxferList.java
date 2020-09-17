@@ -42,6 +42,9 @@ public class DBxferList {
 		Integer currentSystemId = null;
 		ClusterRepDao clusterRepDao = new ClusterRepDao();
 		Integer currentClusterRepId = null;
+		RenameDao renameDao = new RenameDao();
+		StarDao starDao = new StarDao();
+		Integer currentStarId = null;
 		while(iterator.hasNext()){
 			DBxferObject dbxferObject = iterator.next();
 			
@@ -64,6 +67,35 @@ public class DBxferList {
 				ClusterRep newClusterRep = clusterRepDao.addClusterRep(clusterRep);
 				currentClusterRepId = newClusterRep.getClusterRepId();
 			}
+			
+			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Rename")){
+				Rename rename = (Rename)dbxferObject.getType();
+				RenameObjectType renameObjectType = rename.renameObjectType;
+				if(renameObjectType.getName().equals("CLUSTER")){
+					logger.info("Rename:"+ rename.renameObjectType.getName());
+					rename.setRenameId(currentClusterRepId);
+					renameDao.addNewName(renameObjectType, currentClusterRepId, rename.getRenameName(), rename.getGenericName());
+				}
+			}
+			
+			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Star")){
+				Star star = (Star)dbxferObject.getType();
+				logger.info("Star:" + star.getName());
+				star.setClusterToStarId(currentClusterRepId);
+				Star newStar = starDao.addStarToNonSubCluster(star, currentClusterRepId);
+				currentStarId = newStar.getStarId();
+			}
+			
+			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Rename")){
+				Rename rename = (Rename)dbxferObject.getType();
+				RenameObjectType renameObjectType = rename.renameObjectType;
+				if(renameObjectType.getName().equals("STAR")){
+					logger.info("Rename:"+ rename.renameObjectType.getName());
+					rename.setRenameId(currentStarId);
+					renameDao.addNewName(renameObjectType, currentStarId, rename.getRenameName(), rename.getGenericName());
+				}
+			}
+			
 
 			
 			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Atmosphere")){
