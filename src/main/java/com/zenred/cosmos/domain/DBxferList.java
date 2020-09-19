@@ -37,6 +37,7 @@ public class DBxferList {
 	}
 	
 	public static void traverseList() throws Exception{
+		
 		Iterator<DBxferObject> iterator= xferList.iterator();
 		SystemDao systemDao = new SystemDao();
 		Integer currentSystemId = null;
@@ -45,6 +46,9 @@ public class DBxferList {
 		RenameDao renameDao = new RenameDao();
 		StarDao starDao = new StarDao();
 		Integer currentStarId = null;
+		PlanetoidDao planetoidDao = new PlanetoidDao();
+		AtmosphereDao atmosphereDao = new AtmosphereDao();
+		
 		while(iterator.hasNext()){
 			DBxferObject dbxferObject = iterator.next();
 			
@@ -77,9 +81,9 @@ public class DBxferList {
 					renameDao.addNewName(renameObjectType, currentClusterRepId, rename.getRenameName(), rename.getGenericName());
 				}
 			}
-			
+			Star star = null;
 			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Star")){
-				Star star = (Star)dbxferObject.getType();
+				star = (Star)dbxferObject.getType();
 				logger.info("Star:" + star.getName());
 				star.setClusterToStarId(currentClusterRepId);
 				Star newStar = starDao.addStarToNonSubCluster(star, currentClusterRepId);
@@ -96,11 +100,44 @@ public class DBxferList {
 				}
 			}
 			
-
+			Planetoid lastPlanet = null;
+			Planetoid lastMoon = null;
+			Integer currentPlanetoidId = null;
+			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Planetoid")){
+				Planetoid planetoid = (Planetoid)dbxferObject.getType();
+				String [] planetoidAndType = planetoid.getPlanetoidName().split(":");
+				if(planetoidAndType[1].equals("Planet")){
+					planetoid.setPlanetoidName(planetoidAndType[0]);
+					UnifiedPlanetoidI unifiedPlanetoidI = planetoidDao.addStarPlanetoid(planetoid, star);
+					lastPlanet = planetoid;
+					currentPlanetoidId = unifiedPlanetoidI.getPlanetoid().getPlanetoidId();
+				}
+				else if(planetoidAndType[1].equals("Moon")){
+					planetoid.setPlanetoidName(planetoidAndType[0]);
+					UnifiedPlanetoidI unifiedPlanetoidI = planetoidDao.addPlanetoidPlanetoid(lastPlanet, planetoid);
+					lastMoon = planetoid;
+					currentPlanetoidId = unifiedPlanetoidI.getPlanetoid().getPlanetoidId();
+				}
+				else{
+					throw new Exception("What? " + planetoidAndType[1]);
+				}
+			}
+			
+			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Rename")){
+				Rename rename = (Rename)dbxferObject.getType();
+				RenameObjectType renameObjectType = rename.renameObjectType;
+				if(renameObjectType.getName().equals("PLANETOID")){
+					logger.info("Rename:"+ rename.renameObjectType.getName());
+					rename.setRenameId(currentPlanetoidId );
+					renameDao.addNewName(renameObjectType, currentPlanetoidId , rename.getRenameName(), rename.getGenericName());
+				}
+			}
 			
 			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Atmosphere")){
 				Atmosphere atmosphere = (Atmosphere)dbxferObject.getType();
 				logger.info("Atmosphere:" + atmosphere.getChem_name());
+				atmosphere.setPlanetoidId(currentPlanetoidId);
+				atmosphereDao.addAtmosphere(atmosphere);
 			}
 		}
 	}

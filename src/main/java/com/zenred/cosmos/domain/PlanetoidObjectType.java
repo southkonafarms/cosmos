@@ -29,7 +29,7 @@ public enum PlanetoidObjectType {
 			dbxferObject = new DBxferObject();
 			planetoid = new Planetoid();
 			dbxferObject.setType(planetoid);
-			planetoid.setPlanetoidName(planetoidName);
+			planetoid.setPlanetoidName(value);
 			dbxferList = DBxferList.instance();
 		}
 		

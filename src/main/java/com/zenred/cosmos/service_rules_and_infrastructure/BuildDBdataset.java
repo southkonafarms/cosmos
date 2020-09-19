@@ -448,6 +448,14 @@ public class BuildDBdataset {
 			}
 			idex += 1;
 			subArray = starArray[idex].split(":");
+			starObjectType = StarObjectType.STARTYPE;
+			name = starObjectType.getName();
+			if (subArray[0].replace("\"", "").equals(name)) {
+				String star_type = subArray[1];
+				starObjectType.storeValue(star_type);
+			}
+			idex += 1;
+			subArray = starArray[idex].split(":");
 			starObjectType = StarObjectType.STARSIZE;
 			name = starObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
@@ -471,7 +479,7 @@ public class BuildDBdataset {
 			String name = planetoidObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
 				String planetoidName = subArray[1];
-				planetoidObjectType.storeValue(planetoidName+":"+planarType);
+				planetoidObjectType.storeValue(planetoidName.replace("\"", "")+":"+planarType);
 			}
 			idex+=1;
 			subArray = planetArray[idex].split(":");
