@@ -159,7 +159,9 @@ public class StarDao extends AbstractJDBCDao {
 				.usingColumns(Star.csvStarSeparatedColumns()).execute(starMap);
 		Integer starId = super.jdbcSetUp().getSimpleJdbcTemplate()
 				.queryForInt(lastStarInsertSql);
-		return readStarById(starId);
+		star = readStarById(starId);
+		star.setStarId(starId);
+		return star;
 	}
 	
 	/**
@@ -175,7 +177,9 @@ public class StarDao extends AbstractJDBCDao {
 				.usingColumns(Star.csvStarSeparatedColumns()).execute(starMap);
 		Integer starId = super.jdbcSetUp().getSimpleJdbcTemplate()
 				.queryForInt(lastStarInsertSql);
-		return readStarById(starId);
+		star = readStarById(starId);
+		star.setStarId(starId);
+		return star;
 	}
 	
 	/**
