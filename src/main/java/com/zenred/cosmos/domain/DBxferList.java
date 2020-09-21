@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.apache.log4j.Logger;
 
 import java.util.Iterator;
+import com.zenred.cosmos.domain.Rename;
 
 
 class Head{
@@ -52,6 +53,7 @@ public class DBxferList {
 		Planetoid lastMoon = null;
 		Integer currentPlanetoidId = null;
 		Star star = null;
+		ClusterRep lastCluster = null; 
 
 		
 		while(iterator.hasNext()){
@@ -75,6 +77,7 @@ public class DBxferList {
 				clusterRep.setSystemId(currentSystemId);
 				ClusterRep newClusterRep = clusterRepDao.addClusterRep(clusterRep);
 				currentClusterRepId = newClusterRep.getClusterRepId();
+				lastCluster = newClusterRep;
 			}
 			
 			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Rename")){
@@ -90,7 +93,16 @@ public class DBxferList {
 				star = (Star)dbxferObject.getType();
 				logger.info("Star:" + star.getName());
 				star.setClusterToStarId(currentClusterRepId);
-				Star newStar = starDao.addStarToNonSubCluster(star, currentClusterRepId);
+				SubClusterFactory[] values = SubClusterFactory.values();
+				String description = lastCluster.getCluster_description();
+				String clusterDescription = "NONE";
+				for(int idex3 = 0; idex3 < values.length; idex3++){
+					logger.info("factory element:"+values[idex3].name());
+					if((values[idex3].name().contains(description))){
+						clusterDescription = values[idex3].name();
+					}
+				}
+				Star newStar = starDao.addStar(star, lastCluster, clusterDescription);
 				currentStarId = newStar.getStarId();
 				star.setStarId(currentStarId);
 			}
