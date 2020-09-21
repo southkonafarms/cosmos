@@ -403,7 +403,7 @@ public class BuildDBdataset {
 			StarObjectType starObjectType = StarObjectType.STAR_NAME;
 			String name = starObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String starName = subArray[1];
+				String starName = subArray[1].replace("\"", "");
 				starObjectType.storeValue(starName);
 			}
 			idex += 1;
@@ -411,7 +411,7 @@ public class BuildDBdataset {
 			starObjectType = StarObjectType.DISTANCECLUSTVIRTUALCENTRE;
 			name = starObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String distance_clust_virt_centre = subArray[1];
+				String distance_clust_virt_centre = subArray[1].replace("\"", "");
 				starObjectType.storeValue(distance_clust_virt_centre);
 			}
 			idex += 1;
@@ -419,7 +419,7 @@ public class BuildDBdataset {
 			starObjectType = StarObjectType.LUMINOSITY;
 			name = starObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String luminosity = subArray[1];
+				String luminosity = subArray[1].replace("\"", "");
 				starObjectType.storeValue(luminosity);
 			}
 			idex += 1;
@@ -427,7 +427,7 @@ public class BuildDBdataset {
 			starObjectType = StarObjectType.NOPLANETSALLOWED;
 			name = starObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String no_planets_allowed = subArray[1];
+				String no_planets_allowed = subArray[1].replace("\"", "");
 				starObjectType.storeValue(no_planets_allowed);
 			}
 			idex += 1;
@@ -443,7 +443,7 @@ public class BuildDBdataset {
 			starObjectType = StarObjectType.STARCOLOR;
 			name = starObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String star_color = subArray[1];
+				String star_color = subArray[1].replace("\"", "");
 				starObjectType.storeValue(star_color);
 			}
 			idex += 1;
@@ -451,7 +451,7 @@ public class BuildDBdataset {
 			starObjectType = StarObjectType.STARTYPE;
 			name = starObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String star_type = subArray[1];
+				String star_type = subArray[1].replace("\"", "");
 				starObjectType.storeValue(star_type);
 			}
 			idex += 1;
@@ -459,7 +459,7 @@ public class BuildDBdataset {
 			starObjectType = StarObjectType.STARSIZE;
 			name = starObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String star_size = subArray[1];
+				String star_size = subArray[1].replace("\"", "");
 				starObjectType.storeValue(star_size.replace("}", ""));
 			}
 			idex += 1;
@@ -478,7 +478,7 @@ public class BuildDBdataset {
 			planetoidObjectType = PlanetoidObjectType.PLANETOIDNAME;
 			String name = planetoidObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String planetoidName = subArray[1];
+				String planetoidName = subArray[1].replace("\"", "");
 				planetoidObjectType.storeValue(planetoidName.replace("\"", "")+":"+planarType);
 			}
 			idex+=1;
@@ -486,7 +486,7 @@ public class BuildDBdataset {
 			planetoidObjectType = PlanetoidObjectType.RADIUS;
 			name = planetoidObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String radius = subArray[1];
+				String radius = subArray[1].replace("\"", "");
 				planetoidObjectType.storeValue(radius);
 			}
 			idex+=1;
@@ -494,7 +494,7 @@ public class BuildDBdataset {
 			planetoidObjectType = PlanetoidObjectType.DISTANCETOPRIMARY;
 			name = planetoidObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String distanceToPrimary = subArray[1];
+				String distanceToPrimary = subArray[1].replace("\"", "");
 				planetoidObjectType.storeValue(distanceToPrimary);
 			}
 			idex+=1;
@@ -502,7 +502,7 @@ public class BuildDBdataset {
 			planetoidObjectType = PlanetoidObjectType.DEGREE;
 			name = planetoidObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String degree = subArray[1];
+				String degree = subArray[1].replace("\"", "");
 				planetoidObjectType.storeValue(degree);
 			}
 			idex+=1;
@@ -510,7 +510,7 @@ public class BuildDBdataset {
 			planetoidObjectType = PlanetoidObjectType.TEMPERATURE;
 			name = planetoidObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String temperature = subArray[1];
+				String temperature = subArray[1].replace("\"", "");
 				planetoidObjectType.storeValue(temperature);
 			}
 			idex+=1;
@@ -518,7 +518,7 @@ public class BuildDBdataset {
 			planetoidObjectType = PlanetoidObjectType.PERCENTWATER;
 			name = planetoidObjectType.getName();
 			if (subArray[0].replace("\"", "").equals(name)) {
-				String percentWater = subArray[1];
+				String percentWater = subArray[1].replace("\"", "");
 				planetoidObjectType.storeValue(percentWater.replace("}", ""));
 			}
 			idex+=1;
@@ -538,7 +538,7 @@ public class BuildDBdataset {
 			String [] chemicalName = basicList[idex2].split(":");
 			idex2+=1;
 			String [] percentage = basicList[idex2].split(":");
-			atmosphereObjectType.storeValue(chemicalName[1].replace("\"", ""), percentage[1].replace("}", ""));
+			atmosphereObjectType.storeValue(chemicalName[1].replace("\"", ""), percentage[1].replace("\"", "").replace("}", ""));
 			idex2+=1;
 		}
 		return;
