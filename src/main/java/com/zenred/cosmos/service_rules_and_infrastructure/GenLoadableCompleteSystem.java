@@ -175,7 +175,7 @@ public class GenLoadableCompleteSystem {
 		    					unifiedMoonI.getPlanetoid().getPercentWater(),
 		    					unifiedMoonI.getPlanetoid().getRadius(),
 		    					unifiedMoonI.getPlanetoid().getDistanceToPrimary());
-		    			String jsonMoonRep = gson.toJson(basicPlanetoid);
+		    			String jsonMoonRep = gson.toJson(basicMoon);
 		    			logger.info("JSON_moon:" + jsonMoonRep);
 		    			buildNextLine(jsonMoonRep, "JSON_moon");
 			    		List<Rename> moonRenames = renameDao.fetchRenamesForGenericName(basicMoon.getPlanetoidName());

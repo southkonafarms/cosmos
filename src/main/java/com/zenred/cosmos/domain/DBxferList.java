@@ -83,7 +83,8 @@ public class DBxferList {
 			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Rename")){
 				Rename rename = (Rename)dbxferObject.getType();
 				RenameObjectType renameObjectType = rename.renameObjectType;
-				if(renameObjectType.getName().equals("CLUSTER")){
+				String name = renameObjectType.name();
+				if(name.contains("CLUSTER")){
 					logger.info("Rename:"+ rename.renameObjectType.getName());
 					rename.setRenameId(currentClusterRepId);
 					renameDao.addNewName(renameObjectType, currentClusterRepId, rename.getRenameName(), rename.getGenericName());
@@ -110,7 +111,8 @@ public class DBxferList {
 			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Rename")){
 				Rename rename = (Rename)dbxferObject.getType();
 				RenameObjectType renameObjectType = rename.renameObjectType;
-				if(renameObjectType.getName().equals("STAR")){
+				String name = renameObjectType.name();
+				if(name.contains("STAR")){
 					logger.info("Rename:"+ rename.renameObjectType.getName());
 					rename.setRenameId(currentStarId);
 					renameDao.addNewName(renameObjectType, currentStarId, rename.getRenameName(), rename.getGenericName());
@@ -140,7 +142,8 @@ public class DBxferList {
 			if(dbxferObject.getType().getClass().getCanonicalName().equals("com.zenred.cosmos.domain.Rename")){
 				Rename rename = (Rename)dbxferObject.getType();
 				RenameObjectType renameObjectType = rename.renameObjectType;
-				if(renameObjectType.getName().equals("PLANETOID")){
+				String name = renameObjectType.name();
+				if(name.contains("PLANETOID")){
 					logger.info("Rename:"+ rename.renameObjectType.getName());
 					rename.setRenameId(currentPlanetoidId );
 					renameDao.addNewName(renameObjectType, currentPlanetoidId , rename.getRenameName(), rename.getGenericName());
