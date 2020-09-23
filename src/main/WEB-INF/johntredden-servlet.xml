@@ -37,6 +37,7 @@
 	<bean id="buildSpecifiedClusterAndStars" class="com.zenred.cosmos.controller.BuildSpecifiedClusterAndStars"/>
 	<bean id="loadableSystem" class="com.zenred.cosmos.controller.LoadableSystem"/>
 	<bean id="extractDBdata" class="com.zenred.cosmos.controller.ExtractDBdata"/>
+	<bean id="loadExternalSystem" class="com.zenred.cosmos.controller.LoadExternalSystem"/>
 	
 
 	<bean id="urlMapping"
@@ -67,6 +68,7 @@
 				<prop key="/buildSpecifiedClusterAndStars.html">buildSpecifiedClusterAndStars</prop>
 				<prop key="/loadableSystem.html">loadableSystem</prop>
 				<prop key="/extractDBdata.html">extractDBdata</prop>
+				<prop key="/loadExternalSystem.html">loadExternalSystem</prop>
 			</props>
 		</property>
 	</bean>

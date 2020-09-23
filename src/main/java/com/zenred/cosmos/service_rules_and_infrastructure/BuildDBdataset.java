@@ -213,7 +213,10 @@ public class BuildDBdataset {
 						break;
 					}
 				}
-				
+				if(atmosphereArray.length() == 0){
+					++idex;
+					continue;  // suspicious ...
+				}
 				parseAtmospheres(atmosphereArray, "Moon");
 
 			}
