@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ExtractDBOneSystem</title>
+</head>
+
+<link href="css/main.css" rel="stylesheet" type="text/css">
+
+<script src="../js/react.development.js"></script>
+<script src="../js/react-dom.development.js"></script>
+<script type="text/javascript" src="../../js/buckets.js"></script>
+</head>
+<body style="background-color:midnightblue;">
+	<h1 style="color:lightblue">Return to the <a href="http://www.johntreddenlocal.com">Home</a> Page</h1>
+	<h1 style="color:lightblue"> Load data from flat file into the  database</h1>
+	<div id="root"></div>
+	
+	window.onload = function()
+	
+	<script type="text/javascript">
+	/*
+	 *  parses json message from the server
+	 */
+
+		class DBloader extends React.Component {
+		    constructor(props) {
+		        super(props)
+		        this.state = {
+		            error: null,
+		            isLoaded: false,
+		            status: "",
+		        }
+		    }
+
+		    componentDidMount() {
+		        /* 2 */
+		        fetch(
+		                "http://www.localhost:8080/johntredden-1.0/loadExternalSystem.html"
+		            )
+		            .then((res) => res.json())
+		            .then(
+		                (result) => {
+		                    /* 3 */
+		                    this.state.status = result;
+		                    this.setState({
+		                        /* 4 */
+		                        isLoaded: true,
+		                        items: result,
+		                    }); /* 4 */
+
+		                } /* 3 */ ,
+		                // Note: it's important to handle errors here
+		                // instead of a catch() block so that we don't swallow
+		                // exceptions from actual bugs in components.
+		                (error) => {
+		                    /* 3 */
+		                    this.setState({
+		                        /* 4 */
+		                        isLoaded: true,
+		                        error,
+		                    }); /* 4 */
+		                }
+		            ); /* 3 */
+		    } /* 2 */
+
+
+		    render() {
+		        const {
+		            error,
+		            isLoaded,
+		            status
+		        } = this.state;
+
+		        if (error) {
+		            return /*#__PURE__*/ React.createElement(
+		                "div",
+		                null,
+		                "Error: ",
+		                error.message
+		            );
+		        } else if (!isLoaded) {
+		            return /*#__PURE__*/ React.createElement("img", {
+		                src: "../../animatedEllipse.gif",
+		            });
+		        } else {
+		            if (this.state.isLoaded === true) {
+		                
+		                		React.createElement("h1", status)
+		                		
+		                
+		            }
+		        }
+	          return this.state.status;
+		    }
+		}
+
+
+
+		ReactDOM.render( /*#__PURE__*/ React.createElement(DBloader, null), document.getElementById('root'));
+    </script>
+</body>
+</html>
