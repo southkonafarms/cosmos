@@ -55,8 +55,12 @@ public class GenLoadableCompleteSystem {
 	 * String building is also initialized
 	 */
 	private static void initReportDirectory(Integer uCoordinate, Integer vCoordinate){
-		relativePath = reportDirectory + File.separator + uCoordinate + ":" + vCoordinate;
+		relativePath = "";
+		jsonReportFile = "";
+		
+		relativePath = reportDirectory + File.separator + "ds" + uCoordinate + "_" + vCoordinate + ".json";
 		jsonReportFile = fullPathToYourWebappRoot + File.separator + relativePath;
+		logger.info("Report File:" + jsonReportFile);
 		fileContents = new StringBuilder();
 	}
 	/**
@@ -137,11 +141,11 @@ public class GenLoadableCompleteSystem {
 	    		List<UnifiedPlanetoidI> plentoidIList = planetoidDao.readPlanetoidsAroundStar(star);
 	    		for(UnifiedPlanetoidI unifiedPlanetoidI: plentoidIList){
 	    			BasicPlanetoid basicPlanetoid = new BasicPlanetoid(unifiedPlanetoidI.getPlanetoid().getPlanetoidName(),
-	    					unifiedPlanetoidI.getPlanetoid().getDegree(), 
+	    					unifiedPlanetoidI.getPlanetoid().getRadius(), 
+	    					unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary(),
+	    					unifiedPlanetoidI.getPlanetoid().getDegree(),
 	    					unifiedPlanetoidI.getPlanetoid().getTemperature(),
-	    					unifiedPlanetoidI.getPlanetoid().getPercentWater(),
-	    					unifiedPlanetoidI.getPlanetoid().getRadius(),
-	    					unifiedPlanetoidI.getPlanetoid().getDistanceToPrimary());
+	    					unifiedPlanetoidI.getPlanetoid().getPercentWater());
 	    			String jsonPlanetRep = gson.toJson(basicPlanetoid);
 	    			logger.info("JSON_planet:" + jsonPlanetRep);
 	    			buildNextLine(jsonPlanetRep, "JSON_planet");

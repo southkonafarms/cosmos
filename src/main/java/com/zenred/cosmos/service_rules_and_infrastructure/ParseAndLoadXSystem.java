@@ -8,7 +8,7 @@ public class ParseAndLoadXSystem {
 	}
 	
 	public static void doIt() throws Exception{
-		BuildDBdataset.readAndParse("/tmp/ds.json");
+		BuildDBdataset.readAndParse("ds", ".json");
 		DBxferList.instance();
 		DBxferList.traverseList();  //similar to a singleton
 	}

@@ -13,7 +13,7 @@ public class BuildDBdatasetTest {
 
 	@Test
 	public void test() {
-		BuildDBdataset.readAndParse("/tmp/ds.json");
+		BuildDBdataset.readAndParse("ds", ".json");
 		try{
 			DBxferList.instance().traverseList();
 		}

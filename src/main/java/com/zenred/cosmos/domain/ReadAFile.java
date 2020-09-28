@@ -14,6 +14,21 @@ public class ReadAFile {
 		super();
 	}
 	
+	public static String readTmpDirectoyForPattern(String pattern0, String pattern1){
+		String fileName = "";
+		String [] files;
+		
+		File file = new File("/tmp");
+		files = file.list();
+		for (String nextFile : files){
+			if(nextFile.contains(pattern0) && nextFile.contains(pattern1)){
+				fileName = nextFile;
+				break;
+			}
+		}
+		return fileName;
+	}
+	
 	/**
 	 * 
 	 * @param fileName

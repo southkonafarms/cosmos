@@ -547,8 +547,9 @@ public class BuildDBdataset {
 		return;
 	}
 	
-	public static String readAndParse(String fileName) {
-
+	public static String readAndParse(String pattern0, String pattern1) {
+		String fileName = "/tmp/";
+		fileName += ReadAFile.readTmpDirectoyForPattern(pattern0, pattern1);
 		String jsonBlock = ReadAFile.readAsString(fileName);
 		String[] basicArray = jsonBlock.split("\\{", 0);
 		parseHead(basicArray);
