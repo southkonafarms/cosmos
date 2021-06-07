@@ -1,4 +1,4 @@
-package com.zenred.johntredden.domain;
+package com.zenred.cosmos.domain;
 
 import java.util.Properties;
 
