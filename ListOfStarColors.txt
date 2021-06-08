@@ -1,0 +1,38 @@
+
+:White Dwarf
+:Orange Main Sequence
+:Yellow Dwarf
+:Yellow Main Sequence
+:Red Main Sequence
+:Light Blue Sub Dwarf
+:Dark Brown Sub Dwarf
+:Blue Sub Dwarf
+:Pale Yellow Dwarf
+:Red Dwarf
+:Purple Red Dwarf
+:Orange Sub Dwarf
+:Light Blue Main Sequence
+:Blue Dwarf
+:White Sub Dwarf
+:Red Sub Dwarf
+:Orange Dwarf
+:Pale Yellow Main Sequence
+:Pale Yellow Sub Dwarf
+:Light Blue Dwarf
+:White Main Sequence
+:Yellow Sub Dwarf
+:Orange Super Giant I
+:Yellow Giant II
+:Light Blue Sub Giant
+:Blue Main Sequence
+:Light Blue  Giant I
+:White Giant I
+:Red Giant II
+:Light Blue  Giant II
+:Blue Giant I
+:White Sub Giant
+:Pale Yellow Giant II
+:Pale Yellow SubGiant
+:White Giant II
+:Yellow Giant I
+:Yellow Super Giant I
