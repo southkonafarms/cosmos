@@ -11,14 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.apache.log4j.Logger;
 
-import com.zenred.johntredden.domain.AbstractJDBCDao;
+import com.zenred.cosmos.domain.AbstractJDBCDao;
 import com.zenred.util.GenRandomRolls;
 
 public class SystemDao extends AbstractJDBCDao {
 	
 	private static Logger logger = Logger.getLogger(SystemDao.class);
 	
-	public static String SYSTEM = "System";
+	public static String SYSTEM = "`System`";
 	public static String SYSTEM_ID = "SystemId";
 	public static String DISTANCE_TO_GALACTIC_CENTRE = "distance_to_galaxy_centre";
 	public static String UCOORDINATE = "ucoordinate";
