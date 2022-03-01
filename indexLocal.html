@@ -70,6 +70,9 @@ var tagOperations = (function(){
 	   				},
 	   					function musicSect(){
 	   					$('#musicSect').show();
+	   				},
+	   					function globalCoffeeSect(){
+	   					$('#globalCoffeeSect').show();
 	   				}
 	   				
 	];
@@ -109,7 +112,11 @@ var tagOperations = (function(){
    				},
 					function musicSect(){
    					$('#musicSect').hide();
+   				},
+					function globalCoffeeSect(){
+   					$('#globalCoffeeSect').hide();
    				}
+				
 				
 	];
 
@@ -125,7 +132,8 @@ var tagOperations = (function(){
 			"answerQuestionOne" : 8,
 			"createLogin" :9,
 			"netEconomicsSect" :10,
-			"musicSect" : 11
+	                "musicSect" : 11,
+	                "globalCoffeeSect" :12
 	}
 	
 	// public 
@@ -235,7 +243,7 @@ $(document).ready(function() {
 		console.log("createLogin:");
 		if(json.createMessageResponse.theMessage.indexOf("SUCCESS") != -1){
 			var showList = ['cosmosSect'];
-   		var hideList = ['skfSect', 'hawaiiSect', 'zenredSect','login_op','emailAndPassword','questions1','answerQuestionOne', 'createLogin','netEconomicsSect', 'musicSect'];
+   		    var hideList = ['skfSect', 'hawaiiSect', 'zenredSect','login_op','emailAndPassword','questions1','answerQuestionOne', 'createLogin','netEconomicsSect', 'musicSect', 'globalCoffeeSect'];
 			tagOperations.both(showList, hideList);
 			sessionStorage.setItem('LOGIN', true);
 		}
@@ -269,6 +277,7 @@ $(document).ready(function() {
 	$(JRedden1).append("<p><i> <a href=\"http://www.johntreddenlocal.com/cosmos/ListRenamedEntities.html\">Travel to a Renamed Cosmos Entity</a> - Allows you to travel to a named cluster, sun or planetoid</i></p>");
 	$(JRedden1).append("<p><i> <a href=\"http://www.johntreddenlocal.com/buildAsystem.html\">Build a Star System</a> - Build a cluster with U and V coordinates, stars</i></p>");
 	$(JRedden1).append("<p><i> Document on Network Economics  - Network economics as presented to Global Studies Association</i></p>");
+	$(JRedden1).append("<p><i> Document on Coffee Globalization  - As published by Brill Publishers</i></p>");
 	$(JRedden1).append("<p><i> Music- Recording of the Buzzards Blues Band</i></p>");
 		
 	$("#home").click(function () { 
@@ -278,21 +287,21 @@ $(document).ready(function() {
 	$("#skf").click(function () { 
 		console.log("in click");
 		var showList = ['skfSect'];
-		var hideList = ['zenredSect','hawaiiSect','login_op','emailAndPassword','cosmosSect','questions1','answerQuestionOne', 'createLogin','netEconomicsSect','musicSect'];
+		var hideList = ['zenredSect','hawaiiSect','login_op','emailAndPassword','cosmosSect','questions1','answerQuestionOne', 'createLogin','netEconomicsSect','musicSect', 'globalCoffeeSect'];
 		tagOperations.both(showList, hideList);
 	});
 	
 	$("#zenred").click(function () { 
 		console.log("in click");
 		var showList = ['zenredSect'];
-		var hideList = ['skfSect','hawaiiSect','login_op','emailAndPassword','cosmosSect','questions1', 'answerQuestionOne', 'createLogin','netEconomicsSect','musicSect'];
+		var hideList = ['skfSect','hawaiiSect','login_op','emailAndPassword','cosmosSect','questions1', 'answerQuestionOne', 'createLogin','netEconomicsSect','musicSect', 'globalCoffeeSect'];
 		tagOperations.both(showList, hideList);
 	});	
 	
 	$("#doh").click(function () { 
 		console.log("in click");
 		var showList = ['hawaiiSect'];
-		var hideList = ['skfSect','zenredSect','login_op','emailAndPassword','cosmosSect','questions1', 'answerQuestionOne', 'createLogin','netEconomicsSect','musicSect'];
+		var hideList = ['skfSect','zenredSect','login_op','emailAndPassword','cosmosSect','questions1', 'answerQuestionOne', 'createLogin','netEconomicsSect','musicSect', 'globalCoffeeSect'];
 		tagOperations.both(showList, hideList);
 	});
 	
@@ -301,23 +310,23 @@ $(document).ready(function() {
 		if(sessionStorage.LOGIN){
 			console.log("Already logged in");
 			var showList = ['cosmosSect'];
-   			var hideList = ['skfSect', 'hawaiiSect', 'zenredSect','login_op','emailAndPassword','questions1','answerQuestionOne', 'createLogin','netEconomicsSect','musicSect'];
+   			var hideList = ['skfSect', 'hawaiiSect', 'zenredSect','login_op','emailAndPassword','questions1','answerQuestionOne', 'createLogin','netEconomicsSect','musicSect', 'globalCoffeeSect'];
 		}
 		else{
 			var showList = ['login_op'];
-			var hideList = ['hawaiiSect','skfSect','zenredSect','emailAndPassword','cosmosSect','questions1','answerQuestionOne', 'createLogin','netEconomicsSect','musicSect'];
+			var hideList = ['hawaiiSect','skfSect','zenredSect','emailAndPassword','cosmosSect','questions1','answerQuestionOne', 'createLogin','netEconomicsSect','musicSect', 'globalCoffeeSect'];
 		}
 		tagOperations.both(showList, hideList);
 	});
 	
 	$("#startLogin").click(function(){
 		var showList = ['emailAndPassword']
-		var hideList = ['hawaiiSect','cosmosSect','login_op', 'answerQuestionOne', 'createLogin','netEconomicsSect', 'musicSect'];
+		var hideList = ['hawaiiSect','cosmosSect','login_op', 'answerQuestionOne', 'createLogin','netEconomicsSect', 'musicSect', 'globalCoffeeSect'];
 		tagOperations.both(showList, hideList);
 	});
 	
 	$("#startLoginRequest").click(function(){
-		var hideList = ['hawaiiSect', 'cosmosSect','login_op', 'answerQuestionOne', 'createLogin','netEconomicsSect', 'musicSect'];
+		var hideList = ['hawaiiSect', 'cosmosSect','login_op', 'answerQuestionOne', 'createLogin','netEconomicsSect', 'musicSect', 'globalCoffeeSect'];
 		tagOperations.hide(hideList);
 		accessRequest.jsonCall();
 	});
@@ -354,7 +363,7 @@ $(document).ready(function() {
 	$("#netEconommics").click(function(){
 		console.log("in click");
 		var showList = ['netEconomicsSect'];
-		var hideList = ['skfSect','zenredSect','login_op','emailAndPassword','cosmosSect','questions1', 'answerQuestionOne', 'createLogin','hawaiiSect', 'musicSect'];
+		var hideList = ['skfSect','zenredSect','login_op','emailAndPassword','cosmosSect','questions1', 'answerQuestionOne', 'createLogin','hawaiiSect', 'musicSect', 'globalCoffeeSect'];
 		tagOperations.both(showList, hideList);
 
 	});
@@ -362,10 +371,18 @@ $(document).ready(function() {
 	$("#music").click(function(){
 		console.log("in click");
 		var showList = ['musicSect'];
-		var hideList = ['skfSect','zenredSect','login_op','emailAndPassword','cosmosSect','questions1', 'answerQuestionOne', 'createLogin','hawaiiSect', 'netEconomicsSect'];
+		var hideList = ['skfSect','zenredSect','login_op','emailAndPassword','cosmosSect','questions1', 'answerQuestionOne', 'createLogin','hawaiiSect', 'netEconomicsSect', 'globalCoffeeSect'];
 		tagOperations.both(showList, hideList);
 
 	});
+
+        $("#globalCoffee").click(function(){
+			console.log("in click");
+		var showList = ['globalCoffeeSect'];
+		var hideList = ['skfSect','zenredSect','login_op','emailAndPassword','cosmosSect','questions1', 'answerQuestionOne', 'createLogin','hawaiiSect', 'netEconomicsSect', 'musicSect'];
+		tagOperations.both(showList, hideList);
+
+       });
 
 
 });
@@ -433,6 +450,7 @@ var processRequest = (function () {
 					<button id="travelRenamed">Travel to a Renamed Cosmos Entity</button>
 					<button id="buildSystem">Build a Star System</button>
 					<button id="netEconommics">Document On Network Economics</button>
+					<button id="globalCoffee">Globalization and Coffee</button>
 					<button id="music">Music</button>
 				</nav>
 
@@ -475,6 +493,13 @@ var processRequest = (function () {
 			<nav>
 				<div id="netEco">
 					<a href="docs/GlobalInternetValueAndWorkCandidate.pdf">Internet Value and Work</a>			
+				</div>
+			</nav>
+		</section>
+		<section id="globalCoffeeSect">
+			<nav>
+				<div id="globCof">
+					<a href="docs/globalizationCoffee.pdf">Globalization and Coffee</a>			
 				</div>
 			</nav>
 		</section>
